@@ -1,7 +1,21 @@
 {
-  "name": "web-help",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@privify-pw/web-help",
+  "version": "0.0.1",
+  "description": "A web help system for React.  Written in typescript and uses vite for build",
+  "author": {
+    "name": "Charles de Jager",
+    "email": "charles.de.jager@privify.pw"
+  },
+  "organization": "Privify",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Privify-pw/web-help.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -26,5 +40,6 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4"
-  }
+  },
+  "license": "MIT"
 }

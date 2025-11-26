@@ -1,73 +1,111 @@
-# React + TypeScript + Vite
+# Privify Web Help
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small TypeScript React component library and utilities to add contextual help to React apps. Built with Vite, ESLint, and TypeScript. Intended to provide a provider, UI components and hooks to show contextual help, tooltips, and guided help flows.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- TypeScript-first React components and hooks
+- Lightweight, framework-agnostic styles (customizable)
+- Integrates with existing component libraries
+- Vite-based development server and build
 
-## React Compiler
+## Install
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+For local development (this repo):
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+To publish/use as a package, add as a dependency:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install @privify-pw/web-help
+# or
+yarn add @privify-pw/web-help
 ```
+
+## Usage
+
+Example usage in a React + TypeScript app:
+
+```tsx
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { HelpProvider, HelpTrigger, useHelp } from 'web-help';
+
+function App() {
+  return (
+    <HelpProvider>
+      <Main />
+    </HelpProvider>
+  );
+}
+
+function Main() {
+  const { openHelp } = useHelp();
+
+  return (
+    <>
+      <h1>My App</h1>
+      <button onClick={() => openHelp('getting-started')}>Help</button>
+      <HelpTrigger id='getting-started'>
+        <p>Tips and guidance for getting started...</p>
+      </HelpTrigger>
+    </>
+  );
+}
+
+createRoot(document.getElementById('root')!).render(<App />);
+```
+
+(Adjust imports and API names to match your library exports.)
+
+## Development
+
+Run the dev server:
+
+```bash
+npm run dev
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+Preview the production build:
+
+```bash
+npm run preview
+```
+
+Lint the code:
+
+```bash
+npm run lint
+```
+
+## Project structure (example)
+
+- src/ — source components and hooks
+- dist/ — build output (after `npm run build`)
+- public/ — static assets
+- package.json — scripts and dependencies
+- tsconfig.json — TypeScript config
+- .eslintrc.\* — ESLint config
+
+## Contributing
+
+- Open an issue for feature requests or bugs.
+- Fork, make changes on a feature branch, run lint/build, and submit a PR.
+- Follow existing code style and add unit tests for new features.
+
+## License
+
+MIT — see LICENSE file.
+
+## Author
+
+Charles de Jager <charles.de.jager@privify.pw>

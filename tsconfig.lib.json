@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
     "target": "ES2022",
-    "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "useDefineForClassFields": true,
     "types": ["vite/client"],
-    "skipLibCheck": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -24,5 +25,13 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts", "lib/**/*.ts", "lib/**/*.tsx", "vite.config.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "lib/**/*.test.ts",
+    "lib/**/*.test.tsx",
+    "lib/**/*.spec.ts",
+    "lib/**/*.spec.tsx"
+  ]
 }
