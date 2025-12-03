@@ -25,7 +25,10 @@ export interface UseHelpNavigationReturn {
   getBreadcrumbs: () => BreadcrumbItem[];
   /** Get available categories */
   categories: HelpCategory[];
-  /** Navigate to a category */
+  /** 
+   * Navigate to a category. This is a no-op by default and should be 
+   * overridden by the consuming application to handle category navigation.
+   */
   goToCategory: (categoryId: string) => void;
 }
 
@@ -82,10 +85,16 @@ export function useHelpNavigation(): UseHelpNavigationReturn {
     return breadcrumbs;
   }, [state.currentArticle, contentLoader]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const goToCategory = useCallback((_categoryId: string) => {
-    // Category navigation would be handled by the app's routing
-    // This is a hook that developers can use to trigger their own navigation
+  /**
+   * Navigate to a category. By default, this is a no-op as category navigation
+   * should be handled by the consuming application's routing system.
+   * Override this behavior by implementing your own navigation logic.
+   */
+  const goToCategory = useCallback((categoryId: string) => {
+    // Category navigation is intentionally left as a no-op.
+    // This function provides a hook point for developers to implement
+    // their own category navigation logic based on their routing setup.
+    void categoryId;
   }, []);
 
   const categories = useMemo(() => {

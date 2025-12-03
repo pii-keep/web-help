@@ -136,7 +136,16 @@ export const HelpTabs = forwardRef<HTMLDivElement, HelpTabsProps>(function HelpT
           const tabId = `${baseId}-tab-${index}`;
           const panelId = `${baseId}-panel-${index}`;
 
-          return renderTab ? (
+          const tabContent = renderTab
+            ? renderTab(item, isActive)
+            : (
+              <>
+                {item.icon && <span className="help-tabs-tab-icon">{item.icon}</span>}
+                <span className="help-tabs-tab-label">{item.label}</span>
+              </>
+            );
+
+          return (
             <button
               key={item.id}
               ref={(el) => {
@@ -155,29 +164,7 @@ export const HelpTabs = forwardRef<HTMLDivElement, HelpTabsProps>(function HelpT
               data-active={isActive}
               data-disabled={item.disabled}
             >
-              {renderTab(item, isActive)}
-            </button>
-          ) : (
-            <button
-              key={item.id}
-              ref={(el) => {
-                tabRefs.current[index] = el;
-              }}
-              type="button"
-              id={tabId}
-              className="help-tabs-tab"
-              role="tab"
-              aria-selected={isActive}
-              aria-controls={panelId}
-              tabIndex={isActive ? 0 : -1}
-              disabled={item.disabled}
-              onClick={() => !item.disabled && handleTabClick(item.id)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              data-active={isActive}
-              data-disabled={item.disabled}
-            >
-              {item.icon && <span className="help-tabs-tab-icon">{item.icon}</span>}
-              <span className="help-tabs-tab-label">{item.label}</span>
+              {tabContent}
             </button>
           );
         })}

@@ -223,11 +223,21 @@ function generateSlug(filename: string): string {
 
 /**
  * Generate a heading ID from text.
+ * This function strips HTML tags and creates a URL-safe slug.
+ * Note: This is NOT a security sanitization function - it's only used 
+ * for generating heading IDs from trusted markdown content.
  */
 function generateHeadingId(text: string): string {
-  return text
+  // First, repeatedly strip HTML-like tags until none remain
+  let result = text;
+  let previousResult: string;
+  do {
+    previousResult = result;
+    result = result.replace(/<[^>]*>/g, '');
+  } while (result !== previousResult);
+
+  return result
     .toLowerCase()
-    .replace(/<[^>]*>/g, '') // Remove HTML tags
     .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
     .replace(/\s+/g, '-') // Replace spaces with hyphens
     .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
