@@ -1,5 +1,5 @@
 {
-  "name": "@pii-keep/web-help",
+  "name": "@piikeep/web-help",
   "version": "0.1.0",
   "description": "A comprehensive, headless help system for React applications. Built with TypeScript for maximum flexibility.",
   "author": {

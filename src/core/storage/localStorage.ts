@@ -1,6 +1,6 @@
 /**
  * LocalStorage Adapter for the Web Help Component Library
- * @module @privify-pw/web-help/storage/localStorage
+ * @module @piikeep-pw/web-help/storage/localStorage
  */
 
 import type { StorageAdapter } from '../types/storage';

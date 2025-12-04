@@ -1,4 +1,4 @@
-# Privify Web Help
+# PIIKeep Web Help
 
 A small TypeScript React component library and utilities to add contextual help to React apps. Built with Vite, ESLint, and TypeScript. Intended to provide a provider, UI components and hooks to show contextual help, tooltips, and guided help flows.
 
@@ -20,9 +20,9 @@ npm install
 To publish/use as a package, add as a dependency:
 
 ```bash
-npm install @privify-pw/web-help
+npm install @piikeep/web-help
 # or
-yarn add @privify-pw/web-help
+yarn add @piikeep/web-help
 ```
 
 ## Usage
@@ -108,4 +108,4 @@ MIT — see LICENSE file.
 
 ## Author
 
-Charles de Jager <charles.de.jager@privify.pw>
+Charles de Jager <charles.de.jager@piikeep.pw>

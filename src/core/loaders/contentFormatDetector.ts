@@ -1,6 +1,6 @@
 /**
  * Content Format Detector for the Web Help Component Library
- * @module @privify-pw/web-help/loaders/contentFormatDetector
+ * @module @piikeep-pw/web-help/loaders/contentFormatDetector
  */
 
 import type { ContentFormat } from '../types/config';
@@ -62,7 +62,10 @@ export class ContentFormatDetector {
   /**
    * Detect content format from content.
    */
-  detectFromContent(content: string, filename?: string): FormatDetectionResult | null {
+  detectFromContent(
+    content: string,
+    filename?: string,
+  ): FormatDetectionResult | null {
     // First try filename-based detection
     if (filename) {
       const filenameResult = this.detectFromFilename(filename);
@@ -140,7 +143,10 @@ export class ContentFormatDetector {
   /**
    * Get a parser for the detected format.
    */
-  getParserForContent(content: string, filename?: string): ContentParser | null {
+  getParserForContent(
+    content: string,
+    filename?: string,
+  ): ContentParser | null {
     const result = this.detectFromContent(content, filename);
     if (!result) return null;
 
@@ -193,7 +199,11 @@ export class ContentFormatDetector {
     const tabConsistency = this.checkDelimiterConsistency(lines, '\t');
     const semicolonConsistency = this.checkDelimiterConsistency(lines, ';');
 
-    const maxConsistency = Math.max(commaConsistency, tabConsistency, semicolonConsistency);
+    const maxConsistency = Math.max(
+      commaConsistency,
+      tabConsistency,
+      semicolonConsistency,
+    );
 
     if (maxConsistency >= 0.9) return 0.9;
     if (maxConsistency >= 0.7) return 0.7;
@@ -204,7 +214,10 @@ export class ContentFormatDetector {
   /**
    * Check delimiter consistency across lines.
    */
-  private checkDelimiterConsistency(lines: string[], delimiter: string): number {
+  private checkDelimiterConsistency(
+    lines: string[],
+    delimiter: string,
+  ): number {
     if (lines.length < 2) return 0;
 
     const counts = lines.map((line) => {
@@ -216,7 +229,9 @@ export class ContentFormatDetector {
     const headerCount = counts[0];
     if (headerCount === 0) return 0;
 
-    const matchingLines = counts.slice(1).filter((count) => count === headerCount).length;
+    const matchingLines = counts
+      .slice(1)
+      .filter((count) => count === headerCount).length;
     return matchingLines / (counts.length - 1);
   }
 
@@ -226,7 +241,8 @@ export class ContentFormatDetector {
   private detectMdx(content: string): number {
     // Look for JSX-like patterns
     const hasJsxImport = /^import\s+.*from\s+['"]/.test(content);
-    const hasJsxExport = /^export\s+(default\s+)?(?:function|const|let|var|class)/.test(content);
+    const hasJsxExport =
+      /^export\s+(default\s+)?(?:function|const|let|var|class)/.test(content);
     const hasJsxComponent = /<[A-Z][a-zA-Z0-9]*[\s/>]/.test(content);
     const hasJsxExpression = /\{[^}]+\}/.test(content);
 
@@ -268,7 +284,10 @@ export class ContentFormatDetector {
     }
 
     // Bold/italic
-    if (/(\*\*|__).+(\*\*|__)/.test(content) || /(\*|_).+(\*|_)/.test(content)) {
+    if (
+      /(\*\*|__).+(\*\*|__)/.test(content) ||
+      /(\*|_).+(\*|_)/.test(content)
+    ) {
       confidence += 0.1;
     }
 
@@ -302,8 +321,18 @@ export class ContentFormatDetector {
     }
 
     // Common HTML tags
-    const htmlTags = ['<head>', '<body>', '<div>', '<p>', '<span>', '<article>', '<section>'];
-    const tagMatches = htmlTags.filter((tag) => content.toLowerCase().includes(tag)).length;
+    const htmlTags = [
+      '<head>',
+      '<body>',
+      '<div>',
+      '<p>',
+      '<span>',
+      '<article>',
+      '<section>',
+    ];
+    const tagMatches = htmlTags.filter((tag) =>
+      content.toLowerCase().includes(tag),
+    ).length;
     confidence += Math.min(tagMatches * 0.15, 0.6);
 
     return Math.min(confidence, 1.0);
@@ -352,6 +381,8 @@ export class ContentFormatDetector {
 /**
  * Create a content format detector with optional parsers.
  */
-export function createFormatDetector(parsers?: ContentParser[]): ContentFormatDetector {
+export function createFormatDetector(
+  parsers?: ContentParser[],
+): ContentFormatDetector {
   return new ContentFormatDetector(parsers);
 }

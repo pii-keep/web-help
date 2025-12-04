@@ -1,7 +1,7 @@
 /**
  * Metadata Editor Component for the Web Help Component Library
- * @module @privify-pw/web-help/components/editor/HelpMetadataEditor
- * 
+ * @module @piikeep-pw/web-help/components/editor/HelpMetadataEditor
+ *
  * A headless metadata editor component that provides form fields
  * for editing article metadata with validation and i18n support.
  */
@@ -92,7 +92,9 @@ export interface MetadataValidation {
   /** Required fields */
   required?: MetadataField[];
   /** Custom validators */
-  validators?: Partial<Record<MetadataField, (value: unknown) => string | null>>;
+  validators?: Partial<
+    Record<MetadataField, (value: unknown) => string | null>
+  >;
 }
 
 /**
@@ -177,7 +179,7 @@ export const HelpMetadataEditor: React.FC<HelpMetadataEditorProps> = ({
 
       return null;
     },
-    [validation, labels]
+    [validation, labels],
   );
 
   // Handle field change
@@ -186,7 +188,7 @@ export const HelpMetadataEditor: React.FC<HelpMetadataEditorProps> = ({
       const newMetadata = { ...metadata, [field]: value };
       onChange(newMetadata);
     },
-    [metadata, onChange]
+    [metadata, onChange],
   );
 
   // Render a field
@@ -334,20 +336,20 @@ const TextInput: React.FC<TextInputProps> = ({
   error,
   placeholder,
 }) => (
-  <div className="help-metadata-field" data-error={!!error}>
-    <label htmlFor={id} className="help-metadata-label">
+  <div className='help-metadata-field' data-error={!!error}>
+    <label htmlFor={id} className='help-metadata-label'>
       {label}
     </label>
     <input
       id={id}
-      type="text"
-      className="help-metadata-input"
+      type='text'
+      className='help-metadata-input'
       value={value}
       onChange={(e) => onChange(e.target.value)}
       disabled={readOnly}
       placeholder={placeholder}
     />
-    {error && <span className="help-metadata-error">{error}</span>}
+    {error && <span className='help-metadata-error'>{error}</span>}
   </div>
 );
 
@@ -364,21 +366,21 @@ const NumberInput: React.FC<NumberInputProps> = ({
   readOnly,
   error,
 }) => (
-  <div className="help-metadata-field" data-error={!!error}>
-    <label htmlFor={id} className="help-metadata-label">
+  <div className='help-metadata-field' data-error={!!error}>
+    <label htmlFor={id} className='help-metadata-label'>
       {label}
     </label>
     <input
       id={id}
-      type="number"
-      className="help-metadata-input"
+      type='number'
+      className='help-metadata-input'
       value={value ?? ''}
       onChange={(e) =>
         onChange(e.target.value ? parseInt(e.target.value, 10) : undefined)
       }
       disabled={readOnly}
     />
-    {error && <span className="help-metadata-error">{error}</span>}
+    {error && <span className='help-metadata-error'>{error}</span>}
   </div>
 );
 
@@ -406,20 +408,20 @@ const TagsInput: React.FC<TagsInputProps> = ({
   };
 
   return (
-    <div className="help-metadata-field" data-error={!!error}>
-      <label htmlFor={id} className="help-metadata-label">
+    <div className='help-metadata-field' data-error={!!error}>
+      <label htmlFor={id} className='help-metadata-label'>
         {label}
       </label>
       <input
         id={id}
-        type="text"
-        className="help-metadata-input"
+        type='text'
+        className='help-metadata-input'
         value={value.join(', ')}
         onChange={handleChange}
         disabled={readOnly}
         placeholder={placeholder}
       />
-      {error && <span className="help-metadata-error">{error}</span>}
+      {error && <span className='help-metadata-error'>{error}</span>}
     </div>
   );
 };
@@ -439,12 +441,12 @@ const CheckboxInput: React.FC<CheckboxInputProps> = ({
   onChange,
   readOnly,
 }) => (
-  <div className="help-metadata-field help-metadata-field-checkbox">
-    <label htmlFor={id} className="help-metadata-label">
+  <div className='help-metadata-field help-metadata-field-checkbox'>
+    <label htmlFor={id} className='help-metadata-label'>
       <input
         id={id}
-        type="checkbox"
-        className="help-metadata-checkbox"
+        type='checkbox'
+        className='help-metadata-checkbox'
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         disabled={readOnly}
@@ -476,19 +478,19 @@ const DateInput: React.FC<DateInputProps> = ({
   };
 
   return (
-    <div className="help-metadata-field" data-error={!!error}>
-      <label htmlFor={id} className="help-metadata-label">
+    <div className='help-metadata-field' data-error={!!error}>
+      <label htmlFor={id} className='help-metadata-label'>
         {label}
       </label>
       <input
         id={id}
-        type="date"
-        className="help-metadata-input"
+        type='date'
+        className='help-metadata-input'
         value={dateValue}
         onChange={handleChange}
         disabled={readOnly}
       />
-      {error && <span className="help-metadata-error">{error}</span>}
+      {error && <span className='help-metadata-error'>{error}</span>}
     </div>
   );
 };

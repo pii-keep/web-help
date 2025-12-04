@@ -1,7 +1,7 @@
 /**
  * HelpAccordion Component for the Web Help Component Library
- * @module @privify-pw/web-help/components/visual/HelpAccordion
- * 
+ * @module @piikeep-pw/web-help/components/visual/HelpAccordion
+ *
  * Headless component for expandable/collapsible sections.
  */
 
@@ -43,105 +43,108 @@ export interface HelpAccordionProps extends BaseComponentProps {
 /**
  * HelpAccordion is a headless component for expandable sections.
  */
-export const HelpAccordion = forwardRef<HTMLDivElement, HelpAccordionProps>(function HelpAccordion(
-  {
-    items,
-    multiple = false,
-    defaultExpanded = [],
-    expanded: controlledExpanded,
-    onExpandedChange,
-    renderTrigger,
-    className = '',
-    ...props
-  },
-  ref
-) {
-  const baseId = useId();
-  const [internalExpanded, setInternalExpanded] = useState<string[]>(defaultExpanded);
-
-  const expanded = controlledExpanded ?? internalExpanded;
-  const isControlled = controlledExpanded !== undefined;
-
-  const toggleItem = useCallback(
-    (itemId: string) => {
-      const newExpanded = expanded.includes(itemId)
-        ? expanded.filter((id) => id !== itemId)
-        : multiple
-        ? [...expanded, itemId]
-        : [itemId];
-
-      if (!isControlled) {
-        setInternalExpanded(newExpanded);
-      }
-      onExpandedChange?.(newExpanded);
+export const HelpAccordion = forwardRef<HTMLDivElement, HelpAccordionProps>(
+  function HelpAccordion(
+    {
+      items,
+      multiple = false,
+      defaultExpanded = [],
+      expanded: controlledExpanded,
+      onExpandedChange,
+      renderTrigger,
+      className = '',
+      ...props
     },
-    [expanded, multiple, isControlled, onExpandedChange]
-  );
+    ref,
+  ) {
+    const baseId = useId();
+    const [internalExpanded, setInternalExpanded] =
+      useState<string[]>(defaultExpanded);
 
-  return (
-    <div
-      ref={ref}
-      className={`help-accordion ${className}`.trim()}
-      data-component="accordion"
-      data-multiple={multiple}
-      {...props}
-    >
-      {items.map((item, index) => {
-        const isExpanded = expanded.includes(item.id);
-        const triggerId = `${baseId}-trigger-${index}`;
-        const contentId = `${baseId}-content-${index}`;
+    const expanded = controlledExpanded ?? internalExpanded;
+    const isControlled = controlledExpanded !== undefined;
 
-        return (
-          <div
-            key={item.id}
-            className="help-accordion-item"
-            data-expanded={isExpanded}
-            data-disabled={item.disabled}
-          >
-            <h3 className="help-accordion-header">
-              {renderTrigger ? (
-                <button
-                  type="button"
-                  id={triggerId}
-                  className="help-accordion-trigger"
-                  onClick={() => !item.disabled && toggleItem(item.id)}
-                  aria-expanded={isExpanded}
-                  aria-controls={contentId}
-                  disabled={item.disabled}
-                >
-                  {renderTrigger(item, isExpanded)}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  id={triggerId}
-                  className="help-accordion-trigger"
-                  onClick={() => !item.disabled && toggleItem(item.id)}
-                  aria-expanded={isExpanded}
-                  aria-controls={contentId}
-                  disabled={item.disabled}
-                >
-                  <span className="help-accordion-title">{item.title}</span>
-                  <span className="help-accordion-chevron" aria-hidden="true">
-                    {isExpanded ? '▼' : '▶'}
-                  </span>
-                </button>
-              )}
-            </h3>
+    const toggleItem = useCallback(
+      (itemId: string) => {
+        const newExpanded = expanded.includes(itemId)
+          ? expanded.filter((id) => id !== itemId)
+          : multiple
+          ? [...expanded, itemId]
+          : [itemId];
+
+        if (!isControlled) {
+          setInternalExpanded(newExpanded);
+        }
+        onExpandedChange?.(newExpanded);
+      },
+      [expanded, multiple, isControlled, onExpandedChange],
+    );
+
+    return (
+      <div
+        ref={ref}
+        className={`help-accordion ${className}`.trim()}
+        data-component='accordion'
+        data-multiple={multiple}
+        {...props}
+      >
+        {items.map((item, index) => {
+          const isExpanded = expanded.includes(item.id);
+          const triggerId = `${baseId}-trigger-${index}`;
+          const contentId = `${baseId}-content-${index}`;
+
+          return (
             <div
-              id={contentId}
-              className="help-accordion-panel"
-              role="region"
-              aria-labelledby={triggerId}
-              hidden={!isExpanded}
+              key={item.id}
+              className='help-accordion-item'
+              data-expanded={isExpanded}
+              data-disabled={item.disabled}
             >
-              <div className="help-accordion-content">{item.content}</div>
+              <h3 className='help-accordion-header'>
+                {renderTrigger ? (
+                  <button
+                    type='button'
+                    id={triggerId}
+                    className='help-accordion-trigger'
+                    onClick={() => !item.disabled && toggleItem(item.id)}
+                    aria-expanded={isExpanded}
+                    aria-controls={contentId}
+                    disabled={item.disabled}
+                  >
+                    {renderTrigger(item, isExpanded)}
+                  </button>
+                ) : (
+                  <button
+                    type='button'
+                    id={triggerId}
+                    className='help-accordion-trigger'
+                    onClick={() => !item.disabled && toggleItem(item.id)}
+                    aria-expanded={isExpanded}
+                    aria-controls={contentId}
+                    disabled={item.disabled}
+                  >
+                    <span className='help-accordion-title'>{item.title}</span>
+                    <span className='help-accordion-chevron' aria-hidden='true'>
+                      {isExpanded ? '▼' : '▶'}
+                    </span>
+                  </button>
+                )}
+              </h3>
+              <div
+                id={contentId}
+                className='help-accordion-panel'
+                role='region'
+                aria-labelledby={triggerId}
+                hidden={!isExpanded}
+              >
+                <div className='help-accordion-content'>{item.content}</div>
+              </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-});
+          );
+        })}
+      </div>
+    );
+  },
+);
 
 HelpAccordion.displayName = 'HelpAccordion';

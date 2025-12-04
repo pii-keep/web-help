@@ -10,7 +10,7 @@ import {
   HelpTabs,
   useHelp,
   type NavigationItem,
-} from '@privify-pw/web-help';
+} from '@piikeep-pw/web-help';
 import { useTheme } from './ThemeContext';
 
 // Define comprehensive help content manifest
@@ -44,7 +44,7 @@ Our help system provides contextual assistance throughout the application. You c
 
 > **Pro Tip**: Enable keyboard shortcuts in settings for faster navigation!
 `,
-  'installation': `---
+  installation: `---
 title: Installation
 category: Basics
 tags:
@@ -67,7 +67,7 @@ Before you begin, ensure you have:
 ## Quick Install
 
 \`\`\`bash
-npm install @privify-pw/web-help
+npm install @piikeep-pw/web-help
 \`\`\`
 
 ## Configuration
@@ -75,7 +75,7 @@ npm install @privify-pw/web-help
 After installation, you can configure the help system in your app:
 
 \`\`\`tsx
-import { HelpProvider } from '@privify-pw/web-help';
+import { HelpProvider } from '@piikeep-pw/web-help';
 
 function App() {
   return (
@@ -86,7 +86,7 @@ function App() {
 }
 \`\`\`
 `,
-  'features': `---
+  features: `---
 title: Features Overview
 category: Features
 tags:
@@ -120,7 +120,7 @@ Track what you've read and pick up where you left off.
 ### Keyboard Shortcuts
 Navigate the help system efficiently with keyboard shortcuts.
 `,
-  'theming': `---
+  theming: `---
 title: Theming Guide
 category: Customization
 tags:
@@ -190,18 +190,16 @@ const navigationItems: NavigationItem[] = [
     label: 'Customization',
     icon: '🎨',
     isCategory: true,
-    children: [
-      { id: 'theming', label: 'Theming Guide', icon: '🌗' },
-    ],
+    children: [{ id: 'theming', label: 'Theming Guide', icon: '🌗' }],
   },
 ];
 
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
-  
+
   return (
     <button
-      className="theme-toggle"
+      className='theme-toggle'
       onClick={toggleTheme}
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
@@ -217,7 +215,7 @@ function HelpSidebarContent({ onClose }: { onClose: () => void }) {
   const handleNavSelect = async (id: string) => {
     // Check if this is an article ID
     const articles = getAllArticles();
-    const article = articles.find(a => a.id === id);
+    const article = articles.find((a) => a.id === id);
     if (article) {
       setActiveNavId(id);
       await openArticle(id);
@@ -225,26 +223,34 @@ function HelpSidebarContent({ onClose }: { onClose: () => void }) {
   };
 
   // Build breadcrumb path
-  const breadcrumbItems = currentArticle ? [
-    { id: 'home', label: 'Help', href: '#' },
-    ...(currentArticle.metadata.category ? [{ id: 'cat', label: currentArticle.metadata.category, href: '#' }] : []),
-    { id: currentArticle.id, label: currentArticle.title, href: '#' },
-  ] : [];
+  const breadcrumbItems = currentArticle
+    ? [
+        { id: 'home', label: 'Help', href: '#' },
+        ...(currentArticle.metadata.category
+          ? [{ id: 'cat', label: currentArticle.metadata.category, href: '#' }]
+          : []),
+        { id: currentArticle.id, label: currentArticle.title, href: '#' },
+      ]
+    : [];
 
   return (
-    <div className="help-sidebar-layout">
-      <header className="help-header">
-        <h2 className="help-title">📖 Help Center</h2>
-        <div className="help-header-actions">
+    <div className='help-sidebar-layout'>
+      <header className='help-header'>
+        <h2 className='help-title'>📖 Help Center</h2>
+        <div className='help-header-actions'>
           <ThemeToggle />
-          <button className="close-btn" onClick={onClose} aria-label="Close help">
+          <button
+            className='close-btn'
+            onClick={onClose}
+            aria-label='Close help'
+          >
             ✕
           </button>
         </div>
       </header>
 
-      <div className="help-layout">
-        <aside className="help-nav-sidebar">
+      <div className='help-layout'>
+        <aside className='help-nav-sidebar'>
           <HelpNavigation
             items={navigationItems}
             activeId={activeNavId}
@@ -252,26 +258,26 @@ function HelpSidebarContent({ onClose }: { onClose: () => void }) {
           />
         </aside>
 
-        <main className="help-main-content">
+        <main className='help-main-content'>
           {breadcrumbItems.length > 0 && (
             <HelpBreadcrumbs items={breadcrumbItems} />
           )}
 
           {isLoading ? (
-            <div className="help-loading">Loading...</div>
+            <div className='help-loading'>Loading...</div>
           ) : currentArticle ? (
             <>
               <HelpContent content={currentArticle.content} />
-              
+
               {/* Demo components */}
-              <section className="help-demo-section">
+              <section className='help-demo-section'>
                 <h2>Component Examples</h2>
-                
-                <HelpCallout type="tip" title="Pro Tip">
+
+                <HelpCallout type='tip' title='Pro Tip'>
                   You can use these components to enhance your help content!
                 </HelpCallout>
-                
-                <HelpCallout type="warning" title="Note">
+
+                <HelpCallout type='warning' title='Note'>
                   Make sure to test in both light and dark modes.
                 </HelpCallout>
 
@@ -280,12 +286,14 @@ function HelpSidebarContent({ onClose }: { onClose: () => void }) {
                     {
                       id: 'faq-1',
                       title: 'How do I customize the theme?',
-                      content: 'Use CSS variables to customize colors and styles. Check the theming guide for details.',
+                      content:
+                        'Use CSS variables to customize colors and styles. Check the theming guide for details.',
                     },
                     {
                       id: 'faq-2',
                       title: 'Can I use my own components?',
-                      content: 'Yes! All components are headless and can be replaced with your own implementations.',
+                      content:
+                        'Yes! All components are headless and can be replaced with your own implementations.',
                     },
                   ]}
                 />
@@ -295,21 +303,24 @@ function HelpSidebarContent({ onClose }: { onClose: () => void }) {
                     {
                       id: 'react',
                       label: 'React',
-                      content: <code>npm install @privify-pw/web-help</code>,
+                      content: <code>npm install @piikeep-pw/web-help</code>,
                     },
                     {
                       id: 'yarn',
                       label: 'Yarn',
-                      content: <code>yarn add @privify-pw/web-help</code>,
+                      content: <code>yarn add @piikeep-pw/web-help</code>,
                     },
                   ]}
                 />
               </section>
             </>
           ) : (
-            <div className="help-welcome">
+            <div className='help-welcome'>
               <h2>Welcome to the Help Center</h2>
-              <p>Select a topic from the navigation or search for specific content.</p>
+              <p>
+                Select a topic from the navigation or search for specific
+                content.
+              </p>
             </div>
           )}
         </main>
@@ -322,25 +333,25 @@ function Main() {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   return (
-    <div className="app">
-      <header className="app-header">
+    <div className='app'>
+      <header className='app-header'>
         <h1>Styled Example App</h1>
-        <div className="header-actions">
+        <div className='header-actions'>
           <ThemeToggle />
-          <button className="help-button" onClick={() => setIsHelpOpen(true)}>
+          <button className='help-button' onClick={() => setIsHelpOpen(true)}>
             ❓ Help
           </button>
         </div>
       </header>
 
-      <main className="app-main">
-        <div className="app-content">
+      <main className='app-main'>
+        <div className='app-content'>
           <h2>Welcome</h2>
           <p>
-            This example demonstrates the <code>@privify-pw/web-help</code> library with
-            full dark and light mode support.
+            This example demonstrates the <code>@piikeep-pw/web-help</code>{' '}
+            library with full dark and light mode support.
           </p>
-          
+
           <h3>Features Demonstrated</h3>
           <ul>
             <li>🌗 Dark and Light mode toggle</li>
@@ -353,19 +364,13 @@ function Main() {
             <li>📑 Tab components</li>
           </ul>
 
-          <button 
-            className="cta-button" 
-            onClick={() => setIsHelpOpen(true)}
-          >
+          <button className='cta-button' onClick={() => setIsHelpOpen(true)}>
             Open Help Center
           </button>
         </div>
       </main>
 
-      <HelpModal
-        open={isHelpOpen}
-        onClose={() => setIsHelpOpen(false)}
-      >
+      <HelpModal open={isHelpOpen} onClose={() => setIsHelpOpen(false)}>
         <HelpSidebarContent onClose={() => setIsHelpOpen(false)} />
       </HelpModal>
     </div>

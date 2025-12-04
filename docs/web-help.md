@@ -263,12 +263,12 @@ Based on the answers above, here are the core architectural decisions:
 
 ### 7. **Sub-packages Strategy**
 
-- `@privify-pw/web-help` - Core headless components
-- `@privify-pw/web-help-parsers-markdown` - Markdown parser
-- `@privify-pw/web-help-parsers-mdx` - MDX parser
-- `@privify-pw/web-help-search` - Client-side search
-- `@privify-pw/web-help-editor` - Content editor utility (future)
-- `@privify-pw/web-help-cli` - CLI tools
+- `@piikeep/web-help` - Core headless components
+- `@piikeep/web-help-parsers-markdown` - Markdown parser
+- `@piikeep/web-help-parsers-mdx` - MDX parser
+- `@piikeep/web-help-search` - Client-side search
+- `@piikeep/web-help-editor` - Content editor utility (future)
+- `@piikeep/web-help-cli` - CLI tools
 
 ## Implementation Plan
 
@@ -296,7 +296,7 @@ Based on the answers above, here are the core architectural decisions:
    - Storage adapter interfaces
    - Callback signatures (onRate, onComment, onFeedback, etc.)
 
-2. **Markdown Parser** (`@privify-pw/web-help-parsers-markdown`)
+2. **Markdown Parser** (`@piikeep/web-help-parsers-markdown`)
 
    - Frontmatter parsing (yaml metadata)
    - Extended markdown syntax (tables, code blocks, etc.)
@@ -370,7 +370,7 @@ export default {
    - `<HelpPagination>` - Prev/Next with metadata
    - All keyboard accessible
 
-2. **Search System** (`@privify-pw/web-help-search`)
+2. **Search System** (`@piikeep/web-help-search`)
 
    - Client-side search (fuse.js integration)
    - Search adapter interface for custom implementations
@@ -545,7 +545,7 @@ export default {
 
 1. **Additional Parsers**
 
-   - `@privify-pw/web-help-parsers-mdx` - MDX support
+   - `@piikeep/web-help-parsers-mdx` - MDX support
    - JSON content loader
    - CSV content loader
    - Auto-detection based on file extension
@@ -571,7 +571,7 @@ export default {
 
 **Deliverables**:
 
-1. **Editor Package** (`@privify-pw/web-help-editor`)
+1. **Editor Package** (`@piikeep/web-help-editor`)
 
    - WYSIWYG markdown editor
    - Live preview
@@ -630,12 +630,12 @@ export default {
 
 **Deliverables**:
 
-1. **CLI Tool** (`@privify-pw/web-help-cli`)
+1. **CLI Tool** (`@piikeep/web-help-cli`)
 
    ```bash
-   npx @privify-pw/web-help init
-   npx @privify-pw/web-help add-article "Getting Started"
-   npx @privify-pw/web-help validate
+   npx @piikeep/web-help init
+   npx @piikeep/web-help add-article "Getting Started"
+   npx @piikeep/web-help validate
    ```
 
 2. **Documentation**
@@ -655,7 +655,7 @@ export default {
 ### Recommended Package Structure
 
 ```text
-@privify-pw/web-help/                    # Core package
+@piikeep/web-help/                    # Core package
 ├── src/
 │   ├── core/
 │   │   ├── components/                  # Headless UI components
@@ -730,7 +730,7 @@ export default {
 ├── vite.config.ts
 └── README.md
 
-@privify-pw/web-help-parsers-markdown/   # Markdown parser package
+@piikeep/web-help-parsers-markdown/   # Markdown parser package
 ├── src/
 │   ├── parser.ts
 │   ├── frontmatter.ts
@@ -742,14 +742,14 @@ export default {
 │   └── index.ts
 └── package.json
 
-@privify-pw/web-help-parsers-mdx/        # MDX parser package
+@piikeep/web-help-parsers-mdx/        # MDX parser package
 ├── src/
 │   ├── parser.ts
 │   ├── components.ts
 │   └── index.ts
 └── package.json
 
-@privify-pw/web-help-search/             # Search package
+@piikeep/web-help-search/             # Search package
 ├── src/
 │   ├── client/                          # Client-side search
 │   │   ├── fuseSearch.ts
@@ -765,7 +765,7 @@ export default {
 │   └── index.ts
 └── package.json
 
-@privify-pw/web-help-editor/             # Content editor (future)
+@piikeep/web-help-editor/             # Content editor (future)
 ├── src/
 │   ├── components/
 │   │   ├── Editor.tsx
@@ -779,7 +779,7 @@ export default {
 │   └── index.ts
 └── package.json
 
-@privify-pw/web-help-cli/                # CLI tools
+@piikeep/web-help-cli/                # CLI tools
 ├── src/
 │   ├── commands/
 │   │   ├── init.ts

@@ -1,13 +1,16 @@
 /**
  * Content Editor Component for the Web Help Component Library
- * @module @privify-pw/web-help/components/editor/HelpEditor
- * 
+ * @module @piikeep-pw/web-help/components/editor/HelpEditor
+ *
  * A headless content editor component that provides markdown editing
  * with live preview, metadata management, and save/publish callbacks.
  */
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import type { HelpArticle, HelpArticleMetadata } from '../../core/types/content';
+import type {
+  HelpArticle,
+  HelpArticleMetadata,
+} from '../../core/types/content';
 
 /**
  * Props for the HelpEditor component.
@@ -119,7 +122,9 @@ export const HelpEditor: React.FC<HelpEditorProps> = ({
 
   // State
   const [content, setContent] = useState(article?.content ?? '');
-  const [metadata, setMetadata] = useState<HelpArticleMetadata>(article?.metadata ?? {});
+  const [metadata, setMetadata] = useState<HelpArticleMetadata>(
+    article?.metadata ?? {},
+  );
   const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
   const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -150,7 +155,7 @@ export const HelpEditor: React.FC<HelpEditorProps> = ({
       setError(undefined);
       onChange?.(newContent, metadata);
     },
-    [metadata, onChange]
+    [metadata, onChange],
   );
 
   // Handle metadata change
@@ -161,7 +166,7 @@ export const HelpEditor: React.FC<HelpEditorProps> = ({
       setError(undefined);
       onChange?.(content, newMetadata);
     },
-    [content, onChange]
+    [content, onChange],
   );
 
   // Handle save
@@ -259,26 +264,28 @@ export const HelpEditor: React.FC<HelpEditorProps> = ({
       data-readonly={readOnly}
     >
       {/* Header */}
-      <div className="help-editor-header">
-        <h2 className="help-editor-title">{labels.title}</h2>
+      <div className='help-editor-header'>
+        <h2 className='help-editor-title'>{labels.title}</h2>
 
         {/* Status indicators */}
-        <div className="help-editor-status">
-          {isDirty && <span className="help-editor-dirty-indicator">●</span>}
+        <div className='help-editor-status'>
+          {isDirty && <span className='help-editor-dirty-indicator'>●</span>}
           {lastSaved && (
-            <span className="help-editor-saved-time">
+            <span className='help-editor-saved-time'>
               {labels.autoSavedMessage} {formatTime(lastSaved)}
             </span>
           )}
-          {error && <span className="help-editor-error">{error}</span>}
+          {error && <span className='help-editor-error'>{error}</span>}
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="help-editor-tabs" role="tablist">
+      <div className='help-editor-tabs' role='tablist'>
         <button
-          className={`help-editor-tab ${activeTab === 'edit' ? 'help-editor-tab-active' : ''}`}
-          role="tab"
+          className={`help-editor-tab ${
+            activeTab === 'edit' ? 'help-editor-tab-active' : ''
+          }`}
+          role='tab'
           aria-selected={activeTab === 'edit'}
           onClick={() => setActiveTab('edit')}
           disabled={readOnly}
@@ -286,8 +293,10 @@ export const HelpEditor: React.FC<HelpEditorProps> = ({
           {labels.editLabel}
         </button>
         <button
-          className={`help-editor-tab ${activeTab === 'preview' ? 'help-editor-tab-active' : ''}`}
-          role="tab"
+          className={`help-editor-tab ${
+            activeTab === 'preview' ? 'help-editor-tab-active' : ''
+          }`}
+          role='tab'
           aria-selected={activeTab === 'preview'}
           onClick={() => setActiveTab('preview')}
         >
@@ -296,31 +305,33 @@ export const HelpEditor: React.FC<HelpEditorProps> = ({
       </div>
 
       {/* Content area */}
-      <div className="help-editor-content" role="tabpanel">
+      <div className='help-editor-content' role='tabpanel'>
         {activeTab === 'edit' ? (
-          <div className="help-editor-edit-panel">
-            <label htmlFor="help-editor-textarea" className="help-editor-label">
+          <div className='help-editor-edit-panel'>
+            <label htmlFor='help-editor-textarea' className='help-editor-label'>
               {labels.contentLabel}
             </label>
             <textarea
-              id="help-editor-textarea"
+              id='help-editor-textarea'
               ref={contentRef}
-              className="help-editor-textarea"
+              className='help-editor-textarea'
               value={content}
               onChange={handleContentChange}
               disabled={readOnly}
-              placeholder="Enter markdown content..."
+              placeholder='Enter markdown content...'
               aria-label={labels.contentLabel}
             />
           </div>
         ) : (
-          <div className="help-editor-preview-panel">
+          <div className='help-editor-preview-panel'>
             {renderPreview ? (
               renderPreview(content)
             ) : (
               <div
-                className="help-editor-preview-content"
-                dangerouslySetInnerHTML={{ __html: simpleMarkdownToHtml(content) }}
+                className='help-editor-preview-content'
+                dangerouslySetInnerHTML={{
+                  __html: simpleMarkdownToHtml(content),
+                }}
               />
             )}
           </div>
@@ -328,8 +339,8 @@ export const HelpEditor: React.FC<HelpEditorProps> = ({
       </div>
 
       {/* Metadata section - placeholder for MetadataEditor integration */}
-      <div className="help-editor-metadata">
-        <h3 className="help-editor-metadata-title">{labels.metadataLabel}</h3>
+      <div className='help-editor-metadata'>
+        <h3 className='help-editor-metadata-title'>{labels.metadataLabel}</h3>
         <HelpMetadataEditor
           metadata={metadata}
           onChange={handleMetadataChange}
@@ -338,11 +349,11 @@ export const HelpEditor: React.FC<HelpEditorProps> = ({
       </div>
 
       {/* Actions */}
-      <div className="help-editor-actions">
+      <div className='help-editor-actions'>
         {onCancel && (
           <button
-            type="button"
-            className="help-editor-button help-editor-button-cancel"
+            type='button'
+            className='help-editor-button help-editor-button-cancel'
             onClick={handleCancel}
           >
             {labels.cancelLabel}
@@ -350,8 +361,8 @@ export const HelpEditor: React.FC<HelpEditorProps> = ({
         )}
         {onSave && (
           <button
-            type="button"
-            className="help-editor-button help-editor-button-save"
+            type='button'
+            className='help-editor-button help-editor-button-save'
             onClick={handleSave}
             disabled={readOnly || isSaving || !isDirty}
           >
@@ -360,8 +371,8 @@ export const HelpEditor: React.FC<HelpEditorProps> = ({
         )}
         {onPublish && (
           <button
-            type="button"
-            className="help-editor-button help-editor-button-publish"
+            type='button'
+            className='help-editor-button help-editor-button-publish'
             onClick={handlePublish}
             disabled={readOnly || isSaving}
           >
@@ -395,79 +406,90 @@ const HelpMetadataEditor: React.FC<HelpMetadataEditorInternalProps> = ({
   onChange,
   readOnly,
 }) => {
-  const handleFieldChange = (field: keyof HelpArticleMetadata, value: unknown) => {
+  const handleFieldChange = (
+    field: keyof HelpArticleMetadata,
+    value: unknown,
+  ) => {
     onChange({ ...metadata, [field]: value });
   };
 
   const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const tags = e.target.value.split(',').map((t) => t.trim()).filter(Boolean);
+    const tags = e.target.value
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean);
     handleFieldChange('tags', tags);
   };
 
   return (
-    <div className="help-metadata-editor">
-      <div className="help-metadata-field">
-        <label htmlFor="metadata-category" className="help-metadata-label">
+    <div className='help-metadata-editor'>
+      <div className='help-metadata-field'>
+        <label htmlFor='metadata-category' className='help-metadata-label'>
           Category
         </label>
         <input
-          id="metadata-category"
-          type="text"
-          className="help-metadata-input"
+          id='metadata-category'
+          type='text'
+          className='help-metadata-input'
           value={metadata.category ?? ''}
           onChange={(e) => handleFieldChange('category', e.target.value)}
           disabled={readOnly}
         />
       </div>
 
-      <div className="help-metadata-field">
-        <label htmlFor="metadata-tags" className="help-metadata-label">
+      <div className='help-metadata-field'>
+        <label htmlFor='metadata-tags' className='help-metadata-label'>
           Tags (comma-separated)
         </label>
         <input
-          id="metadata-tags"
-          type="text"
-          className="help-metadata-input"
+          id='metadata-tags'
+          type='text'
+          className='help-metadata-input'
           value={metadata.tags?.join(', ') ?? ''}
           onChange={handleTagsChange}
           disabled={readOnly}
         />
       </div>
 
-      <div className="help-metadata-field">
-        <label htmlFor="metadata-author" className="help-metadata-label">
+      <div className='help-metadata-field'>
+        <label htmlFor='metadata-author' className='help-metadata-label'>
           Author
         </label>
         <input
-          id="metadata-author"
-          type="text"
-          className="help-metadata-input"
+          id='metadata-author'
+          type='text'
+          className='help-metadata-input'
           value={metadata.author ?? ''}
           onChange={(e) => handleFieldChange('author', e.target.value)}
           disabled={readOnly}
         />
       </div>
 
-      <div className="help-metadata-field">
-        <label htmlFor="metadata-order" className="help-metadata-label">
+      <div className='help-metadata-field'>
+        <label htmlFor='metadata-order' className='help-metadata-label'>
           Order
         </label>
         <input
-          id="metadata-order"
-          type="number"
-          className="help-metadata-input"
+          id='metadata-order'
+          type='number'
+          className='help-metadata-input'
           value={metadata.order ?? ''}
-          onChange={(e) => handleFieldChange('order', e.target.value ? parseInt(e.target.value, 10) : undefined)}
+          onChange={(e) =>
+            handleFieldChange(
+              'order',
+              e.target.value ? parseInt(e.target.value, 10) : undefined,
+            )
+          }
           disabled={readOnly}
         />
       </div>
 
-      <div className="help-metadata-field help-metadata-field-checkbox">
-        <label htmlFor="metadata-published" className="help-metadata-label">
+      <div className='help-metadata-field help-metadata-field-checkbox'>
+        <label htmlFor='metadata-published' className='help-metadata-label'>
           <input
-            id="metadata-published"
-            type="checkbox"
-            className="help-metadata-checkbox"
+            id='metadata-published'
+            type='checkbox'
+            className='help-metadata-checkbox'
             checked={metadata.published ?? true}
             onChange={(e) => handleFieldChange('published', e.target.checked)}
             disabled={readOnly}
@@ -506,23 +528,25 @@ function formatTime(date: Date): string {
  * This is a minimal fallback - developers should provide renderPreview for full support.
  */
 function simpleMarkdownToHtml(markdown: string): string {
-  return markdown
-    // Headings
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    // Bold
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    // Italic
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    // Code
-    .replace(/`(.+?)`/g, '<code>$1</code>')
-    // Links
-    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>')
-    // Paragraphs
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/^/, '<p>')
-    .replace(/$/, '</p>');
+  return (
+    markdown
+      // Headings
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+      // Bold
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      // Italic
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      // Code
+      .replace(/`(.+?)`/g, '<code>$1</code>')
+      // Links
+      .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>')
+      // Paragraphs
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/^/, '<p>')
+      .replace(/$/, '</p>')
+  );
 }
 
 export default HelpEditor;

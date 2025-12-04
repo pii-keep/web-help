@@ -1,6 +1,6 @@
 /**
  * Configuration Types for the Web Help Component Library
- * @module @privify-pw/web-help/types/config
+ * @module @piikeep-pw/web-help/types/config
  */
 
 import type { StorageAdapter } from './storage';
@@ -57,7 +57,7 @@ export type ContentFormat = 'md' | 'mdx' | 'json' | 'csv' | 'html';
  */
 export type ContentLoaderFunction = (
   articleId: string,
-  options?: Record<string, unknown>
+  options?: Record<string, unknown>,
 ) => Promise<HelpArticle | null>;
 
 /**
@@ -222,7 +222,11 @@ export interface HelpCallbacks {
   /** Called when user rates an article */
   onRate?: (articleId: string, rating: number) => void | Promise<void>;
   /** Called when user submits feedback */
-  onFeedback?: (articleId: string, helpful: boolean, comment?: string) => void | Promise<void>;
+  onFeedback?: (
+    articleId: string,
+    helpful: boolean,
+    comment?: string,
+  ) => void | Promise<void>;
   /** Called when user submits a comment */
   onComment?: (articleId: string, comment: string) => void | Promise<void>;
   /** Called when user toggles a bookmark */
@@ -230,7 +234,10 @@ export interface HelpCallbacks {
   /** Called when an article is viewed */
   onArticleView?: (articleId: string) => void | Promise<void>;
   /** Called when user performs a search */
-  onSearch?: (query: string, results: HelpSearchResult[]) => void | Promise<void>;
+  onSearch?: (
+    query: string,
+    results: HelpSearchResult[],
+  ) => void | Promise<void>;
   /** Called when navigation occurs */
   onNavigate?: (fromId: string | null, toId: string) => void | Promise<void>;
   /** Called on error */

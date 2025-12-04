@@ -1,6 +1,6 @@
 /**
  * Context Index for the Web Help Component Library
- * @module @privify-pw/web-help/context
+ * @module @piikeep-pw/web-help/context
  */
 
 export {

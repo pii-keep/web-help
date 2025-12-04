@@ -1,10 +1,16 @@
 /**
  * Component Types for the Web Help Component Library
- * @module @privify-pw/web-help/types/components
+ * @module @piikeep-pw/web-help/types/components
  */
 
 import type { ReactNode } from 'react';
-import type { HelpArticle, TOCEntry, BreadcrumbItem, NavigationState, HelpSearchResult } from './content';
+import type {
+  HelpArticle,
+  TOCEntry,
+  BreadcrumbItem,
+  NavigationState,
+  HelpSearchResult,
+} from './content';
 import type { HelpConfig, HelpCallbacks } from './config';
 
 /**

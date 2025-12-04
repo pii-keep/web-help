@@ -1,7 +1,7 @@
 /**
  * Editor Internationalization for the Web Help Component Library
- * @module @privify-pw/web-help/components/editor/i18n
- * 
+ * @module @piikeep-pw/web-help/components/editor/i18n
+ *
  * Provides i18n support for editor components with built-in translations
  * for common languages and the ability to add custom translations.
  */
@@ -39,7 +39,8 @@ const translations: Record<SupportedLocale, EditorI18nLabels> = {
       cancelLabel: 'Cancel',
       metadataLabel: 'Metadata',
       autoSavedMessage: 'Auto-saved',
-      unsavedWarning: 'You have unsaved changes. Are you sure you want to leave?',
+      unsavedWarning:
+        'You have unsaved changes. Are you sure you want to leave?',
     },
     metadata: {
       category: 'Category',
@@ -82,7 +83,8 @@ const translations: Record<SupportedLocale, EditorI18nLabels> = {
       cancelLabel: 'Cancelar',
       metadataLabel: 'Metadatos',
       autoSavedMessage: 'Guardado automático',
-      unsavedWarning: 'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?',
+      unsavedWarning:
+        'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?',
     },
     metadata: {
       category: 'Categoría',
@@ -125,7 +127,8 @@ const translations: Record<SupportedLocale, EditorI18nLabels> = {
       cancelLabel: 'Abbrechen',
       metadataLabel: 'Metadaten',
       autoSavedMessage: 'Automatisch gespeichert',
-      unsavedWarning: 'Sie haben ungespeicherte Änderungen. Sind Sie sicher, dass Sie gehen möchten?',
+      unsavedWarning:
+        'Sie haben ungespeicherte Änderungen. Sind Sie sicher, dass Sie gehen möchten?',
     },
     metadata: {
       category: 'Kategorie',
@@ -168,7 +171,8 @@ const translations: Record<SupportedLocale, EditorI18nLabels> = {
       cancelLabel: 'Annuler',
       metadataLabel: 'Métadonnées',
       autoSavedMessage: 'Enregistré automatiquement',
-      unsavedWarning: 'Vous avez des modifications non enregistrées. Êtes-vous sûr de vouloir quitter?',
+      unsavedWarning:
+        'Vous avez des modifications non enregistrées. Êtes-vous sûr de vouloir quitter?',
     },
     metadata: {
       category: 'Catégorie',
@@ -187,7 +191,8 @@ const translations: Record<SupportedLocale, EditorI18nLabels> = {
       relatedPlaceholder: "Entrez les IDs d'articles séparés par des virgules",
     },
     assetUpload: {
-      dropzone: 'Glissez et déposez des fichiers ici, ou cliquez pour parcourir',
+      dropzone:
+        'Glissez et déposez des fichiers ici, ou cliquez pour parcourir',
       dropzoneActive: 'Déposez les fichiers ici',
       browse: 'Parcourir',
       uploading: 'Téléchargement...',
@@ -211,7 +216,8 @@ const translations: Record<SupportedLocale, EditorI18nLabels> = {
       cancelLabel: 'Cancelar',
       metadataLabel: 'Metadados',
       autoSavedMessage: 'Salvo automaticamente',
-      unsavedWarning: 'Você tem alterações não salvas. Tem certeza de que deseja sair?',
+      unsavedWarning:
+        'Você tem alterações não salvas. Tem certeza de que deseja sair?',
     },
     metadata: {
       category: 'Categoria',
@@ -367,7 +373,7 @@ export function getEditorLabels(locale: string): EditorI18nLabels {
  */
 export function addEditorTranslation(
   locale: string,
-  labels: Partial<EditorI18nLabels>
+  labels: Partial<EditorI18nLabels>,
 ): void {
   const existing = customTranslations.get(locale) ?? {};
   customTranslations.set(locale, {

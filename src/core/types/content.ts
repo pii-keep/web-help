@@ -1,6 +1,6 @@
 /**
  * Content Types for the Web Help Component Library
- * @module @privify-pw/web-help/types/content
+ * @module @piikeep-pw/web-help/types/content
  */
 
 /**

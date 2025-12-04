@@ -1,6 +1,6 @@
 /**
  * Static Content Loader for the Web Help Component Library
- * @module @privify-pw/web-help/loaders/staticLoader
+ * @module @piikeep-pw/web-help/loaders/staticLoader
  */
 
 import type { HelpArticle, HelpCategory, ContentIndex } from '../types/content';
@@ -91,7 +91,7 @@ export class StaticContentLoader {
   async parseContent(
     content: string,
     filename: string,
-    articleId: string
+    articleId: string,
   ): Promise<HelpArticle | null> {
     const extension = filename.split('.').pop() ?? '';
     const parser = this.getParser(extension);
@@ -103,12 +103,17 @@ export class StaticContentLoader {
 
     try {
       const result = await parser.parse(content, { filename });
-      const article = this.createArticleFromResult(articleId, filename, content, result);
-      
+      const article = this.createArticleFromResult(
+        articleId,
+        filename,
+        content,
+        result,
+      );
+
       // Cache the article
       this.registry.articles.set(articleId, article);
       this.updateIndex(article);
-      
+
       return article;
     } catch (error) {
       console.error(`Failed to parse content: ${filename}`, error);
@@ -123,7 +128,7 @@ export class StaticContentLoader {
     id: string,
     filename: string,
     rawContent: string,
-    result: ParseResult
+    result: ParseResult,
   ): HelpArticle {
     // Extract title from first heading or filename
     let title = id;
@@ -167,7 +172,9 @@ export class StaticContentLoader {
    * Update the search index with an article.
    */
   private updateIndex(article: HelpArticle): void {
-    const existingIndex = this.registry.index.findIndex((i) => i.id === article.id);
+    const existingIndex = this.registry.index.findIndex(
+      (i) => i.id === article.id,
+    );
     const indexEntry: ContentIndex = {
       id: article.id,
       title: article.title,
@@ -262,6 +269,8 @@ export class StaticContentLoader {
 /**
  * Create a static content loader with default configuration.
  */
-export function createStaticLoader(config?: ContentConfig): StaticContentLoader {
+export function createStaticLoader(
+  config?: ContentConfig,
+): StaticContentLoader {
   return new StaticContentLoader(config);
 }

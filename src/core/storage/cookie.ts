@@ -1,6 +1,6 @@
 /**
  * Cookie Storage Adapter for the Web Help Component Library
- * @module @privify-pw/web-help/storage/cookie
+ * @module @piikeep-pw/web-help/storage/cookie
  */
 
 import type { StorageAdapter, CookieOptions } from '../types/storage';
@@ -22,7 +22,7 @@ const defaultCookieOptions: CookieOptions = {
  */
 export function createCookieAdapter(
   prefix = 'help_',
-  options: CookieOptions = {}
+  options: CookieOptions = {},
 ): StorageAdapter {
   const mergedOptions = { ...defaultCookieOptions, ...options };
   const getKey = (key: string) => `${prefix}${key}`;
@@ -40,9 +40,15 @@ export function createCookieAdapter(
     }
   };
 
-  const setCookie = (name: string, value: string, opts: CookieOptions): void => {
+  const setCookie = (
+    name: string,
+    value: string,
+    opts: CookieOptions,
+  ): void => {
     try {
-      let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
+      let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(
+        value,
+      )}`;
 
       if (opts.expires) {
         const date = new Date();
@@ -74,7 +80,9 @@ export function createCookieAdapter(
 
   const deleteCookie = (name: string, opts: CookieOptions): void => {
     try {
-      let cookieString = `${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      let cookieString = `${encodeURIComponent(
+        name,
+      )}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 
       if (opts.path) {
         cookieString += `; path=${opts.path}`;

@@ -10,7 +10,7 @@ import {
   type ParseResult,
   type FormatDetectionResult,
   type CsvParserOptions,
-} from '@privify-pw/web-help';
+} from '@piikeep-pw/web-help';
 
 // Sample content in different formats
 const sampleContent = {
@@ -37,7 +37,7 @@ This is an example of **Markdown** content with frontmatter metadata.
 ### Code Example
 
 \`\`\`typescript
-import { HelpProvider } from '@privify-pw/web-help';
+import { HelpProvider } from '@piikeep-pw/web-help';
 
 function App() {
   return (
@@ -140,7 +140,7 @@ author: Advanced Team
 ---
 
 import { useState } from 'react';
-import { HelpCallout, HelpTabs } from '@privify-pw/web-help';
+import { HelpCallout, HelpTabs } from '@piikeep-pw/web-help';
 
 # MDX Content Example
 
@@ -157,9 +157,9 @@ MDX allows you to use React components directly in your markdown:
 ## Tabs Example
 
 <HelpTabs items={[
-  { id: 'npm', label: 'npm', content: 'npm install @privify-pw/web-help' },
-  { id: 'yarn', label: 'yarn', content: 'yarn add @privify-pw/web-help' },
-  { id: 'pnpm', label: 'pnpm', content: 'pnpm add @privify-pw/web-help' }
+  { id: 'npm', label: 'npm', content: 'npm install @piikeep-pw/web-help' },
+  { id: 'yarn', label: 'yarn', content: 'yarn add @piikeep-pw/web-help' },
+  { id: 'pnpm', label: 'pnpm', content: 'pnpm add @piikeep-pw/web-help' }
 ]} />
 
 ## Benefits of MDX
@@ -188,9 +188,12 @@ The parser extracts components and can render them as placeholders or with custo
 type ContentFormat = 'markdown' | 'json' | 'csv' | 'mdx';
 
 function App() {
-  const [selectedFormat, setSelectedFormat] = useState<ContentFormat>('markdown');
+  const [selectedFormat, setSelectedFormat] =
+    useState<ContentFormat>('markdown');
   const [parseResult, setParseResult] = useState<ParseResult | null>(null);
-  const [detectionResults, setDetectionResults] = useState<FormatDetectionResult[]>([]);
+  const [detectionResults, setDetectionResults] = useState<
+    FormatDetectionResult[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [csvRenderAsTable, setCsvRenderAsTable] = useState(true);
@@ -255,20 +258,23 @@ function App() {
 
   return (
     <HelpProvider>
-      <div className="app">
-        <header className="app-header">
+      <div className='app'>
+        <header className='app-header'>
           <h1>📄 Multi-Format Content Example</h1>
           <p>
-            Demonstrating MDX, JSON, CSV parsers, ContentFormatDetector, and pluggable parser architecture
+            Demonstrating MDX, JSON, CSV parsers, ContentFormatDetector, and
+            pluggable parser architecture
           </p>
         </header>
 
         {/* Format Selector */}
-        <div className="format-selector">
+        <div className='format-selector'>
           {(Object.keys(sampleContent) as ContentFormat[]).map((format) => (
             <button
               key={format}
-              className={`format-button ${selectedFormat === format ? 'active' : ''}`}
+              className={`format-button ${
+                selectedFormat === format ? 'active' : ''
+              }`}
               onClick={() => setSelectedFormat(format)}
             >
               {format.toUpperCase()}
@@ -278,20 +284,20 @@ function App() {
 
         {/* CSV Rendering Options */}
         {selectedFormat === 'csv' && (
-          <div className="rendering-options">
-            <label className="rendering-option">
+          <div className='rendering-options'>
+            <label className='rendering-option'>
               <input
-                type="radio"
-                name="csvRender"
+                type='radio'
+                name='csvRender'
                 checked={csvRenderAsTable}
                 onChange={() => setCsvRenderAsTable(true)}
               />
               Render as Table
             </label>
-            <label className="rendering-option">
+            <label className='rendering-option'>
               <input
-                type="radio"
-                name="csvRender"
+                type='radio'
+                name='csvRender'
                 checked={!csvRenderAsTable}
                 onChange={() => setCsvRenderAsTable(false)}
               />
@@ -301,53 +307,57 @@ function App() {
         )}
 
         {/* Format Detection Results */}
-        <div className="detection-panel">
+        <div className='detection-panel'>
           <h2>🔍 Auto-detected Formats (ContentFormatDetector)</h2>
-          <div className="detection-results">
+          <div className='detection-results'>
             {detectionResults.map((result, index) => (
-              <div key={index} className="detection-result">
-                <span className="detection-format">{result.format.toUpperCase()}</span>
+              <div key={index} className='detection-result'>
+                <span className='detection-format'>
+                  {result.format.toUpperCase()}
+                </span>
                 <span
                   className={`detection-confidence ${
-                    result.confidence >= 0.8 ? 'high' : result.confidence >= 0.5 ? 'medium' : 'low'
+                    result.confidence >= 0.8
+                      ? 'high'
+                      : result.confidence >= 0.5
+                      ? 'medium'
+                      : 'low'
                   }`}
                 >
                   {(result.confidence * 100).toFixed(0)}% confidence
                 </span>
                 {result.parserName && (
-                  <span className="detection-parser">({result.parserName} parser)</span>
+                  <span className='detection-parser'>
+                    ({result.parserName} parser)
+                  </span>
                 )}
               </div>
             ))}
-            {detectionResults.length === 0 && (
-              <span>No formats detected</span>
-            )}
+            {detectionResults.length === 0 && <span>No formats detected</span>}
           </div>
         </div>
 
         {/* Content Display */}
-        <div className="content-panel">
+        <div className='content-panel'>
           {/* Source Panel */}
-          <div className="panel">
-            <div className="panel-header">
+          <div className='panel'>
+            <div className='panel-header'>
               📝 Source ({selectedFormat.toUpperCase()})
             </div>
-            <div className="panel-content">
-              <pre className="source-code">{currentContent}</pre>
+            <div className='panel-content'>
+              <pre className='source-code'>{currentContent}</pre>
             </div>
           </div>
 
           {/* Rendered Panel */}
-          <div className="panel">
-            <div className="panel-header">
-              👁️ Rendered Output
-            </div>
-            <div className="panel-content">
-              {isLoading && <div className="loading">Parsing content...</div>}
-              {error && <div className="error">Error: {error}</div>}
+          <div className='panel'>
+            <div className='panel-header'>👁️ Rendered Output</div>
+            <div className='panel-content'>
+              {isLoading && <div className='loading'>Parsing content...</div>}
+              {error && <div className='error'>Error: {error}</div>}
               {!isLoading && !error && parseResult && (
                 <div
-                  className="rendered-content"
+                  className='rendered-content'
                   dangerouslySetInnerHTML={{ __html: parseResult.html }}
                 />
               )}
@@ -356,52 +366,57 @@ function App() {
         </div>
 
         {/* Metadata Section */}
-        {parseResult?.metadata && Object.keys(parseResult.metadata).length > 0 && (
-          <div className="metadata-section">
-            <h2>📋 Parsed Metadata</h2>
-            <div className="metadata-grid">
-              {Object.entries(parseResult.metadata).map(([key, value]) => {
-                if (value === undefined || value === null) return null;
-                return (
-                  <div key={key} className="metadata-item">
-                    <div className="metadata-label">{key}</div>
-                    <div className="metadata-value">
-                      {typeof value === 'object' ? JSON.stringify(value) : String(value)}
+        {parseResult?.metadata &&
+          Object.keys(parseResult.metadata).length > 0 && (
+            <div className='metadata-section'>
+              <h2>📋 Parsed Metadata</h2>
+              <div className='metadata-grid'>
+                {Object.entries(parseResult.metadata).map(([key, value]) => {
+                  if (value === undefined || value === null) return null;
+                  return (
+                    <div key={key} className='metadata-item'>
+                      <div className='metadata-label'>{key}</div>
+                      <div className='metadata-value'>
+                        {typeof value === 'object'
+                          ? JSON.stringify(value)
+                          : String(value)}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* TOC Section */}
         {parseResult?.toc && parseResult.toc.length > 0 && (
-          <div className="metadata-section">
+          <div className='metadata-section'>
             <h2>📑 Table of Contents</h2>
             <TocTree entries={parseResult.toc} />
           </div>
         )}
 
         {/* Parser Info */}
-        <div className="metadata-section">
+        <div className='metadata-section'>
           <h2>⚙️ Pluggable Parser Architecture</h2>
           <p>
-            This example demonstrates the pluggable parser architecture. Each parser implements
-            the <code>ContentParser</code> interface:
+            This example demonstrates the pluggable parser architecture. Each
+            parser implements the <code>ContentParser</code> interface:
           </p>
-          <pre className="source-code">{`interface ContentParser {
+          <pre className='source-code'>{`interface ContentParser {
   name: string;
   extensions: string[];
   canParse(content: string, filename?: string): boolean;
   parse(content: string, options?: ParserOptions): Promise<ParseResult>;
 }`}</pre>
           <p>
-            Available parsers: <strong>Markdown</strong>, <strong>JSON</strong>, <strong>CSV</strong>, <strong>MDX</strong>
+            Available parsers: <strong>Markdown</strong>, <strong>JSON</strong>,{' '}
+            <strong>CSV</strong>, <strong>MDX</strong>
           </p>
           <p>
-            The <code>ContentFormatDetector</code> can automatically detect content format
-            based on file extension or content analysis, and return the appropriate parser.
+            The <code>ContentFormatDetector</code> can automatically detect
+            content format based on file extension or content analysis, and
+            return the appropriate parser.
           </p>
         </div>
       </div>
@@ -410,9 +425,25 @@ function App() {
 }
 
 // TOC Tree Component
-function TocTree({ entries, level = 0 }: { entries: { id: string; text: string; level: number; children?: typeof entries }[]; level?: number }) {
+function TocTree({
+  entries,
+  level = 0,
+}: {
+  entries: {
+    id: string;
+    text: string;
+    level: number;
+    children?: typeof entries;
+  }[];
+  level?: number;
+}) {
   return (
-    <ul style={{ paddingLeft: level > 0 ? '1.5rem' : '0', listStyle: level > 0 ? 'circle' : 'disc' }}>
+    <ul
+      style={{
+        paddingLeft: level > 0 ? '1.5rem' : '0',
+        listStyle: level > 0 ? 'circle' : 'disc',
+      }}
+    >
       {entries.map((entry) => (
         <li key={entry.id}>
           <a href={`#${entry.id}`}>{entry.text}</a>

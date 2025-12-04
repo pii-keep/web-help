@@ -4,7 +4,7 @@ import {
   HelpEditor,
   createMarkdownParser,
   type HelpArticle,
-} from '@privify-pw/web-help';
+} from '@piikeep-pw/web-help';
 
 // Sample article content
 const sampleArticle: HelpArticle = {
@@ -32,7 +32,7 @@ Welcome to the help editor! This example demonstrates how to use the **HelpEdito
 ## Usage
 
 \`\`\`tsx
-import { HelpEditor } from '@privify-pw/web-help';
+import { HelpEditor } from '@piikeep-pw/web-help';
 
 <HelpEditor
   article={article}
@@ -63,36 +63,57 @@ const markdownParser = createMarkdownParser();
 
 function App() {
   const [savedArticles, setSavedArticles] = useState<HelpArticle[]>([]);
-  const [currentArticle, setCurrentArticle] = useState<HelpArticle | undefined>(sampleArticle);
+  const [currentArticle, setCurrentArticle] = useState<HelpArticle | undefined>(
+    sampleArticle,
+  );
   const [editorKey, setEditorKey] = useState(0);
 
   // Handle save
   const handleSave = useCallback(async (article: HelpArticle) => {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 500));
-    
+
     setSavedArticles((prev) => {
       const existing = prev.findIndex((a) => a.id === article.id);
       if (existing >= 0) {
         const updated = [...prev];
-        updated[existing] = { ...article, metadata: { ...article.metadata, updatedAt: new Date().toISOString() } };
+        updated[existing] = {
+          ...article,
+          metadata: {
+            ...article.metadata,
+            updatedAt: new Date().toISOString(),
+          },
+        };
         return updated;
       }
-      return [...prev, { ...article, metadata: { ...article.metadata, createdAt: new Date().toISOString() } }];
+      return [
+        ...prev,
+        {
+          ...article,
+          metadata: {
+            ...article.metadata,
+            createdAt: new Date().toISOString(),
+          },
+        },
+      ];
     });
-    
+
     console.log('Saved article:', article);
   }, []);
 
   // Handle publish
   const handlePublish = useCallback(async (article: HelpArticle) => {
     await new Promise((resolve) => setTimeout(resolve, 500));
-    
+
     const publishedArticle = {
       ...article,
-      metadata: { ...article.metadata, published: true, updatedAt: new Date().toISOString() },
+      metadata: {
+        ...article.metadata,
+        published: true,
+        updatedAt: new Date().toISOString(),
+      },
     };
-    
+
     setSavedArticles((prev) => {
       const existing = prev.findIndex((a) => a.id === article.id);
       if (existing >= 0) {
@@ -102,7 +123,7 @@ function App() {
       }
       return [...prev, publishedArticle];
     });
-    
+
     console.log('Published article:', publishedArticle);
   }, []);
 
@@ -133,12 +154,15 @@ function App() {
   }, []);
 
   // Delete saved article
-  const handleDelete = useCallback((id: string) => {
-    setSavedArticles((prev) => prev.filter((a) => a.id !== id));
-    if (currentArticle?.id === id) {
-      setCurrentArticle(undefined);
-    }
-  }, [currentArticle]);
+  const handleDelete = useCallback(
+    (id: string) => {
+      setSavedArticles((prev) => prev.filter((a) => a.id !== id));
+      if (currentArticle?.id === id) {
+        setCurrentArticle(undefined);
+      }
+    },
+    [currentArticle],
+  );
 
   // Create new article
   const handleNew = useCallback(() => {
@@ -164,8 +188,8 @@ Start writing your content here...
 
   return (
     <HelpProvider>
-      <div className="app">
-        <header className="app-header">
+      <div className='app'>
+        <header className='app-header'>
           <h1>📝 Help Editor Example</h1>
           <button
             onClick={handleNew}
@@ -198,29 +222,38 @@ Start writing your content here...
         )}
 
         {!currentArticle && (
-          <div className="empty-state">
-            <p>No article selected. Click "New Article" or edit a saved article below.</p>
+          <div className='empty-state'>
+            <p>
+              No article selected. Click "New Article" or edit a saved article
+              below.
+            </p>
           </div>
         )}
 
-        <div className="saved-articles">
+        <div className='saved-articles'>
           <h2>📚 Saved Articles</h2>
           {savedArticles.length === 0 ? (
-            <p className="empty-state">No saved articles yet. Create and save an article to see it here.</p>
+            <p className='empty-state'>
+              No saved articles yet. Create and save an article to see it here.
+            </p>
           ) : (
-            <ul className="saved-articles-list">
+            <ul className='saved-articles-list'>
               {savedArticles.map((article) => (
-                <li key={article.id} className="saved-article-item">
+                <li key={article.id} className='saved-article-item'>
                   <div>
-                    <span className="saved-article-title">{article.title}</span>
-                    <div className="saved-article-meta">
-                      {article.metadata.category && <span>{article.metadata.category}</span>}
+                    <span className='saved-article-title'>{article.title}</span>
+                    <div className='saved-article-meta'>
+                      {article.metadata.category && (
+                        <span>{article.metadata.category}</span>
+                      )}
                       {article.metadata.published ? ' • Published' : ' • Draft'}
                     </div>
                   </div>
-                  <div className="saved-article-actions">
+                  <div className='saved-article-actions'>
                     <button onClick={() => handleEdit(article)}>Edit</button>
-                    <button onClick={() => handleDelete(article.id)}>Delete</button>
+                    <button onClick={() => handleDelete(article.id)}>
+                      Delete
+                    </button>
                   </div>
                 </li>
               ))}
@@ -245,12 +278,12 @@ function PreviewContent({ content }: { content: string }) {
   });
 
   if (error) {
-    return <div className="help-editor-preview-error">{error}</div>;
+    return <div className='help-editor-preview-error'>{error}</div>;
   }
 
   return (
     <div
-      className="help-editor-preview-content"
+      className='help-editor-preview-content'
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

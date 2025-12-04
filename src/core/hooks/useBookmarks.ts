@@ -1,6 +1,6 @@
 /**
  * useBookmarks Hook for the Web Help Component Library
- * @module @privify-pw/web-help/hooks/useBookmarks
+ * @module @piikeep-pw/web-help/hooks/useBookmarks
  */
 
 import { useCallback, useMemo } from 'react';
@@ -42,28 +42,28 @@ export function useBookmarks(): UseBookmarksReturn {
     (articleId: string) => {
       addBookmark(articleId);
     },
-    [addBookmark]
+    [addBookmark],
   );
 
   const remove = useCallback(
     (articleId: string) => {
       removeBookmark(articleId);
     },
-    [removeBookmark]
+    [removeBookmark],
   );
 
   const toggle = useCallback(
     (articleId: string): boolean => {
       return toggleBookmark(articleId);
     },
-    [toggleBookmark]
+    [toggleBookmark],
   );
 
   const checkIsBookmarked = useCallback(
     (articleId: string): boolean => {
       return isBookmarked(articleId);
     },
-    [isBookmarked]
+    [isBookmarked],
   );
 
   return {

@@ -18,7 +18,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": false,
     "paths": {
-      "@privify-pw/web-help": ["../../src/index.ts"]
+      "@piikeep-pw/web-help": ["../../src/index.ts"]
     },
     "baseUrl": "."
   },

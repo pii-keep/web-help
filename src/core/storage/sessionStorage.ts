@@ -1,6 +1,6 @@
 /**
  * SessionStorage Adapter for the Web Help Component Library
- * @module @privify-pw/web-help/storage/sessionStorage
+ * @module @piikeep-pw/web-help/storage/sessionStorage
  */
 
 import type { StorageAdapter } from '../types/storage';

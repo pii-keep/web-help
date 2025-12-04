@@ -1,6 +1,6 @@
 /**
  * Search Types for the Web Help Component Library
- * @module @privify-pw/web-help/types/search
+ * @module @piikeep-pw/web-help/types/search
  */
 
 import type { HelpSearchResult, ContentIndex } from './content';
@@ -11,13 +11,13 @@ import type { HelpSearchResult, ContentIndex } from './content';
 export interface SearchAdapter {
   /** Adapter name */
   name: string;
-  
+
   /**
    * Initialize the search index with content.
    * @param content - Array of content to index
    */
   initialize(content: ContentIndex[]): Promise<void>;
-  
+
   /**
    * Search for content.
    * @param query - Search query
@@ -25,25 +25,25 @@ export interface SearchAdapter {
    * @returns Array of search results
    */
   search(query: string, options?: SearchOptions): Promise<HelpSearchResult[]>;
-  
+
   /**
    * Add content to the index.
    * @param content - Content to add
    */
   add?(content: ContentIndex): Promise<void>;
-  
+
   /**
    * Update content in the index.
    * @param content - Content to update
    */
   update?(content: ContentIndex): Promise<void>;
-  
+
   /**
    * Remove content from the index.
    * @param id - Content ID to remove
    */
   remove?(id: string): Promise<void>;
-  
+
   /**
    * Clear the entire index.
    */

@@ -1,9 +1,9 @@
 /**
- * @privify-pw/web-help - React Web Help Component Library
- * 
+ * @piikeep/web-help - React Web Help Component Library
+ *
  * A comprehensive, headless help system for React applications.
  * Built with TypeScript and designed for maximum flexibility.
- * 
+ *
  * @packageDocumentation
  */
 
@@ -139,11 +139,7 @@ export {
 // Feature Components
 // ============================================================================
 // Media
-export {
-  HelpImage,
-  HelpVideo,
-  HelpDownload,
-} from './components/media';
+export { HelpImage, HelpVideo, HelpDownload } from './components/media';
 
 export type {
   HelpImageProps,
@@ -154,10 +150,7 @@ export type {
 } from './components/media';
 
 // Code
-export {
-  HelpCodeBlock,
-  HelpInlineCode,
-} from './components/code';
+export { HelpCodeBlock, HelpInlineCode } from './components/code';
 
 export type {
   HelpCodeBlockProps,

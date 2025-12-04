@@ -1,7 +1,7 @@
 /**
  * PWA/Offline Support for the Web Help Component Library
- * @module @privify-pw/web-help/components/advanced/pwa
- * 
+ * @module @piikeep-pw/web-help/components/advanced/pwa
+ *
  * Provides utilities and hooks for Progressive Web App features
  * including offline support, content caching, and update notifications.
  */
@@ -98,7 +98,8 @@ export function usePWA(config?: PWAConfig): {
 } {
   const [status, setStatus] = useState<PWAStatus>({
     isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
-    isSupported: typeof navigator !== 'undefined' && 'serviceWorker' in navigator,
+    isSupported:
+      typeof navigator !== 'undefined' && 'serviceWorker' in navigator,
     isRegistered: false,
     isCached: false,
     updateAvailable: false,
@@ -150,7 +151,10 @@ export function usePWA(config?: PWAConfig): {
             const newWorker = registration.installing;
             if (newWorker) {
               newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                if (
+                  newWorker.state === 'installed' &&
+                  navigator.serviceWorker.controller
+                ) {
                   setStatus((prev) => ({ ...prev, updateAvailable: true }));
                   config?.onUpdateAvailable?.();
                 }
@@ -212,7 +216,7 @@ export function usePWA(config?: PWAConfig): {
       setStatus((prev) => ({ ...prev, isCached: true }));
       config?.onCached?.();
     },
-    [cacheName, config]
+    [cacheName, config],
   );
 
   // Clear cache
@@ -241,9 +245,11 @@ export function usePWA(config?: PWAConfig): {
           url: request.url,
           timestamp: Date.now(), // Note: actual timestamp would need to be stored
           contentType: response?.headers.get('content-type') ?? undefined,
-          size: response ? parseInt(response.headers.get('content-length') ?? '0', 10) : undefined,
+          size: response
+            ? parseInt(response.headers.get('content-length') ?? '0', 10)
+            : undefined,
         };
-      })
+      }),
     );
 
     return items;
@@ -294,7 +300,7 @@ export function useOfflineContent(urls: string[]): {
           urls.map(async (url) => {
             const response = await cache.match(url);
             return !!response;
-          })
+          }),
         );
         setIsAvailable(available.every(Boolean));
       } catch {
@@ -342,7 +348,7 @@ export async function registerHelpServiceWorker(
     onSuccess?: (registration: ServiceWorkerRegistration) => void;
     onUpdate?: (registration: ServiceWorkerRegistration) => void;
     onError?: (error: Error) => void;
-  }
+  },
 ): Promise<ServiceWorkerRegistration | null> {
   if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) {
     return null;
@@ -371,7 +377,9 @@ export async function registerHelpServiceWorker(
 
     return registration;
   } catch (error) {
-    options?.onError?.(error instanceof Error ? error : new Error('SW registration failed'));
+    options?.onError?.(
+      error instanceof Error ? error : new Error('SW registration failed'),
+    );
     return null;
   }
 }

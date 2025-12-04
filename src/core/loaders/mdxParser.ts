@@ -1,13 +1,18 @@
 /**
  * MDX Content Parser for the Web Help Component Library
- * @module @privify-pw/web-help/loaders/mdxParser
- * 
+ * @module @piikeep-pw/web-help/loaders/mdxParser
+ *
  * This parser handles MDX content by extracting frontmatter, processing
  * markdown content, and identifying JSX component usage. Full MDX runtime
  * evaluation requires the developer to provide component mappings.
  */
 
-import type { ContentParser, ParseResult, ParserOptions, AssetReference } from '../types/parser';
+import type {
+  ContentParser,
+  ParseResult,
+  ParserOptions,
+  AssetReference,
+} from '../types/parser';
 import type { HelpArticleMetadata, TOCEntry } from '../types/content';
 import matter from 'gray-matter';
 import { Marked, type Tokens } from 'marked';
@@ -21,7 +26,10 @@ export interface MdxParserOptions extends ParserOptions {
   /** Whether to render components as placeholders (default: true) */
   renderPlaceholders?: boolean;
   /** Custom component placeholder renderer */
-  placeholderRenderer?: (componentName: string, props: Record<string, unknown>) => string;
+  placeholderRenderer?: (
+    componentName: string,
+    props: Record<string, unknown>,
+  ) => string;
 }
 
 /**
@@ -64,7 +72,10 @@ export function createMdxParser(): ContentParser {
       return hasJsxComponent || hasImport || hasExport;
     },
 
-    async parse(content: string, options?: ParserOptions): Promise<ParseResult> {
+    async parse(
+      content: string,
+      options?: ParserOptions,
+    ): Promise<ParseResult> {
       const mdxOptions = options as MdxParserOptions | undefined;
       const renderPlaceholders = mdxOptions?.renderPlaceholders ?? true;
 
@@ -72,13 +83,17 @@ export function createMdxParser(): ContentParser {
       const { data: frontmatter, content: mdxContent } = matter(content);
 
       // Extract imports and exports
-      const { cleanContent, imports, exports: mdxExports } = extractImportsExports(mdxContent);
+      const {
+        cleanContent,
+        imports,
+        exports: mdxExports,
+      } = extractImportsExports(mdxContent);
 
       // Extract JSX components
       const { processedContent, components } = extractJsxComponents(
         cleanContent,
         renderPlaceholders,
-        mdxOptions?.placeholderRenderer
+        mdxOptions?.placeholderRenderer,
       );
 
       // Parse remaining markdown content
@@ -116,21 +131,32 @@ export function createMdxParser(): ContentParser {
             });
 
             const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
-            return `<img src="${escapeHtml(href)}" alt="${escapeHtml(text)}"${titleAttr} class="help-image" loading="lazy" />`;
+            return `<img src="${escapeHtml(href)}" alt="${escapeHtml(
+              text,
+            )}"${titleAttr} class="help-image" loading="lazy" />`;
           },
 
           link({ href, title, tokens }: Tokens.Link): string {
             const text = this.parser.parseInline(tokens);
             const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
-            const isExternal = href.startsWith('http://') || href.startsWith('https://');
-            const externalAttrs = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
+            const isExternal =
+              href.startsWith('http://') || href.startsWith('https://');
+            const externalAttrs = isExternal
+              ? ' target="_blank" rel="noopener noreferrer"'
+              : '';
 
-            return `<a href="${escapeHtml(href)}"${titleAttr}${externalAttrs} class="help-link${isExternal ? ' help-link-external' : ''}">${text}</a>`;
+            return `<a href="${escapeHtml(
+              href,
+            )}"${titleAttr}${externalAttrs} class="help-link${
+              isExternal ? ' help-link-external' : ''
+            }">${text}</a>`;
           },
 
           code({ text, lang }: Tokens.Code): string {
             const languageClass = lang ? ` language-${escapeHtml(lang)}` : '';
-            return `<pre class="help-code-block${languageClass}"><code class="help-code${languageClass}">${escapeHtml(text)}</code></pre>`;
+            return `<pre class="help-code-block${languageClass}"><code class="help-code${languageClass}">${escapeHtml(
+              text,
+            )}</code></pre>`;
           },
 
           codespan({ text }: Tokens.Codespan): string {
@@ -144,13 +170,23 @@ export function createMdxParser(): ContentParser {
 
           table({ header, rows }: Tokens.Table): string {
             const headerHtml = header
-              .map((cell) => `<th class="help-table-header">${this.parser.parseInline(cell.tokens)}</th>`)
+              .map(
+                (cell) =>
+                  `<th class="help-table-header">${this.parser.parseInline(
+                    cell.tokens,
+                  )}</th>`,
+              )
               .join('');
 
             const bodyHtml = rows
               .map((row) => {
                 const cells = row
-                  .map((cell) => `<td class="help-table-cell">${this.parser.parseInline(cell.tokens)}</td>`)
+                  .map(
+                    (cell) =>
+                      `<td class="help-table-cell">${this.parser.parseInline(
+                        cell.tokens,
+                      )}</td>`,
+                  )
                   .join('');
                 return `<tr class="help-table-row">${cells}</tr>`;
               })
@@ -160,7 +196,9 @@ export function createMdxParser(): ContentParser {
           },
 
           paragraph({ tokens }: Tokens.Paragraph): string {
-            return `<p class="help-paragraph">${this.parser.parseInline(tokens)}</p>`;
+            return `<p class="help-paragraph">${this.parser.parseInline(
+              tokens,
+            )}</p>`;
           },
         },
       });
@@ -172,13 +210,20 @@ export function createMdxParser(): ContentParser {
       const metadata = extractMetadata(frontmatter, options);
 
       // Add MDX-specific metadata
-      if (imports.length > 0 || mdxExports.length > 0 || components.length > 0) {
+      if (
+        imports.length > 0 ||
+        mdxExports.length > 0 ||
+        components.length > 0
+      ) {
         metadata.custom = {
           ...metadata.custom,
           mdx: {
             imports,
             exports: mdxExports,
-            components: components.map((c) => ({ name: c.name, props: c.props })),
+            components: components.map((c) => ({
+              name: c.name,
+              props: c.props,
+            })),
           },
         };
       }
@@ -219,7 +264,10 @@ function extractImportsExports(content: string): {
     // Handle multi-line imports
     if (inMultilineImport) {
       currentImport += '\n' + line;
-      if (trimmed.includes(';') || (trimmed.includes('from') && trimmed.endsWith("'"))) {
+      if (
+        trimmed.includes(';') ||
+        (trimmed.includes('from') && trimmed.endsWith("'"))
+      ) {
         imports.push(currentImport.trim());
         inMultilineImport = false;
         currentImport = '';
@@ -229,7 +277,12 @@ function extractImportsExports(content: string): {
 
     // Single-line import
     if (trimmed.startsWith('import ')) {
-      if (trimmed.includes('from') && (trimmed.endsWith("'") || trimmed.endsWith('"') || trimmed.endsWith(';'))) {
+      if (
+        trimmed.includes('from') &&
+        (trimmed.endsWith("'") ||
+          trimmed.endsWith('"') ||
+          trimmed.endsWith(';'))
+      ) {
         imports.push(trimmed);
       } else {
         inMultilineImport = true;
@@ -239,7 +292,10 @@ function extractImportsExports(content: string): {
     }
 
     // Export statements (except export default for components)
-    if (trimmed.startsWith('export ') && !trimmed.includes('export default function')) {
+    if (
+      trimmed.startsWith('export ') &&
+      !trimmed.includes('export default function')
+    ) {
       exports.push(trimmed);
       continue;
     }
@@ -260,7 +316,10 @@ function extractImportsExports(content: string): {
 function extractJsxComponents(
   content: string,
   renderPlaceholders: boolean,
-  placeholderRenderer?: (componentName: string, props: Record<string, unknown>) => string
+  placeholderRenderer?: (
+    componentName: string,
+    props: Record<string, unknown>,
+  ) => string,
 ): {
   processedContent: string;
   components: ExtractedComponent[];
@@ -269,7 +328,8 @@ function extractJsxComponents(
 
   // Match JSX components (starting with uppercase letter)
   // This is a simplified regex - doesn't handle all edge cases
-  const jsxRegex = /<([A-Z][a-zA-Z0-9]*)\s*([^>]*?)\s*(\/?>)(?:([\s\S]*?)<\/\1>)?/g;
+  const jsxRegex =
+    /<([A-Z][a-zA-Z0-9]*)\s*([^>]*?)\s*(\/?>)(?:([\s\S]*?)<\/\1>)?/g;
 
   let processedContent = content;
   let match;
@@ -365,7 +425,10 @@ function parseJsxProps(propsString: string): Record<string, unknown> {
 /**
  * Create a default placeholder for a component.
  */
-function createDefaultPlaceholder(componentName: string, props: Record<string, unknown>): string {
+function createDefaultPlaceholder(
+  componentName: string,
+  props: Record<string, unknown>,
+): string {
   const propsDisplay = Object.entries(props)
     .filter(([key]) => key !== 'children')
     .map(([key, value]) => `${key}=${JSON.stringify(value)}`)
@@ -374,8 +437,12 @@ function createDefaultPlaceholder(componentName: string, props: Record<string, u
   const hasChildren = 'children' in props;
   const childrenNote = hasChildren ? ' (with children)' : '';
 
-  return `<div class="help-mdx-placeholder" data-component="${escapeHtml(componentName)}" data-props='${escapeHtml(JSON.stringify(props))}'>
-  <span class="help-mdx-placeholder-label">&lt;${escapeHtml(componentName)}${propsDisplay ? ' ' + escapeHtml(propsDisplay) : ''}${childrenNote} /&gt;</span>
+  return `<div class="help-mdx-placeholder" data-component="${escapeHtml(
+    componentName,
+  )}" data-props='${escapeHtml(JSON.stringify(props))}'>
+  <span class="help-mdx-placeholder-label">&lt;${escapeHtml(componentName)}${
+    propsDisplay ? ' ' + escapeHtml(propsDisplay) : ''
+  }${childrenNote} /&gt;</span>
 </div>`;
 }
 
@@ -384,20 +451,29 @@ function createDefaultPlaceholder(componentName: string, props: Record<string, u
  */
 function extractMetadata(
   frontmatter: Record<string, unknown>,
-  options?: ParserOptions
+  options?: ParserOptions,
 ): HelpArticleMetadata {
   return {
     version: asString(frontmatter.version),
     order: asNumber(frontmatter.order),
-    prevArticle: asString(frontmatter.prevArticle) || asString(frontmatter.prev),
-    nextArticle: asString(frontmatter.nextArticle) || asString(frontmatter.next),
-    createdAt: asString(frontmatter.createdAt) || asString(frontmatter.created) || asString(frontmatter.date),
+    prevArticle:
+      asString(frontmatter.prevArticle) || asString(frontmatter.prev),
+    nextArticle:
+      asString(frontmatter.nextArticle) || asString(frontmatter.next),
+    createdAt:
+      asString(frontmatter.createdAt) ||
+      asString(frontmatter.created) ||
+      asString(frontmatter.date),
     updatedAt: asString(frontmatter.updatedAt) || asString(frontmatter.updated),
     category: asString(frontmatter.category),
     tags: asStringArray(frontmatter.tags),
     author: asString(frontmatter.author),
-    relatedArticles: asStringArray(frontmatter.relatedArticles) || asStringArray(frontmatter.related),
-    slug: asString(frontmatter.slug) || (options?.filename ? generateSlug(options.filename) : undefined),
+    relatedArticles:
+      asStringArray(frontmatter.relatedArticles) ||
+      asStringArray(frontmatter.related),
+    slug:
+      asString(frontmatter.slug) ||
+      (options?.filename ? generateSlug(options.filename) : undefined),
     published: asBoolean(frontmatter.published) ?? true,
     custom: extractCustomMetadata(frontmatter),
   };
@@ -406,12 +482,30 @@ function extractMetadata(
 /**
  * Extract custom metadata fields.
  */
-function extractCustomMetadata(frontmatter: Record<string, unknown>): Record<string, unknown> | undefined {
+function extractCustomMetadata(
+  frontmatter: Record<string, unknown>,
+): Record<string, unknown> | undefined {
   const standardKeys = new Set([
-    'version', 'order', 'prevArticle', 'prev', 'nextArticle', 'next',
-    'createdAt', 'created', 'date', 'updatedAt', 'updated',
-    'category', 'tags', 'author', 'relatedArticles', 'related',
-    'slug', 'published', 'title', 'description',
+    'version',
+    'order',
+    'prevArticle',
+    'prev',
+    'nextArticle',
+    'next',
+    'createdAt',
+    'created',
+    'date',
+    'updatedAt',
+    'updated',
+    'category',
+    'tags',
+    'author',
+    'relatedArticles',
+    'related',
+    'slug',
+    'published',
+    'title',
+    'description',
   ]);
 
   const custom: Record<string, unknown> = {};
@@ -455,7 +549,10 @@ function buildTOCTree(entries: TOCEntry[]): TOCEntry[] {
   const cleanChildren = (tocEntries: TOCEntry[]): TOCEntry[] => {
     return tocEntries.map((e) => ({
       ...e,
-      children: e.children && e.children.length > 0 ? cleanChildren(e.children) : undefined,
+      children:
+        e.children && e.children.length > 0
+          ? cleanChildren(e.children)
+          : undefined,
     }));
   };
 

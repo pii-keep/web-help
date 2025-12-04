@@ -1,11 +1,16 @@
 /**
  * Markdown Parser for the Web Help Component Library
- * @module @privify-pw/web-help/loaders/markdownParser
+ * @module @piikeep-pw/web-help/loaders/markdownParser
  */
 
 import { Marked, type Tokens } from 'marked';
 import matter from 'gray-matter';
-import type { ContentParser, ParseResult, ParserOptions, AssetReference } from '../types/parser';
+import type {
+  ContentParser,
+  ParseResult,
+  ParserOptions,
+  AssetReference,
+} from '../types/parser';
 import type { HelpArticleMetadata, TOCEntry } from '../types/content';
 
 /**
@@ -34,7 +39,10 @@ export function createMarkdownParser(): ContentParser {
       return content.trim().startsWith('---') || /^#\s/.test(content.trim());
     },
 
-    async parse(content: string, options?: ParserOptions): Promise<ParseResult> {
+    async parse(
+      content: string,
+      options?: ParserOptions,
+    ): Promise<ParseResult> {
       // Parse frontmatter
       const { data: frontmatter, content: markdownContent } = matter(content);
 
@@ -61,7 +69,7 @@ export function createMarkdownParser(): ContentParser {
           heading({ tokens, depth }: Tokens.Heading): string {
             const text = this.parser.parseInline(tokens);
             const id = generateHeadingId(text);
-            
+
             tocEntries.push({
               id,
               text,
@@ -80,21 +88,32 @@ export function createMarkdownParser(): ContentParser {
             });
 
             const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
-            return `<img src="${escapeHtml(href)}" alt="${escapeHtml(text)}"${titleAttr} class="help-image" loading="lazy" />`;
+            return `<img src="${escapeHtml(href)}" alt="${escapeHtml(
+              text,
+            )}"${titleAttr} class="help-image" loading="lazy" />`;
           },
 
           link({ href, title, tokens }: Tokens.Link): string {
             const text = this.parser.parseInline(tokens);
             const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
-            const isExternal = href.startsWith('http://') || href.startsWith('https://');
-            const externalAttrs = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
-            
-            return `<a href="${escapeHtml(href)}"${titleAttr}${externalAttrs} class="help-link${isExternal ? ' help-link-external' : ''}">${text}</a>`;
+            const isExternal =
+              href.startsWith('http://') || href.startsWith('https://');
+            const externalAttrs = isExternal
+              ? ' target="_blank" rel="noopener noreferrer"'
+              : '';
+
+            return `<a href="${escapeHtml(
+              href,
+            )}"${titleAttr}${externalAttrs} class="help-link${
+              isExternal ? ' help-link-external' : ''
+            }">${text}</a>`;
           },
 
           code({ text, lang }: Tokens.Code): string {
             const languageClass = lang ? ` language-${escapeHtml(lang)}` : '';
-            return `<pre class="help-code-block${languageClass}"><code class="help-code${languageClass}">${escapeHtml(text)}</code></pre>`;
+            return `<pre class="help-code-block${languageClass}"><code class="help-code${languageClass}">${escapeHtml(
+              text,
+            )}</code></pre>`;
           },
 
           codespan({ text }: Tokens.Codespan): string {
@@ -108,13 +127,23 @@ export function createMarkdownParser(): ContentParser {
 
           table({ header, rows }: Tokens.Table): string {
             const headerHtml = header
-              .map((cell) => `<th class="help-table-header">${this.parser.parseInline(cell.tokens)}</th>`)
+              .map(
+                (cell) =>
+                  `<th class="help-table-header">${this.parser.parseInline(
+                    cell.tokens,
+                  )}</th>`,
+              )
               .join('');
-            
+
             const bodyHtml = rows
               .map((row) => {
                 const cells = row
-                  .map((cell) => `<td class="help-table-cell">${this.parser.parseInline(cell.tokens)}</td>`)
+                  .map(
+                    (cell) =>
+                      `<td class="help-table-cell">${this.parser.parseInline(
+                        cell.tokens,
+                      )}</td>`,
+                  )
                   .join('');
                 return `<tr class="help-table-row">${cells}</tr>`;
               })
@@ -128,18 +157,27 @@ export function createMarkdownParser(): ContentParser {
             const startAttr = ordered && start !== 1 ? ` start="${start}"` : '';
             const itemsHtml = items
               .map((item) => {
-                const checkbox = item.checked !== undefined
-                  ? `<input type="checkbox" ${item.checked ? 'checked' : ''} disabled class="help-checkbox" />`
-                  : '';
-                return `<li class="help-list-item${item.checked !== undefined ? ' help-list-item-task' : ''}">${checkbox}${this.parser.parse(item.tokens)}</li>`;
+                const checkbox =
+                  item.checked !== undefined
+                    ? `<input type="checkbox" ${
+                        item.checked ? 'checked' : ''
+                      } disabled class="help-checkbox" />`
+                    : '';
+                return `<li class="help-list-item${
+                  item.checked !== undefined ? ' help-list-item-task' : ''
+                }">${checkbox}${this.parser.parse(item.tokens)}</li>`;
               })
               .join('');
-            
-            return `<${tag}${startAttr} class="help-list help-list-${ordered ? 'ordered' : 'unordered'}">${itemsHtml}</${tag}>`;
+
+            return `<${tag}${startAttr} class="help-list help-list-${
+              ordered ? 'ordered' : 'unordered'
+            }">${itemsHtml}</${tag}>`;
           },
 
           paragraph({ tokens }: Tokens.Paragraph): string {
-            return `<p class="help-paragraph">${this.parser.parseInline(tokens)}</p>`;
+            return `<p class="help-paragraph">${this.parser.parseInline(
+              tokens,
+            )}</p>`;
           },
 
           hr(): string {
@@ -170,20 +208,29 @@ export function createMarkdownParser(): ContentParser {
  */
 function extractMetadata(
   frontmatter: Record<string, unknown>,
-  options?: ParserOptions
+  options?: ParserOptions,
 ): HelpArticleMetadata {
   return {
     version: asString(frontmatter.version),
     order: asNumber(frontmatter.order),
-    prevArticle: asString(frontmatter.prevArticle) || asString(frontmatter.prev),
-    nextArticle: asString(frontmatter.nextArticle) || asString(frontmatter.next),
-    createdAt: asString(frontmatter.createdAt) || asString(frontmatter.created) || asString(frontmatter.date),
+    prevArticle:
+      asString(frontmatter.prevArticle) || asString(frontmatter.prev),
+    nextArticle:
+      asString(frontmatter.nextArticle) || asString(frontmatter.next),
+    createdAt:
+      asString(frontmatter.createdAt) ||
+      asString(frontmatter.created) ||
+      asString(frontmatter.date),
     updatedAt: asString(frontmatter.updatedAt) || asString(frontmatter.updated),
     category: asString(frontmatter.category),
     tags: asStringArray(frontmatter.tags),
     author: asString(frontmatter.author),
-    relatedArticles: asStringArray(frontmatter.relatedArticles) || asStringArray(frontmatter.related),
-    slug: asString(frontmatter.slug) || (options?.filename ? generateSlug(options.filename) : undefined),
+    relatedArticles:
+      asStringArray(frontmatter.relatedArticles) ||
+      asStringArray(frontmatter.related),
+    slug:
+      asString(frontmatter.slug) ||
+      (options?.filename ? generateSlug(options.filename) : undefined),
     published: asBoolean(frontmatter.published) ?? true,
     custom: extractCustomMetadata(frontmatter),
   };
@@ -192,12 +239,30 @@ function extractMetadata(
 /**
  * Extract custom metadata fields not in the standard set.
  */
-function extractCustomMetadata(frontmatter: Record<string, unknown>): Record<string, unknown> | undefined {
+function extractCustomMetadata(
+  frontmatter: Record<string, unknown>,
+): Record<string, unknown> | undefined {
   const standardKeys = new Set([
-    'version', 'order', 'prevArticle', 'prev', 'nextArticle', 'next',
-    'createdAt', 'created', 'date', 'updatedAt', 'updated',
-    'category', 'tags', 'author', 'relatedArticles', 'related',
-    'slug', 'published', 'title', 'description',
+    'version',
+    'order',
+    'prevArticle',
+    'prev',
+    'nextArticle',
+    'next',
+    'createdAt',
+    'created',
+    'date',
+    'updatedAt',
+    'updated',
+    'category',
+    'tags',
+    'author',
+    'relatedArticles',
+    'related',
+    'slug',
+    'published',
+    'title',
+    'description',
   ]);
 
   const custom: Record<string, unknown> = {};
@@ -224,7 +289,7 @@ function generateSlug(filename: string): string {
 /**
  * Generate a heading ID from text.
  * This function strips HTML tags and creates a URL-safe slug.
- * Note: This is NOT a security sanitization function - it's only used 
+ * Note: This is NOT a security sanitization function - it's only used
  * for generating heading IDs from trusted markdown content.
  */
 function generateHeadingId(text: string): string {
@@ -275,7 +340,10 @@ function buildTOCTree(entries: TOCEntry[]): TOCEntry[] {
   const cleanChildren = (entries: TOCEntry[]): TOCEntry[] => {
     return entries.map((e) => ({
       ...e,
-      children: e.children && e.children.length > 0 ? cleanChildren(e.children) : undefined,
+      children:
+        e.children && e.children.length > 0
+          ? cleanChildren(e.children)
+          : undefined,
     }));
   };
 

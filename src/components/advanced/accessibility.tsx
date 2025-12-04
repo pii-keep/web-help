@@ -1,7 +1,7 @@
 /**
  * Accessibility Utilities for the Web Help Component Library
- * @module @privify-pw/web-help/components/advanced/accessibility
- * 
+ * @module @piikeep-pw/web-help/components/advanced/accessibility
+ *
  * Provides accessibility utilities, hooks, and components for
  * WCAG 2.1 AA compliance.
  */
@@ -47,13 +47,16 @@ const defaultPreferences: AccessibilityPreferences = {
  * Hook to detect and track accessibility preferences.
  */
 export function useAccessibilityPreferences(): AccessibilityPreferences {
-  const [preferences, setPreferences] = useState<AccessibilityPreferences>(defaultPreferences);
+  const [preferences, setPreferences] =
+    useState<AccessibilityPreferences>(defaultPreferences);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     // Detect reduce motion preference
-    const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const reduceMotionQuery = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    );
     const handleReduceMotion = (e: MediaQueryListEvent | MediaQueryList) => {
       setPreferences((prev) => ({ ...prev, reduceMotion: e.matches }));
     };
@@ -102,7 +105,7 @@ export function useAccessibilityPreferences(): AccessibilityPreferences {
  */
 export function useFocusTrap(
   containerRef: React.RefObject<HTMLElement | null>,
-  active: boolean = true
+  active: boolean = true,
 ): void {
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
@@ -144,7 +147,10 @@ export function useFocusTrap(
       container.removeEventListener('keydown', handleKeyDown);
 
       // Restore focus
-      if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
+      if (
+        previousFocusRef.current &&
+        typeof previousFocusRef.current.focus === 'function'
+      ) {
         previousFocusRef.current.focus();
       }
     };
@@ -164,7 +170,9 @@ export function useLiveAnnouncer(): {
     if (typeof document === 'undefined') return;
 
     // Create or find announcer container
-    let container = document.getElementById('help-live-announcer') as HTMLDivElement;
+    let container = document.getElementById(
+      'help-live-announcer',
+    ) as HTMLDivElement;
 
     if (!container) {
       container = document.createElement('div');
@@ -192,19 +200,22 @@ export function useLiveAnnouncer(): {
     };
   }, []);
 
-  const announce = useCallback((message: string, priority: 'polite' | 'assertive' = 'polite') => {
-    if (!containerRef.current) return;
+  const announce = useCallback(
+    (message: string, priority: 'polite' | 'assertive' = 'polite') => {
+      if (!containerRef.current) return;
 
-    containerRef.current.setAttribute('aria-live', priority);
-    
-    // Clear and set message (ensures screen readers pick up the change)
-    containerRef.current.textContent = '';
-    requestAnimationFrame(() => {
-      if (containerRef.current) {
-        containerRef.current.textContent = message;
-      }
-    });
-  }, []);
+      containerRef.current.setAttribute('aria-live', priority);
+
+      // Clear and set message (ensures screen readers pick up the change)
+      containerRef.current.textContent = '';
+      requestAnimationFrame(() => {
+        if (containerRef.current) {
+          containerRef.current.textContent = message;
+        }
+      });
+    },
+    [],
+  );
 
   const clear = useCallback(() => {
     if (containerRef.current) {
@@ -234,7 +245,7 @@ export function useSkipLink(targetId: string): {
         target.removeAttribute('tabindex');
       }
     },
-    [targetId]
+    [targetId],
   );
 
   return {
@@ -272,10 +283,7 @@ export const SkipLink: React.FC<SkipLinkProps> = ({
   const { skipLinkProps } = useSkipLink(targetId);
 
   return (
-    <a
-      {...skipLinkProps}
-      className={`help-skip-link ${className ?? ''}`}
-    >
+    <a {...skipLinkProps} className={`help-skip-link ${className ?? ''}`}>
       {children}
     </a>
   );
@@ -299,7 +307,7 @@ export const VisuallyHidden: React.FC<VisuallyHiddenProps> = ({
   as: Component = 'span',
 }) => {
   return (
-    <Component className="help-visually-hidden" style={visuallyHiddenStyles}>
+    <Component className='help-visually-hidden' style={visuallyHiddenStyles}>
       {children}
     </Component>
   );
@@ -353,7 +361,8 @@ export const FocusRing: React.FC<FocusRingProps> = ({
       }
     : {};
 
-  const childStyle = (children.props as { style?: React.CSSProperties }).style ?? {};
+  const childStyle =
+    (children.props as { style?: React.CSSProperties }).style ?? {};
 
   return React.cloneElement(children, {
     style: { ...childStyle, ...style },
@@ -381,9 +390,9 @@ export function getFocusableElements(container: HTMLElement): HTMLElement[] {
     '[contenteditable]',
   ].join(', ');
 
-  return Array.from(container.querySelectorAll<HTMLElement>(focusableSelector)).filter(
-    (el) => !el.hasAttribute('disabled') && el.offsetParent !== null
-  );
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(focusableSelector),
+  ).filter((el) => !el.hasAttribute('disabled') && el.offsetParent !== null);
 }
 
 /**
@@ -414,14 +423,17 @@ export function generateA11yId(prefix: string = 'help'): string {
 /**
  * ARIA attributes helper.
  */
-export function ariaAttributes(attrs: Record<string, string | boolean | undefined>): Record<string, string | undefined> {
+export function ariaAttributes(
+  attrs: Record<string, string | boolean | undefined>,
+): Record<string, string | undefined> {
   const result: Record<string, string | undefined> = {};
 
   for (const [key, value] of Object.entries(attrs)) {
     if (value === undefined) continue;
 
     const ariaKey = key.startsWith('aria-') ? key : `aria-${key}`;
-    result[ariaKey] = typeof value === 'boolean' ? (value ? 'true' : 'false') : value;
+    result[ariaKey] =
+      typeof value === 'boolean' ? (value ? 'true' : 'false') : value;
   }
 
   return result;
@@ -446,7 +458,7 @@ export function meetsContrastRequirements(
   color1: string,
   color2: string,
   level: 'AA' | 'AAA' = 'AA',
-  largeText: boolean = false
+  largeText: boolean = false,
 ): boolean {
   const ratio = getContrastRatio(color1, color2);
   const requirements = {
@@ -465,7 +477,9 @@ function getLuminance(color: string): number {
 
   const [r, g, b] = rgb.map((val) => {
     const sRGB = val / 255;
-    return sRGB <= 0.03928 ? sRGB / 12.92 : Math.pow((sRGB + 0.055) / 1.055, 2.4);
+    return sRGB <= 0.03928
+      ? sRGB / 12.92
+      : Math.pow((sRGB + 0.055) / 1.055, 2.4);
   });
 
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;

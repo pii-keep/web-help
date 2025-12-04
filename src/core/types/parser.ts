@@ -1,6 +1,6 @@
 /**
  * Parser Plugin Types for the Web Help Component Library
- * @module @privify-pw/web-help/types/parser
+ * @module @piikeep-pw/web-help/types/parser
  */
 
 import type { HelpArticleMetadata, TOCEntry } from './content';

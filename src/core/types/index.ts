@@ -1,6 +1,6 @@
 /**
  * Core Types Index for the Web Help Component Library
- * @module @privify-pw/web-help/types
+ * @module @piikeep-pw/web-help/types
  */
 
 // Content types
