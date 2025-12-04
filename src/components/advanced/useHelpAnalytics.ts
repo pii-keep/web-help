@@ -1,7 +1,7 @@
 /**
  * Analytics Hooks for the Web Help Component Library
- * @module @privify-pw/web-help/hooks/useHelpAnalytics
- * 
+ * @module @piikeep-pw/web-help/hooks/useHelpAnalytics
+ *
  * Provides hooks for tracking user interactions with help content,
  * including views, searches, ratings, and engagement metrics.
  */
@@ -101,17 +101,28 @@ export interface AnalyticsState {
  */
 export interface UseHelpAnalyticsReturn {
   /** Track a custom event */
-  trackEvent: (type: AnalyticsEventType, data?: Record<string, unknown>) => void;
+  trackEvent: (
+    type: AnalyticsEventType,
+    data?: Record<string, unknown>,
+  ) => void;
   /** Track page/article view */
   trackPageView: (articleId?: string) => void;
   /** Track search */
   trackSearch: (query: string, resultsCount: number) => void;
   /** Track search result click */
-  trackSearchResultClick: (query: string, articleId: string, position: number) => void;
+  trackSearchResultClick: (
+    query: string,
+    articleId: string,
+    position: number,
+  ) => void;
   /** Track rating */
   trackRating: (articleId: string, rating: number) => void;
   /** Track feedback */
-  trackFeedback: (articleId: string, helpful: boolean, comment?: string) => void;
+  trackFeedback: (
+    articleId: string,
+    helpful: boolean,
+    comment?: string,
+  ) => void;
   /** Track bookmark */
   trackBookmark: (articleId: string, bookmarked: boolean) => void;
   /** Track link click */
@@ -162,8 +173,13 @@ const defaultConfig: Required<AnalyticsConfig> = {
 /**
  * Hook for tracking help system analytics.
  */
-export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsReturn {
-  const mergedConfig = useMemo(() => ({ ...defaultConfig, ...config }), [config]);
+export function useHelpAnalytics(
+  config?: AnalyticsConfig,
+): UseHelpAnalyticsReturn {
+  const mergedConfig = useMemo(
+    () => ({ ...defaultConfig, ...config }),
+    [config],
+  );
 
   // State refs (to avoid re-renders)
   const stateRef = useRef<AnalyticsState | null>(null);
@@ -191,12 +207,15 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
         console.log(`[HelpAnalytics] ${message}`, data ?? '');
       }
     },
-    [mergedConfig.debug]
+    [mergedConfig.debug],
   );
 
   // Create event
   const createEvent = useCallback(
-    (type: AnalyticsEventType, data?: Record<string, unknown>): AnalyticsEvent => {
+    (
+      type: AnalyticsEventType,
+      data?: Record<string, unknown>,
+    ): AnalyticsEvent => {
       return {
         type,
         timestamp: Date.now(),
@@ -205,7 +224,7 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
         userId: mergedConfig.userId || undefined,
       };
     },
-    [mergedConfig.userId]
+    [mergedConfig.userId],
   );
 
   // Flush queued events
@@ -240,7 +259,7 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
         await mergedConfig.onEvent(event);
       }
     },
-    [mergedConfig, logDebug, flushEvents]
+    [mergedConfig, logDebug, flushEvents],
   );
 
   // Track generic event
@@ -249,7 +268,7 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
       const event = createEvent(type, data);
       processEvent(event);
     },
-    [createEvent, processEvent]
+    [createEvent, processEvent],
   );
 
   // Track page view
@@ -271,7 +290,7 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
 
       trackEvent(articleId ? 'article_view' : 'page_view', { articleId });
     },
-    [mergedConfig.trackTimeOnPage, trackEvent]
+    [mergedConfig.trackTimeOnPage, trackEvent],
   );
 
   // Track search
@@ -280,7 +299,7 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
       statsRef.current.searches++;
       trackEvent('search', { query, resultsCount });
     },
-    [trackEvent]
+    [trackEvent],
   );
 
   // Track search result click
@@ -288,7 +307,7 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
     (query: string, articleId: string, position: number) => {
       trackEvent('search_result_click', { query, articleId, position });
     },
-    [trackEvent]
+    [trackEvent],
   );
 
   // Track rating
@@ -296,7 +315,7 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
     (articleId: string, rating: number) => {
       trackEvent('rating', { articleId, rating });
     },
-    [trackEvent]
+    [trackEvent],
   );
 
   // Track feedback
@@ -304,7 +323,7 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
     (articleId: string, helpful: boolean, comment?: string) => {
       trackEvent('feedback', { articleId, helpful, hasComment: !!comment });
     },
-    [trackEvent]
+    [trackEvent],
   );
 
   // Track bookmark
@@ -312,7 +331,7 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
     (articleId: string, bookmarked: boolean) => {
       trackEvent('bookmark', { articleId, bookmarked });
     },
-    [trackEvent]
+    [trackEvent],
   );
 
   // Track link click
@@ -320,7 +339,7 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
     (articleId: string, url: string, isExternal: boolean) => {
       trackEvent('link_click', { articleId, url, isExternal });
     },
-    [trackEvent]
+    [trackEvent],
   );
 
   // Track navigation
@@ -328,7 +347,7 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
     (from: string | null, to: string) => {
       trackEvent('navigation', { from, to });
     },
-    [trackEvent]
+    [trackEvent],
   );
 
   // Get session stats
@@ -348,9 +367,11 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
     if (!mergedConfig.trackScrollDepth || typeof window === 'undefined') return;
 
     const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       const scrollTop = window.scrollY;
-      const depth = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
+      const depth =
+        scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
 
       if (depth > stateRef.current!.maxScrollDepth) {
         stateRef.current!.maxScrollDepth = depth;
@@ -374,7 +395,12 @@ export function useHelpAnalytics(config?: AnalyticsConfig): UseHelpAnalyticsRetu
         clearInterval(batchTimerRef.current);
       }
     };
-  }, [mergedConfig.batchEvents, mergedConfig.batchInterval, mergedConfig.enabled, flushEvents]);
+  }, [
+    mergedConfig.batchEvents,
+    mergedConfig.batchInterval,
+    mergedConfig.enabled,
+    flushEvents,
+  ]);
 
   // Flush on unload
   useEffect(() => {

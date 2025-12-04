@@ -1,9 +1,13 @@
 /**
  * CSV Content Parser for the Web Help Component Library
- * @module @privify-pw/web-help/loaders/csvParser
+ * @module @piikeep-pw/web-help/loaders/csvParser
  */
 
-import type { ContentParser, ParseResult, ParserOptions } from '../types/parser';
+import type {
+  ContentParser,
+  ParseResult,
+  ParserOptions,
+} from '../types/parser';
 import type { HelpArticleMetadata } from '../types/content';
 
 /**
@@ -48,9 +52,14 @@ export function createCsvParser(): ContentParser {
       return firstLineCommas > 0 && firstLineCommas === secondLineCommas;
     },
 
-    async parse(content: string, options?: ParserOptions): Promise<ParseResult> {
+    async parse(
+      content: string,
+      options?: ParserOptions,
+    ): Promise<ParseResult> {
       const csvOptions = options as CsvParserOptions | undefined;
-      const delimiter = csvOptions?.delimiter ?? (options?.filename?.endsWith('.tsv') ? '\t' : ',');
+      const delimiter =
+        csvOptions?.delimiter ??
+        (options?.filename?.endsWith('.tsv') ? '\t' : ',');
       const hasHeader = csvOptions?.hasHeader ?? true;
       const quote = csvOptions?.quote ?? '"';
       const renderAsTable = csvOptions?.renderAsTable ?? true;
@@ -66,7 +75,9 @@ export function createCsvParser(): ContentParser {
       }
 
       // Extract headers if present
-      const headers = hasHeader ? rows[0] : rows[0].map((_, i) => `Column ${i + 1}`);
+      const headers = hasHeader
+        ? rows[0]
+        : rows[0].map((_, i) => `Column ${i + 1}`);
       const dataRows = hasHeader ? rows.slice(1) : rows;
 
       // Build HTML
@@ -99,7 +110,11 @@ export function createCsvParser(): ContentParser {
 /**
  * Parse CSV content into rows.
  */
-function parseCSV(content: string, delimiter: string, quote: string): string[][] {
+function parseCSV(
+  content: string,
+  delimiter: string,
+  quote: string,
+): string[][] {
   const rows: string[][] = [];
   const lines = content.split('\n');
 
@@ -200,7 +215,7 @@ function buildTableHtml(headers: string[], rows: string[][]): string {
 function buildListHtml(
   headers: string[],
   rows: string[][],
-  options?: CsvParserOptions
+  options?: CsvParserOptions,
 ): string {
   const titleColumn = options?.titleColumn ?? headers[0];
   const contentColumn = options?.contentColumn ?? headers[1];
@@ -209,8 +224,14 @@ function buildListHtml(
 
   const itemsHtml = rows
     .map((row) => {
-      const title = titleIndex >= 0 && titleIndex < row.length ? row[titleIndex] : row[0] ?? '';
-      const content = contentIndex >= 0 && contentIndex < row.length ? row[contentIndex] : row[1] ?? '';
+      const title =
+        titleIndex >= 0 && titleIndex < row.length
+          ? row[titleIndex]
+          : row[0] ?? '';
+      const content =
+        contentIndex >= 0 && contentIndex < row.length
+          ? row[contentIndex]
+          : row[1] ?? '';
 
       // Build metadata from other columns
       const metaHtml = headers
@@ -218,7 +239,9 @@ function buildListHtml(
           if (i === titleIndex || i === contentIndex) return '';
           const value = i < row.length ? row[i] : '';
           if (!value) return '';
-          return `<span class="help-csv-meta-item"><strong>${escapeHtml(header)}:</strong> ${escapeHtml(value)}</span>`;
+          return `<span class="help-csv-meta-item"><strong>${escapeHtml(
+            header,
+          )}:</strong> ${escapeHtml(value)}</span>`;
         })
         .filter((html) => html !== '')
         .join(' ');

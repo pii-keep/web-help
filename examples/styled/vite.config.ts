@@ -6,12 +6,12 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@privify-pw/web-help': path.resolve(__dirname, '../../src/index.ts'),
+      '@piikeep-pw/web-help': path.resolve(__dirname, '../../src/index.ts'),
       buffer: 'buffer/',
     },
   },
   define: {
-    'global': 'globalThis',
+    global: 'globalThis',
   },
   optimizeDeps: {
     include: ['buffer'],

@@ -1,9 +1,13 @@
 /**
  * JSON Content Parser for the Web Help Component Library
- * @module @privify-pw/web-help/loaders/jsonParser
+ * @module @piikeep-pw/web-help/loaders/jsonParser
  */
 
-import type { ContentParser, ParseResult, ParserOptions } from '../types/parser';
+import type {
+  ContentParser,
+  ParseResult,
+  ParserOptions,
+} from '../types/parser';
 import type { HelpArticleMetadata, TOCEntry } from '../types/content';
 
 /**
@@ -27,7 +31,15 @@ export interface JsonHelpContent {
  */
 export interface JsonContentBlock {
   /** Block type */
-  type: 'heading' | 'paragraph' | 'code' | 'image' | 'list' | 'blockquote' | 'callout' | 'html';
+  type:
+    | 'heading'
+    | 'paragraph'
+    | 'code'
+    | 'image'
+    | 'list'
+    | 'blockquote'
+    | 'callout'
+    | 'html';
   /** Block content */
   content: string;
   /** Heading level (for heading type) */
@@ -65,13 +77,20 @@ export function createJsonParser(): ContentParser {
       return trimmed.startsWith('{') || trimmed.startsWith('[');
     },
 
-    async parse(content: string, options?: ParserOptions): Promise<ParseResult> {
+    async parse(
+      content: string,
+      options?: ParserOptions,
+    ): Promise<ParseResult> {
       let jsonContent: JsonHelpContent;
 
       try {
         jsonContent = JSON.parse(content) as JsonHelpContent;
       } catch {
-        throw new Error(`Invalid JSON content${options?.filename ? ` in ${options.filename}` : ''}`);
+        throw new Error(
+          `Invalid JSON content${
+            options?.filename ? ` in ${options.filename}` : ''
+          }`,
+        );
       }
 
       // Validate required fields
@@ -97,7 +116,10 @@ export function createJsonParser(): ContentParser {
         metadata.custom = { ...metadata.custom, title: jsonContent.title };
       }
       if (jsonContent.description && !metadata.custom?.description) {
-        metadata.custom = { ...metadata.custom, description: jsonContent.description };
+        metadata.custom = {
+          ...metadata.custom,
+          description: jsonContent.description,
+        };
       }
 
       return {
@@ -131,36 +153,52 @@ function renderContentBlock(block: JsonContentBlock): string {
     case 'heading': {
       const level = block.level ?? 2;
       const id = generateHeadingId(block.content);
-      return `<h${level} id="${id}" class="help-heading help-heading-${level}">${escapeHtml(block.content)}</h${level}>`;
+      return `<h${level} id="${id}" class="help-heading help-heading-${level}">${escapeHtml(
+        block.content,
+      )}</h${level}>`;
     }
 
     case 'paragraph':
       return `<p class="help-paragraph">${escapeHtml(block.content)}</p>`;
 
     case 'code': {
-      const langClass = block.language ? ` language-${escapeHtml(block.language)}` : '';
-      return `<pre class="help-code-block${langClass}"><code class="help-code${langClass}">${escapeHtml(block.content)}</code></pre>`;
+      const langClass = block.language
+        ? ` language-${escapeHtml(block.language)}`
+        : '';
+      return `<pre class="help-code-block${langClass}"><code class="help-code${langClass}">${escapeHtml(
+        block.content,
+      )}</code></pre>`;
     }
 
     case 'image': {
       const src = block.src ?? block.content;
       const alt = block.alt ?? '';
-      return `<img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" class="help-image" loading="lazy" />`;
+      return `<img src="${escapeHtml(src)}" alt="${escapeHtml(
+        alt,
+      )}" class="help-image" loading="lazy" />`;
     }
 
     case 'list': {
       const items = block.items ?? [block.content];
       const tag = block.ordered ? 'ol' : 'ul';
-      const itemsHtml = items.map((item) => `<li class="help-list-item">${escapeHtml(item)}</li>`).join('');
-      return `<${tag} class="help-list help-list-${block.ordered ? 'ordered' : 'unordered'}">${itemsHtml}</${tag}>`;
+      const itemsHtml = items
+        .map((item) => `<li class="help-list-item">${escapeHtml(item)}</li>`)
+        .join('');
+      return `<${tag} class="help-list help-list-${
+        block.ordered ? 'ordered' : 'unordered'
+      }">${itemsHtml}</${tag}>`;
     }
 
     case 'blockquote':
-      return `<blockquote class="help-blockquote"><p>${escapeHtml(block.content)}</p></blockquote>`;
+      return `<blockquote class="help-blockquote"><p>${escapeHtml(
+        block.content,
+      )}</p></blockquote>`;
 
     case 'callout': {
       const type = block.calloutType ?? 'info';
-      return `<div class="help-callout help-callout-${type}" data-type="${type}"><p>${escapeHtml(block.content)}</p></div>`;
+      return `<div class="help-callout help-callout-${type}" data-type="${type}"><p>${escapeHtml(
+        block.content,
+      )}</p></div>`;
     }
 
     case 'html':
@@ -175,7 +213,9 @@ function renderContentBlock(block: JsonContentBlock): string {
 /**
  * Extract TOC from content blocks.
  */
-function extractTocFromContent(content: string | JsonContentBlock[]): TOCEntry[] {
+function extractTocFromContent(
+  content: string | JsonContentBlock[],
+): TOCEntry[] {
   if (typeof content === 'string') {
     // Try to extract headings from HTML string
     const headingRegex = /<h([1-6])[^>]*id="([^"]*)"[^>]*>([^<]*)<\/h[1-6]>/gi;
@@ -236,7 +276,10 @@ function buildTocTree(entries: TOCEntry[]): TOCEntry[] {
   const cleanChildren = (tocEntries: TOCEntry[]): TOCEntry[] => {
     return tocEntries.map((e) => ({
       ...e,
-      children: e.children && e.children.length > 0 ? cleanChildren(e.children) : undefined,
+      children:
+        e.children && e.children.length > 0
+          ? cleanChildren(e.children)
+          : undefined,
     }));
   };
 

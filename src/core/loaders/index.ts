@@ -1,6 +1,6 @@
 /**
  * Loaders Index for the Web Help Component Library
- * @module @privify-pw/web-help/loaders
+ * @module @piikeep-pw/web-help/loaders
  */
 
 // Parsers
@@ -13,10 +13,18 @@ export { createMdxParser } from './mdxParser';
 export { StaticContentLoader, createStaticLoader } from './staticLoader';
 
 // Format Detection
-export { ContentFormatDetector, createFormatDetector } from './contentFormatDetector';
+export {
+  ContentFormatDetector,
+  createFormatDetector,
+} from './contentFormatDetector';
 
 // Re-export types
-export type { ContentParser, ParseResult, ParserOptions, FrontmatterResult } from '../types/parser';
+export type {
+  ContentParser,
+  ParseResult,
+  ParserOptions,
+  FrontmatterResult,
+} from '../types/parser';
 export type { JsonHelpContent, JsonContentBlock } from './jsonParser';
 export type { CsvParserOptions } from './csvParser';
 export type { MdxParserOptions, ExtractedComponent } from './mdxParser';

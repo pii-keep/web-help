@@ -1,6 +1,6 @@
 /**
  * User Preferences Context for the Web Help Component Library
- * @module @privify-pw/web-help/context/UserPreferencesContext
+ * @module @piikeep-pw/web-help/context/UserPreferencesContext
  */
 
 import {
@@ -10,7 +10,12 @@ import {
   useMemo,
   type ReactNode,
 } from 'react';
-import type { UserPreferences, ReadingHistoryEntry, UserSettings, StorageAdapter } from '../types/storage';
+import type {
+  UserPreferences,
+  ReadingHistoryEntry,
+  UserSettings,
+  StorageAdapter,
+} from '../types/storage';
 import { useHelpContext } from './HelpContext';
 
 /**
@@ -75,12 +80,17 @@ const MAX_RECENT_SEARCHES = 10;
 /**
  * User preferences context.
  */
-const UserPreferencesContext = createContext<UserPreferencesContextValue | null>(null);
+const UserPreferencesContext =
+  createContext<UserPreferencesContextValue | null>(null);
 
 /**
  * Helper to read from storage.
  */
-function readFromStorage<T>(storage: StorageAdapter, key: string, defaultValue: T): T {
+function readFromStorage<T>(
+  storage: StorageAdapter,
+  key: string,
+  defaultValue: T,
+): T {
   const value = storage.get<T>(key);
   return value ?? defaultValue;
 }
@@ -95,107 +105,198 @@ export interface UserPreferencesProviderProps {
 /**
  * User preferences provider component.
  */
-export function UserPreferencesProvider({ children }: UserPreferencesProviderProps) {
+export function UserPreferencesProvider({
+  children,
+}: UserPreferencesProviderProps) {
   const { storage, callbacks } = useHelpContext();
 
   // Read current preferences from storage
-  const preferences = useMemo((): UserPreferences => ({
-    bookmarks: readFromStorage<string[]>(storage, STORAGE_KEYS.BOOKMARKS, []),
-    history: readFromStorage<ReadingHistoryEntry[]>(storage, STORAGE_KEYS.HISTORY, []),
-    readingProgress: readFromStorage<Record<string, number>>(storage, STORAGE_KEYS.PROGRESS, {}),
-    recentSearches: readFromStorage<string[]>(storage, STORAGE_KEYS.RECENT_SEARCHES, []),
-    settings: readFromStorage<UserSettings>(storage, STORAGE_KEYS.SETTINGS, {}),
-  }), [storage]);
+  const preferences = useMemo(
+    (): UserPreferences => ({
+      bookmarks: readFromStorage<string[]>(storage, STORAGE_KEYS.BOOKMARKS, []),
+      history: readFromStorage<ReadingHistoryEntry[]>(
+        storage,
+        STORAGE_KEYS.HISTORY,
+        [],
+      ),
+      readingProgress: readFromStorage<Record<string, number>>(
+        storage,
+        STORAGE_KEYS.PROGRESS,
+        {},
+      ),
+      recentSearches: readFromStorage<string[]>(
+        storage,
+        STORAGE_KEYS.RECENT_SEARCHES,
+        [],
+      ),
+      settings: readFromStorage<UserSettings>(
+        storage,
+        STORAGE_KEYS.SETTINGS,
+        {},
+      ),
+    }),
+    [storage],
+  );
 
   // Bookmark functions
-  const addBookmark = useCallback((articleId: string) => {
-    const bookmarks = readFromStorage<string[]>(storage, STORAGE_KEYS.BOOKMARKS, []);
-    if (!bookmarks.includes(articleId)) {
-      const newBookmarks = [...bookmarks, articleId];
+  const addBookmark = useCallback(
+    (articleId: string) => {
+      const bookmarks = readFromStorage<string[]>(
+        storage,
+        STORAGE_KEYS.BOOKMARKS,
+        [],
+      );
+      if (!bookmarks.includes(articleId)) {
+        const newBookmarks = [...bookmarks, articleId];
+        storage.set(STORAGE_KEYS.BOOKMARKS, newBookmarks);
+        callbacks.onBookmark?.(articleId, true);
+      }
+    },
+    [storage, callbacks],
+  );
+
+  const removeBookmark = useCallback(
+    (articleId: string) => {
+      const bookmarks = readFromStorage<string[]>(
+        storage,
+        STORAGE_KEYS.BOOKMARKS,
+        [],
+      );
+      const newBookmarks = bookmarks.filter((id) => id !== articleId);
       storage.set(STORAGE_KEYS.BOOKMARKS, newBookmarks);
-      callbacks.onBookmark?.(articleId, true);
-    }
-  }, [storage, callbacks]);
+      callbacks.onBookmark?.(articleId, false);
+    },
+    [storage, callbacks],
+  );
 
-  const removeBookmark = useCallback((articleId: string) => {
-    const bookmarks = readFromStorage<string[]>(storage, STORAGE_KEYS.BOOKMARKS, []);
-    const newBookmarks = bookmarks.filter((id) => id !== articleId);
-    storage.set(STORAGE_KEYS.BOOKMARKS, newBookmarks);
-    callbacks.onBookmark?.(articleId, false);
-  }, [storage, callbacks]);
+  const toggleBookmark = useCallback(
+    (articleId: string): boolean => {
+      const bookmarks = readFromStorage<string[]>(
+        storage,
+        STORAGE_KEYS.BOOKMARKS,
+        [],
+      );
+      const isCurrentlyBookmarked = bookmarks.includes(articleId);
 
-  const toggleBookmark = useCallback((articleId: string): boolean => {
-    const bookmarks = readFromStorage<string[]>(storage, STORAGE_KEYS.BOOKMARKS, []);
-    const isCurrentlyBookmarked = bookmarks.includes(articleId);
-    
-    if (isCurrentlyBookmarked) {
-      removeBookmark(articleId);
-      return false;
-    } else {
-      addBookmark(articleId);
-      return true;
-    }
-  }, [storage, addBookmark, removeBookmark]);
+      if (isCurrentlyBookmarked) {
+        removeBookmark(articleId);
+        return false;
+      } else {
+        addBookmark(articleId);
+        return true;
+      }
+    },
+    [storage, addBookmark, removeBookmark],
+  );
 
-  const isBookmarked = useCallback((articleId: string): boolean => {
-    const bookmarks = readFromStorage<string[]>(storage, STORAGE_KEYS.BOOKMARKS, []);
-    return bookmarks.includes(articleId);
-  }, [storage]);
+  const isBookmarked = useCallback(
+    (articleId: string): boolean => {
+      const bookmarks = readFromStorage<string[]>(
+        storage,
+        STORAGE_KEYS.BOOKMARKS,
+        [],
+      );
+      return bookmarks.includes(articleId);
+    },
+    [storage],
+  );
 
   const getBookmarks = useCallback((): string[] => {
     return readFromStorage<string[]>(storage, STORAGE_KEYS.BOOKMARKS, []);
   }, [storage]);
 
   // History functions
-  const addToHistory = useCallback((entry: Omit<ReadingHistoryEntry, 'timestamp'>) => {
-    const history = readFromStorage<ReadingHistoryEntry[]>(storage, STORAGE_KEYS.HISTORY, []);
-    
-    // Remove existing entry for this article
-    const filteredHistory = history.filter((h) => h.articleId !== entry.articleId);
-    
-    // Add new entry at the beginning
-    const newEntry: ReadingHistoryEntry = {
-      ...entry,
-      timestamp: new Date().toISOString(),
-    };
-    
-    const newHistory = [newEntry, ...filteredHistory].slice(0, MAX_HISTORY_ENTRIES);
-    storage.set(STORAGE_KEYS.HISTORY, newHistory);
-  }, [storage]);
+  const addToHistory = useCallback(
+    (entry: Omit<ReadingHistoryEntry, 'timestamp'>) => {
+      const history = readFromStorage<ReadingHistoryEntry[]>(
+        storage,
+        STORAGE_KEYS.HISTORY,
+        [],
+      );
 
-  const getHistory = useCallback((limit?: number): ReadingHistoryEntry[] => {
-    const history = readFromStorage<ReadingHistoryEntry[]>(storage, STORAGE_KEYS.HISTORY, []);
-    return limit ? history.slice(0, limit) : history;
-  }, [storage]);
+      // Remove existing entry for this article
+      const filteredHistory = history.filter(
+        (h) => h.articleId !== entry.articleId,
+      );
+
+      // Add new entry at the beginning
+      const newEntry: ReadingHistoryEntry = {
+        ...entry,
+        timestamp: new Date().toISOString(),
+      };
+
+      const newHistory = [newEntry, ...filteredHistory].slice(
+        0,
+        MAX_HISTORY_ENTRIES,
+      );
+      storage.set(STORAGE_KEYS.HISTORY, newHistory);
+    },
+    [storage],
+  );
+
+  const getHistory = useCallback(
+    (limit?: number): ReadingHistoryEntry[] => {
+      const history = readFromStorage<ReadingHistoryEntry[]>(
+        storage,
+        STORAGE_KEYS.HISTORY,
+        [],
+      );
+      return limit ? history.slice(0, limit) : history;
+    },
+    [storage],
+  );
 
   const clearHistory = useCallback(() => {
     storage.set(STORAGE_KEYS.HISTORY, []);
   }, [storage]);
 
   // Reading progress functions
-  const updateProgress = useCallback((articleId: string, progress: number) => {
-    const progressMap = readFromStorage<Record<string, number>>(storage, STORAGE_KEYS.PROGRESS, {});
-    progressMap[articleId] = Math.min(100, Math.max(0, progress));
-    storage.set(STORAGE_KEYS.PROGRESS, progressMap);
-  }, [storage]);
+  const updateProgress = useCallback(
+    (articleId: string, progress: number) => {
+      const progressMap = readFromStorage<Record<string, number>>(
+        storage,
+        STORAGE_KEYS.PROGRESS,
+        {},
+      );
+      progressMap[articleId] = Math.min(100, Math.max(0, progress));
+      storage.set(STORAGE_KEYS.PROGRESS, progressMap);
+    },
+    [storage],
+  );
 
-  const getProgress = useCallback((articleId: string): number => {
-    const progressMap = readFromStorage<Record<string, number>>(storage, STORAGE_KEYS.PROGRESS, {});
-    return progressMap[articleId] ?? 0;
-  }, [storage]);
+  const getProgress = useCallback(
+    (articleId: string): number => {
+      const progressMap = readFromStorage<Record<string, number>>(
+        storage,
+        STORAGE_KEYS.PROGRESS,
+        {},
+      );
+      return progressMap[articleId] ?? 0;
+    },
+    [storage],
+  );
 
   // Recent searches functions
-  const addRecentSearch = useCallback((query: string) => {
-    if (!query.trim()) return;
-    
-    const searches = readFromStorage<string[]>(storage, STORAGE_KEYS.RECENT_SEARCHES, []);
-    
-    // Remove duplicate and add at the beginning
-    const filtered = searches.filter((s) => s.toLowerCase() !== query.toLowerCase());
-    const newSearches = [query, ...filtered].slice(0, MAX_RECENT_SEARCHES);
-    
-    storage.set(STORAGE_KEYS.RECENT_SEARCHES, newSearches);
-  }, [storage]);
+  const addRecentSearch = useCallback(
+    (query: string) => {
+      if (!query.trim()) return;
+
+      const searches = readFromStorage<string[]>(
+        storage,
+        STORAGE_KEYS.RECENT_SEARCHES,
+        [],
+      );
+
+      // Remove duplicate and add at the beginning
+      const filtered = searches.filter(
+        (s) => s.toLowerCase() !== query.toLowerCase(),
+      );
+      const newSearches = [query, ...filtered].slice(0, MAX_RECENT_SEARCHES);
+
+      storage.set(STORAGE_KEYS.RECENT_SEARCHES, newSearches);
+    },
+    [storage],
+  );
 
   const getRecentSearches = useCallback((): string[] => {
     return readFromStorage<string[]>(storage, STORAGE_KEYS.RECENT_SEARCHES, []);
@@ -206,11 +307,18 @@ export function UserPreferencesProvider({ children }: UserPreferencesProviderPro
   }, [storage]);
 
   // Settings functions
-  const updateSettings = useCallback((settings: Partial<UserSettings>) => {
-    const currentSettings = readFromStorage<UserSettings>(storage, STORAGE_KEYS.SETTINGS, {});
-    const newSettings = { ...currentSettings, ...settings };
-    storage.set(STORAGE_KEYS.SETTINGS, newSettings);
-  }, [storage]);
+  const updateSettings = useCallback(
+    (settings: Partial<UserSettings>) => {
+      const currentSettings = readFromStorage<UserSettings>(
+        storage,
+        STORAGE_KEYS.SETTINGS,
+        {},
+      );
+      const newSettings = { ...currentSettings, ...settings };
+      storage.set(STORAGE_KEYS.SETTINGS, newSettings);
+    },
+    [storage],
+  );
 
   const getSettings = useCallback((): UserSettings => {
     return readFromStorage<UserSettings>(storage, STORAGE_KEYS.SETTINGS, {});
@@ -250,7 +358,9 @@ export function UserPreferencesProvider({ children }: UserPreferencesProviderPro
 export function useUserPreferences(): UserPreferencesContextValue {
   const context = useContext(UserPreferencesContext);
   if (!context) {
-    throw new Error('useUserPreferences must be used within a UserPreferencesProvider');
+    throw new Error(
+      'useUserPreferences must be used within a UserPreferencesProvider',
+    );
   }
   return context;
 }

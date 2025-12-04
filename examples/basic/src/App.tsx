@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { HelpProvider, HelpModal, useHelp } from '@privify-pw/web-help';
+import { HelpProvider, HelpModal, useHelp } from '@piikeep-pw/web-help';
 
 // Define help content manifest
 const contentManifest = {
@@ -44,8 +44,8 @@ function Main() {
     <div style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
       <h1>My App</h1>
       <p>This is a basic example demonstrating the web-help library.</p>
-      
-      <button 
+
+      <button
         onClick={handleOpenHelp}
         style={{
           padding: '0.5rem 1rem',
@@ -68,7 +68,11 @@ function Main() {
         {isLoading ? (
           <p>Loading...</p>
         ) : currentArticle ? (
-          <div dangerouslySetInnerHTML={{ __html: currentArticle.renderedContent || currentArticle.content }} />
+          <div
+            dangerouslySetInnerHTML={{
+              __html: currentArticle.renderedContent || currentArticle.content,
+            }}
+          />
         ) : (
           <p>No help content available.</p>
         )}

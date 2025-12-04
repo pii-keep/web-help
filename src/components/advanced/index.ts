@@ -1,16 +1,27 @@
 /**
  * Advanced Components Index for the Web Help Component Library
- * @module @privify-pw/web-help/components/advanced
+ * @module @piikeep-pw/web-help/components/advanced
  */
 
 // Diagrams
-export { HelpDiagram, default as HelpDiagramDefault, detectDiagramType } from './HelpDiagram';
+export {
+  HelpDiagram,
+  default as HelpDiagramDefault,
+  detectDiagramType,
+} from './HelpDiagram';
 
 // Sandbox
-export { HelpSandbox, default as HelpSandboxDefault, extractSandboxId } from './HelpSandbox';
+export {
+  HelpSandbox,
+  default as HelpSandboxDefault,
+  extractSandboxId,
+} from './HelpSandbox';
 
 // Analytics
-export { useHelpAnalytics, default as useHelpAnalyticsDefault } from './useHelpAnalytics';
+export {
+  useHelpAnalytics,
+  default as useHelpAnalyticsDefault,
+} from './useHelpAnalytics';
 
 // Accessibility
 export {
@@ -39,10 +50,7 @@ export {
 } from './pwa';
 
 // Types - Diagrams
-export type {
-  HelpDiagramProps,
-  HelpDiagramLabels,
-} from './HelpDiagram';
+export type { HelpDiagramProps, HelpDiagramLabels } from './HelpDiagram';
 
 // Types - Sandbox
 export type {
@@ -70,9 +78,4 @@ export type {
 } from './accessibility';
 
 // Types - PWA
-export type {
-  PWAConfig,
-  PWAStatus,
-  CacheUsage,
-  CacheItem,
-} from './pwa';
+export type { PWAConfig, PWAStatus, CacheUsage, CacheItem } from './pwa';

@@ -1,6 +1,6 @@
 /**
  * Storage Adapters Index for the Web Help Component Library
- * @module @privify-pw/web-help/storage
+ * @module @piikeep-pw/web-help/storage
  */
 
 export { createLocalStorageAdapter } from './localStorage';
@@ -9,4 +9,10 @@ export { createCookieAdapter } from './cookie';
 export { createMemoryAdapter } from './memory';
 
 // Re-export types
-export type { StorageAdapter, UserPreferences, ReadingHistoryEntry, UserSettings, CookieOptions } from '../types/storage';
+export type {
+  StorageAdapter,
+  UserPreferences,
+  ReadingHistoryEntry,
+  UserSettings,
+  CookieOptions,
+} from '../types/storage';

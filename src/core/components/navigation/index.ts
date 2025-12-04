@@ -1,6 +1,6 @@
 /**
  * Navigation Components Index for the Web Help Component Library
- * @module @privify-pw/web-help/components/navigation
+ * @module @piikeep-pw/web-help/components/navigation
  */
 
 export { HelpTOC } from './HelpTOC';

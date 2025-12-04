@@ -1,7 +1,7 @@
 /**
  * HelpVideo Component for the Web Help Component Library
- * @module @privify-pw/web-help/components/media/HelpVideo
- * 
+ * @module @piikeep/web-help/components/media/HelpVideo
+ *
  * Headless component for rendering video embeds.
  */
 
@@ -86,7 +86,10 @@ function getEmbedUrl(videoId: string, provider: VideoProvider): string {
 /**
  * Generate thumbnail URL for provider.
  */
-function getThumbnailUrl(videoId: string, provider: VideoProvider): string | null {
+function getThumbnailUrl(
+  videoId: string,
+  provider: VideoProvider,
+): string | null {
   switch (provider) {
     case 'youtube':
       return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
@@ -101,99 +104,110 @@ function getThumbnailUrl(videoId: string, provider: VideoProvider): string | nul
 /**
  * HelpVideo is a headless component for rendering video embeds.
  */
-export const HelpVideo = forwardRef<HTMLDivElement, HelpVideoProps>(function HelpVideo(
-  {
-    src,
-    provider = 'custom',
-    title,
-    lazyLoad = true,
-    aspectRatio = '16/9',
-    width,
-    height,
-    controls = true,
-    allowFullscreen = true,
-    thumbnail,
-    onPlay,
-    className = '',
-    ...props
-  },
-  ref
-) {
-  const [isPlaying, setIsPlaying] = useState(!lazyLoad);
+export const HelpVideo = forwardRef<HTMLDivElement, HelpVideoProps>(
+  function HelpVideo(
+    {
+      src,
+      provider = 'custom',
+      title,
+      lazyLoad = true,
+      aspectRatio = '16/9',
+      width,
+      height,
+      controls = true,
+      allowFullscreen = true,
+      thumbnail,
+      onPlay,
+      className = '',
+      ...props
+    },
+    ref,
+  ) {
+    const [isPlaying, setIsPlaying] = useState(!lazyLoad);
 
-  const videoId = useMemo(() => extractVideoId(src, provider), [src, provider]);
-  const embedUrl = useMemo(() => getEmbedUrl(videoId, provider), [videoId, provider]);
-  const thumbnailUrl = thumbnail ?? (lazyLoad ? getThumbnailUrl(videoId, provider) : null);
+    const videoId = useMemo(
+      () => extractVideoId(src, provider),
+      [src, provider],
+    );
+    const embedUrl = useMemo(
+      () => getEmbedUrl(videoId, provider),
+      [videoId, provider],
+    );
+    const thumbnailUrl =
+      thumbnail ?? (lazyLoad ? getThumbnailUrl(videoId, provider) : null);
 
-  const handlePlay = useCallback(() => {
-    setIsPlaying(true);
-    onPlay?.();
-  }, [onPlay]);
+    const handlePlay = useCallback(() => {
+      setIsPlaying(true);
+      onPlay?.();
+    }, [onPlay]);
 
-  // Calculate aspect ratio for CSS
-  const aspectRatioStyle = useMemo(() => {
-    const [w, h] = aspectRatio.split('/').map(Number);
-    if (w && h) {
-      return { paddingBottom: `${(h / w) * 100}%` };
-    }
-    return { paddingBottom: '56.25%' }; // Default 16:9
-  }, [aspectRatio]);
+    // Calculate aspect ratio for CSS
+    const aspectRatioStyle = useMemo(() => {
+      const [w, h] = aspectRatio.split('/').map(Number);
+      if (w && h) {
+        return { paddingBottom: `${(h / w) * 100}%` };
+      }
+      return { paddingBottom: '56.25%' }; // Default 16:9
+    }, [aspectRatio]);
 
-  return (
-    <div
-      ref={ref}
-      className={`help-video ${className}`.trim()}
-      data-component="video"
-      data-provider={provider}
-      data-playing={isPlaying}
-      data-lazy={lazyLoad}
-      style={{ width, height }}
-      {...props}
-    >
-      <div className="help-video-wrapper" style={aspectRatioStyle}>
-        {!isPlaying && lazyLoad ? (
-          <button
-            type="button"
-            className="help-video-placeholder"
-            onClick={handlePlay}
-            aria-label={`Play video: ${title}`}
-          >
-            {thumbnailUrl && (
-              <img
-                src={thumbnailUrl}
-                alt={`Thumbnail for ${title}`}
-                className="help-video-thumbnail"
-                loading="lazy"
-              />
-            )}
-            <span className="help-video-play-button" aria-hidden="true">
-              ▶
-            </span>
-          </button>
-        ) : provider === 'custom' ? (
-          <video
-            className="help-video-player"
-            src={src}
-            title={title}
-            controls={controls}
-            playsInline
-          >
-            <track kind="captions" />
-            Your browser does not support the video tag.
-          </video>
-        ) : (
-          <iframe
-            className="help-video-iframe"
-            src={embedUrl}
-            title={title}
-            allow={`accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture${allowFullscreen ? '; fullscreen' : ''}`}
-            allowFullScreen={allowFullscreen}
-            loading={lazyLoad ? 'lazy' : 'eager'}
-          />
-        )}
+    return (
+      <div
+        ref={ref}
+        className={`help-video ${className}`.trim()}
+        data-component='video'
+        data-provider={provider}
+        data-playing={isPlaying}
+        data-lazy={lazyLoad}
+        style={{ width, height }}
+        {...props}
+      >
+        <div className='help-video-wrapper' style={aspectRatioStyle}>
+          {!isPlaying && lazyLoad ? (
+            <button
+              type='button'
+              className='help-video-placeholder'
+              onClick={handlePlay}
+              aria-label={`Play video: ${title}`}
+            >
+              {thumbnailUrl && (
+                <img
+                  src={thumbnailUrl}
+                  alt={`Thumbnail for ${title}`}
+                  className='help-video-thumbnail'
+                  loading='lazy'
+                />
+              )}
+              <span className='help-video-play-button' aria-hidden='true'>
+                ▶
+              </span>
+            </button>
+          ) : provider === 'custom' ? (
+            <video
+              className='help-video-player'
+              src={src}
+              title={title}
+              controls={controls}
+              playsInline
+            >
+              <track kind='captions' />
+              Your browser does not support the video tag.
+            </video>
+          ) : (
+            <iframe
+              className='help-video-iframe'
+              src={embedUrl}
+              title={title}
+              allow={`accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture${
+                allowFullscreen ? '; fullscreen' : ''
+              }`}
+              allowFullScreen={allowFullscreen}
+              loading={lazyLoad ? 'lazy' : 'eager'}
+            />
+          )}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 HelpVideo.displayName = 'HelpVideo';

@@ -1,6 +1,6 @@
 /**
  * Core Index for the Web Help Component Library
- * @module @privify-pw/web-help/core
+ * @module @piikeep-pw/web-help/core
  */
 
 // Types - export all types

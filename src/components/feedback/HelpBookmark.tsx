@@ -1,7 +1,7 @@
 /**
  * HelpBookmark Component for the Web Help Component Library
- * @module @privify-pw/web-help/components/feedback/HelpBookmark
- * 
+ * @module @piikeep-pw/web-help/components/feedback/HelpBookmark
+ *
  * Headless component for bookmarking articles.
  */
 
@@ -31,51 +31,53 @@ export interface HelpBookmarkProps extends BaseComponentProps {
 /**
  * HelpBookmark is a headless component for bookmarking articles.
  */
-export const HelpBookmark = forwardRef<HTMLButtonElement, HelpBookmarkProps>(function HelpBookmark(
-  {
-    articleId,
-    isBookmarked = false,
-    onToggle,
-    addText = 'Bookmark',
-    removeText = 'Remove bookmark',
-    size = 'medium',
-    renderContent,
-    className = '',
-    ...props
+export const HelpBookmark = forwardRef<HTMLButtonElement, HelpBookmarkProps>(
+  function HelpBookmark(
+    {
+      articleId,
+      isBookmarked = false,
+      onToggle,
+      addText = 'Bookmark',
+      removeText = 'Remove bookmark',
+      size = 'medium',
+      renderContent,
+      className = '',
+      ...props
+    },
+    ref,
+  ) {
+    const handleClick = useCallback(() => {
+      onToggle?.(articleId, !isBookmarked);
+    }, [articleId, isBookmarked, onToggle]);
+
+    const label = isBookmarked ? removeText : addText;
+
+    return (
+      <button
+        ref={ref}
+        type='button'
+        className={`help-bookmark ${className}`.trim()}
+        data-component='bookmark'
+        data-bookmarked={isBookmarked}
+        data-size={size}
+        onClick={handleClick}
+        aria-pressed={isBookmarked}
+        aria-label={label}
+        {...props}
+      >
+        {renderContent ? (
+          renderContent(isBookmarked)
+        ) : (
+          <>
+            <span className='help-bookmark-icon' aria-hidden='true'>
+              {isBookmarked ? '★' : '☆'}
+            </span>
+            <span className='help-bookmark-text'>{label}</span>
+          </>
+        )}
+      </button>
+    );
   },
-  ref
-) {
-  const handleClick = useCallback(() => {
-    onToggle?.(articleId, !isBookmarked);
-  }, [articleId, isBookmarked, onToggle]);
-
-  const label = isBookmarked ? removeText : addText;
-
-  return (
-    <button
-      ref={ref}
-      type="button"
-      className={`help-bookmark ${className}`.trim()}
-      data-component="bookmark"
-      data-bookmarked={isBookmarked}
-      data-size={size}
-      onClick={handleClick}
-      aria-pressed={isBookmarked}
-      aria-label={label}
-      {...props}
-    >
-      {renderContent ? (
-        renderContent(isBookmarked)
-      ) : (
-        <>
-          <span className="help-bookmark-icon" aria-hidden="true">
-            {isBookmarked ? '★' : '☆'}
-          </span>
-          <span className="help-bookmark-text">{label}</span>
-        </>
-      )}
-    </button>
-  );
-});
+);
 
 HelpBookmark.displayName = 'HelpBookmark';

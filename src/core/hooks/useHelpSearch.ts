@@ -1,6 +1,6 @@
 /**
  * useHelpSearch Hook for the Web Help Component Library
- * @module @privify-pw/web-help/hooks/useHelpSearch
+ * @module @piikeep-pw/web-help/hooks/useHelpSearch
  */
 
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
@@ -58,7 +58,7 @@ const defaultOptions: Required<UseHelpSearchOptions> = {
 function performClientSearch(
   query: string,
   index: ContentIndex[],
-  options: Required<UseHelpSearchOptions>
+  options: Required<UseHelpSearchOptions>,
 ): HelpSearchResult[] {
   if (!query || query.length < options.minQueryLength) {
     return [];
@@ -120,17 +120,27 @@ function performClientSearch(
 /**
  * Extract a snippet around the matched query.
  */
-function extractSnippet(content: string, query: string, contextLength = 100): string {
+function extractSnippet(
+  content: string,
+  query: string,
+  contextLength = 100,
+): string {
   const lowerContent = content.toLowerCase();
   const matchIndex = lowerContent.indexOf(query);
 
   if (matchIndex === -1) {
     // No match, return beginning
-    return content.substring(0, contextLength * 2) + (content.length > contextLength * 2 ? '...' : '');
+    return (
+      content.substring(0, contextLength * 2) +
+      (content.length > contextLength * 2 ? '...' : '')
+    );
   }
 
   const start = Math.max(0, matchIndex - contextLength);
-  const end = Math.min(content.length, matchIndex + query.length + contextLength);
+  const end = Math.min(
+    content.length,
+    matchIndex + query.length + contextLength,
+  );
 
   let snippet = content.substring(start, end);
 
@@ -143,16 +153,23 @@ function extractSnippet(content: string, query: string, contextLength = 100): st
 /**
  * Hook for search functionality.
  */
-export function useHelpSearch(options?: UseHelpSearchOptions): UseHelpSearchReturn {
+export function useHelpSearch(
+  options?: UseHelpSearchOptions,
+): UseHelpSearchReturn {
   const { getContentIndex, callbacks } = useHelpContext();
 
   const [query, setQueryState] = useState('');
   const [results, setResults] = useState<HelpSearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
 
   // Memoize options
-  const mergedOptions = useMemo(() => ({ ...defaultOptions, ...options }), [options]);
+  const mergedOptions = useMemo(
+    () => ({ ...defaultOptions, ...options }),
+    [options],
+  );
 
   // Memoize the content index
   const contentIndex = useMemo(() => getContentIndex(), [getContentIndex]);
@@ -167,17 +184,21 @@ export function useHelpSearch(options?: UseHelpSearchOptions): UseHelpSearchRetu
       setIsSearching(true);
       try {
         // Use client-side search
-        const searchResults = performClientSearch(searchQuery, contentIndex, mergedOptions);
-        
+        const searchResults = performClientSearch(
+          searchQuery,
+          contentIndex,
+          mergedOptions,
+        );
+
         // Call callback
         callbacks.onSearch?.(searchQuery, searchResults);
-        
+
         return searchResults;
       } finally {
         setIsSearching(false);
       }
     },
-    [contentIndex, mergedOptions, callbacks]
+    [contentIndex, mergedOptions, callbacks],
   );
 
   // Debounced search effect
@@ -201,7 +222,12 @@ export function useHelpSearch(options?: UseHelpSearchOptions): UseHelpSearchRetu
         clearTimeout(debounceRef.current);
       }
     };
-  }, [query, mergedOptions.debounceMs, mergedOptions.minQueryLength, performSearch]);
+  }, [
+    query,
+    mergedOptions.debounceMs,
+    mergedOptions.minQueryLength,
+    performSearch,
+  ]);
 
   // Set query
   const setQuery = useCallback((newQuery: string) => {
@@ -222,7 +248,7 @@ export function useHelpSearch(options?: UseHelpSearchOptions): UseHelpSearchRetu
       setResults(searchResults);
       return searchResults;
     },
-    [performSearch]
+    [performSearch],
   );
 
   return {

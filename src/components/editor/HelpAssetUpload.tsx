@@ -1,7 +1,7 @@
 /**
  * Asset Upload Component for the Web Help Component Library
- * @module @privify-pw/web-help/components/editor/HelpAssetUpload
- * 
+ * @module @piikeep-pw/web-help/components/editor/HelpAssetUpload
+ *
  * A headless asset upload component that provides file selection,
  * upload handling, and asset management through callbacks.
  */
@@ -126,7 +126,9 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
   const [isDragActive, setIsDragActive] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadErrors, setUploadErrors] = useState<string[]>([]);
-  const [uploadProgress, setUploadProgress] = useState<Map<string, number>>(new Map());
+  const [uploadProgress, setUploadProgress] = useState<Map<string, number>>(
+    new Map(),
+  );
 
   // Refs
   const inputRef = useRef<HTMLInputElement>(null);
@@ -173,7 +175,7 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
 
       return { valid, errors };
     },
-    [accept, maxFileSize, maxFiles, labels]
+    [accept, maxFileSize, maxFiles, labels],
   );
 
   // Handle file selection
@@ -214,7 +216,7 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
         setUploadProgress(new Map());
       }
     },
-    [disabled, validateFiles, onUpload, labels]
+    [disabled, validateFiles, onUpload, labels],
   );
 
   // Drag and drop handlers
@@ -226,7 +228,7 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
         setIsDragActive(true);
       }
     },
-    [disabled]
+    [disabled],
   );
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
@@ -250,7 +252,7 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
         handleFiles(e.dataTransfer.files);
       }
     },
-    [disabled, handleFiles]
+    [disabled, handleFiles],
   );
 
   // Handle input change
@@ -260,7 +262,7 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
         handleFiles(e.target.files);
       }
     },
-    [handleFiles]
+    [handleFiles],
   );
 
   // Handle click to browse
@@ -283,7 +285,7 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
         setUploadErrors([err instanceof Error ? err.message : 'Delete failed']);
       }
     },
-    [onDelete, labels.deleteConfirm]
+    [onDelete, labels.deleteConfirm],
   );
 
   // Handle asset select
@@ -291,7 +293,7 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
     (asset: Asset) => {
       onSelect?.(asset);
     },
-    [onSelect]
+    [onSelect],
   );
 
   // Get file type icon/indicator
@@ -307,13 +309,15 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
     >
       {/* Dropzone */}
       <div
-        className={`help-asset-dropzone ${isDragActive ? 'help-asset-dropzone-active' : ''}`}
+        className={`help-asset-dropzone ${
+          isDragActive ? 'help-asset-dropzone-active' : ''
+        }`}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onClick={handleBrowseClick}
-        role="button"
+        role='button'
         tabIndex={disabled ? -1 : 0}
         aria-disabled={disabled}
         onKeyDown={(e) => {
@@ -325,37 +329,43 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
       >
         <input
           ref={inputRef}
-          type="file"
+          type='file'
           accept={accept}
           multiple={multiple}
           onChange={handleInputChange}
           disabled={disabled}
-          className="help-asset-input"
-          aria-hidden="true"
+          className='help-asset-input'
+          aria-hidden='true'
         />
 
         {isUploading ? (
-          <div className="help-asset-uploading">
-            <span className="help-asset-uploading-text">{labels.uploading}</span>
+          <div className='help-asset-uploading'>
+            <span className='help-asset-uploading-text'>
+              {labels.uploading}
+            </span>
             {uploadProgress.size > 0 && (
-              <div className="help-asset-progress">
-                {Array.from(uploadProgress.entries()).map(([name, progress]) => (
-                  <div key={name} className="help-asset-progress-item">
-                    <span className="help-asset-progress-name">{name}</span>
-                    <span className="help-asset-progress-value">{progress}%</span>
-                  </div>
-                ))}
+              <div className='help-asset-progress'>
+                {Array.from(uploadProgress.entries()).map(
+                  ([name, progress]) => (
+                    <div key={name} className='help-asset-progress-item'>
+                      <span className='help-asset-progress-name'>{name}</span>
+                      <span className='help-asset-progress-value'>
+                        {progress}%
+                      </span>
+                    </div>
+                  ),
+                )}
               </div>
             )}
           </div>
         ) : (
-          <div className="help-asset-dropzone-content">
-            <span className="help-asset-dropzone-text">
+          <div className='help-asset-dropzone-content'>
+            <span className='help-asset-dropzone-text'>
               {isDragActive ? labels.dropzoneActive : labels.dropzone}
             </span>
             <button
-              type="button"
-              className="help-asset-browse-button"
+              type='button'
+              className='help-asset-browse-button'
               disabled={disabled}
             >
               {labels.browse}
@@ -366,9 +376,9 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
 
       {/* Errors */}
       {uploadErrors.length > 0 && (
-        <div className="help-asset-errors">
+        <div className='help-asset-errors'>
           {uploadErrors.map((error, index) => (
-            <div key={index} className="help-asset-error">
+            <div key={index} className='help-asset-error'>
               {error}
             </div>
           ))}
@@ -376,16 +386,16 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
       )}
 
       {/* Asset list */}
-      <div className="help-asset-list">
+      <div className='help-asset-list'>
         {assets.length === 0 ? (
-          <div className="help-asset-empty">{labels.noAssets}</div>
+          <div className='help-asset-empty'>{labels.noAssets}</div>
         ) : (
           assets.map((asset) => (
             <div
               key={asset.id}
               className={`help-asset-item ${getAssetTypeClass(asset.type)}`}
               onClick={() => handleAssetClick(asset)}
-              role="button"
+              role='button'
               tabIndex={0}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -399,27 +409,29 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
                 <img
                   src={asset.thumbnail ?? asset.url}
                   alt={asset.name}
-                  className="help-asset-thumbnail"
+                  className='help-asset-thumbnail'
                 />
               ) : (
-                <div className="help-asset-icon" data-type={asset.type}>
+                <div className='help-asset-icon' data-type={asset.type}>
                   {asset.type.charAt(0).toUpperCase()}
                 </div>
               )}
 
               {/* Info */}
-              <div className="help-asset-info">
-                <span className="help-asset-name">{asset.name}</span>
+              <div className='help-asset-info'>
+                <span className='help-asset-name'>{asset.name}</span>
                 {asset.size && (
-                  <span className="help-asset-size">{formatFileSize(asset.size)}</span>
+                  <span className='help-asset-size'>
+                    {formatFileSize(asset.size)}
+                  </span>
                 )}
               </div>
 
               {/* Actions */}
               {onDelete && (
                 <button
-                  type="button"
-                  className="help-asset-delete"
+                  type='button'
+                  className='help-asset-delete'
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDelete(asset.id);
@@ -443,7 +455,8 @@ export const HelpAssetUpload: React.FC<HelpAssetUploadProps> = ({
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes < 1024 * 1024 * 1024)
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
 }
 

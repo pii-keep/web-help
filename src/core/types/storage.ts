@@ -1,6 +1,6 @@
 /**
  * Storage Adapter Types for the Web Help Component Library
- * @module @privify-pw/web-help/types/storage
+ * @module @piikeep-pw/web-help/types/storage
  */
 
 /**

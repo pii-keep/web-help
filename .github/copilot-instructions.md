@@ -1,4 +1,4 @@
-# Copilot Instructions for @privify-pw/web-help
+# Copilot Instructions for @piikeep/web-help
 
 ## Project Overview
 
@@ -65,12 +65,13 @@ src/
 ### Context Pattern
 
 ```tsx
-export const HelpProvider: React.FC<HelpProviderProps> = ({ children, config }) => {
+export const HelpProvider: React.FC<HelpProviderProps> = ({
+  children,
+  config,
+}) => {
   // State management
   return (
-    <HelpContext.Provider value={contextValue}>
-      {children}
-    </HelpContext.Provider>
+    <HelpContext.Provider value={contextValue}>{children}</HelpContext.Provider>
   );
 };
 ```

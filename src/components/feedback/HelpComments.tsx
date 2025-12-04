@@ -1,7 +1,7 @@
 /**
  * HelpComments Component for the Web Help Component Library
- * @module @privify-pw/web-help/components/feedback/HelpComments
- * 
+ * @module @piikeep-pw/web-help/components/feedback/HelpComments
+ *
  * Headless component for displaying and submitting comments.
  */
 
@@ -62,8 +62,10 @@ function formatRelativeTime(timestamp: string): string {
   const diffDays = Math.floor(diffMs / 86400000);
 
   if (diffMinutes < 1) return 'just now';
-  if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
-  if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+  if (diffMinutes < 60)
+    return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
+  if (diffHours < 24)
+    return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
   if (diffDays < 30) return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
   return date.toLocaleDateString();
 }
@@ -71,124 +73,128 @@ function formatRelativeTime(timestamp: string): string {
 /**
  * HelpComments is a headless component for comments.
  */
-export const HelpComments = forwardRef<HTMLDivElement, HelpCommentsProps>(function HelpComments(
-  {
-    articleId,
-    comments = [],
-    onComment,
-    showForm = true,
-    placeholder = 'Add a comment...',
-    submitText = 'Submit',
-    emptyMessage = 'No comments yet. Be the first to comment!',
-    title = 'Comments',
-    isLoading = false,
-    renderComment,
-    className = '',
-    ...props
-  },
-  ref
-) {
-  const [newComment, setNewComment] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = useCallback(
-    async (event: React.FormEvent) => {
-      event.preventDefault();
-      if (!newComment.trim()) return;
-
-      setIsSubmitting(true);
-      try {
-        await onComment?.(articleId, newComment.trim());
-        setNewComment('');
-      } finally {
-        setIsSubmitting(false);
-      }
+export const HelpComments = forwardRef<HTMLDivElement, HelpCommentsProps>(
+  function HelpComments(
+    {
+      articleId,
+      comments = [],
+      onComment,
+      showForm = true,
+      placeholder = 'Add a comment...',
+      submitText = 'Submit',
+      emptyMessage = 'No comments yet. Be the first to comment!',
+      title = 'Comments',
+      isLoading = false,
+      renderComment,
+      className = '',
+      ...props
     },
-    [articleId, newComment, onComment]
-  );
+    ref,
+  ) {
+    const [newComment, setNewComment] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const defaultRenderComment = (comment: CommentItem): React.ReactNode => (
-    <div className="help-comment" data-id={comment.id}>
-      <div className="help-comment-header">
-        {comment.avatar && (
-          <img
-            src={comment.avatar}
-            alt={`${comment.author}'s avatar`}
-            className="help-comment-avatar"
-          />
-        )}
-        <span className="help-comment-author">{comment.author}</span>
-        <time className="help-comment-time" dateTime={comment.timestamp}>
-          {formatRelativeTime(comment.timestamp)}
-        </time>
+    const handleSubmit = useCallback(
+      async (event: React.FormEvent) => {
+        event.preventDefault();
+        if (!newComment.trim()) return;
+
+        setIsSubmitting(true);
+        try {
+          await onComment?.(articleId, newComment.trim());
+          setNewComment('');
+        } finally {
+          setIsSubmitting(false);
+        }
+      },
+      [articleId, newComment, onComment],
+    );
+
+    const defaultRenderComment = (comment: CommentItem): React.ReactNode => (
+      <div className='help-comment' data-id={comment.id}>
+        <div className='help-comment-header'>
+          {comment.avatar && (
+            <img
+              src={comment.avatar}
+              alt={`${comment.author}'s avatar`}
+              className='help-comment-avatar'
+            />
+          )}
+          <span className='help-comment-author'>{comment.author}</span>
+          <time className='help-comment-time' dateTime={comment.timestamp}>
+            {formatRelativeTime(comment.timestamp)}
+          </time>
+        </div>
+        <div className='help-comment-content'>{comment.content}</div>
       </div>
-      <div className="help-comment-content">{comment.content}</div>
-    </div>
-  );
+    );
 
-  return (
-    <div
-      ref={ref}
-      className={`help-comments ${className}`.trim()}
-      data-component="comments"
-      data-loading={isLoading}
-      {...props}
-    >
-      {/* Title */}
-      {title && (
-        <h3 className="help-comments-title">
-          {title}
-          {comments.length > 0 && (
-            <span className="help-comments-count">({comments.length})</span>
-          )}
-        </h3>
-      )}
+    return (
+      <div
+        ref={ref}
+        className={`help-comments ${className}`.trim()}
+        data-component='comments'
+        data-loading={isLoading}
+        {...props}
+      >
+        {/* Title */}
+        {title && (
+          <h3 className='help-comments-title'>
+            {title}
+            {comments.length > 0 && (
+              <span className='help-comments-count'>({comments.length})</span>
+            )}
+          </h3>
+        )}
 
-      {/* Loading state */}
-      {isLoading && (
-        <div className="help-comments-loading" aria-live="polite">
-          Loading comments...
-        </div>
-      )}
+        {/* Loading state */}
+        {isLoading && (
+          <div className='help-comments-loading' aria-live='polite'>
+            Loading comments...
+          </div>
+        )}
 
-      {/* Comment list */}
-      {!isLoading && (
-        <div className="help-comments-list">
-          {comments.length === 0 ? (
-            <p className="help-comments-empty">{emptyMessage}</p>
-          ) : (
-            comments.map((comment) => (
-              <div key={comment.id}>
-                {renderComment ? renderComment(comment) : defaultRenderComment(comment)}
-              </div>
-            ))
-          )}
-        </div>
-      )}
+        {/* Comment list */}
+        {!isLoading && (
+          <div className='help-comments-list'>
+            {comments.length === 0 ? (
+              <p className='help-comments-empty'>{emptyMessage}</p>
+            ) : (
+              comments.map((comment) => (
+                <div key={comment.id}>
+                  {renderComment
+                    ? renderComment(comment)
+                    : defaultRenderComment(comment)}
+                </div>
+              ))
+            )}
+          </div>
+        )}
 
-      {/* Comment form */}
-      {showForm && (
-        <form className="help-comments-form" onSubmit={handleSubmit}>
-          <textarea
-            className="help-comments-input"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder={placeholder}
-            rows={3}
-            aria-label="New comment"
-            disabled={isSubmitting}
-          />
-          <button
-            type="submit"
-            className="help-comments-submit"
-            disabled={isSubmitting || !newComment.trim()}
-          >
-            {isSubmitting ? 'Submitting...' : submitText}
-          </button>
-        </form>
-      )}
-    </div>
-  );
-});
+        {/* Comment form */}
+        {showForm && (
+          <form className='help-comments-form' onSubmit={handleSubmit}>
+            <textarea
+              className='help-comments-input'
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder={placeholder}
+              rows={3}
+              aria-label='New comment'
+              disabled={isSubmitting}
+            />
+            <button
+              type='submit'
+              className='help-comments-submit'
+              disabled={isSubmitting || !newComment.trim()}
+            >
+              {isSubmitting ? 'Submitting...' : submitText}
+            </button>
+          </form>
+        )}
+      </div>
+    );
+  },
+);
 
 HelpComments.displayName = 'HelpComments';

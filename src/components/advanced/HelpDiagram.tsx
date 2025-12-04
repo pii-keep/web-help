@@ -1,7 +1,7 @@
 /**
  * Mermaid Diagram Component for the Web Help Component Library
- * @module @privify-pw/web-help/components/advanced/HelpDiagram
- * 
+ * @module @piikeep-pw/web-help/components/advanced/HelpDiagram
+ *
  * A headless component for rendering Mermaid and PlantUML diagrams.
  * Supports lazy loading and accessibility features.
  */
@@ -13,7 +13,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
  * This allows type-safe usage of the optional mermaid dependency.
  */
 interface MermaidAPI {
-  initialize: (config: { startOnLoad?: boolean; theme?: string; securityLevel?: string }) => void;
+  initialize: (config: {
+    startOnLoad?: boolean;
+    theme?: string;
+    securityLevel?: string;
+  }) => void;
   render: (id: string, source: string) => Promise<{ svg: string }>;
 }
 
@@ -112,23 +116,30 @@ export const HelpDiagram: React.FC<HelpDiagramProps> = ({
     try {
       // Dynamic import of Mermaid (must be installed by consumer)
       // Using Function constructor to avoid TypeScript module resolution
-      const importFn = new Function('specifier', 'return import(specifier)') as (specifier: string) => Promise<{ default: MermaidAPI }>;
+      const importFn = new Function(
+        'specifier',
+        'return import(specifier)',
+      ) as (specifier: string) => Promise<{ default: MermaidAPI }>;
       const mermaidModule = await importFn('mermaid');
       const mermaid = mermaidModule.default;
-      
+
       mermaid.initialize({
         startOnLoad: false,
         theme: theme,
         securityLevel: 'strict',
       });
 
-      const id = `mermaid-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+      const id = `mermaid-${Date.now()}-${Math.random()
+        .toString(36)
+        .slice(2, 11)}`;
       const { svg } = await mermaid.render(id, source);
-      
+
       return svg;
     } catch {
       // Mermaid not installed, return placeholder
-      throw new Error('Mermaid library not installed. Install with: npm install mermaid');
+      throw new Error(
+        'Mermaid library not installed. Install with: npm install mermaid',
+      );
     }
   }, [source, theme]);
 
@@ -141,7 +152,9 @@ export const HelpDiagram: React.FC<HelpDiagramProps> = ({
     // Fetch SVG from PlantUML server
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`Failed to render PlantUML diagram: ${response.statusText}`);
+      throw new Error(
+        `Failed to render PlantUML diagram: ${response.statusText}`,
+      );
     }
 
     const svg = await response.text();
@@ -157,7 +170,7 @@ export const HelpDiagram: React.FC<HelpDiagramProps> = ({
 
     try {
       let svg: string;
-      
+
       if (type === 'mermaid') {
         svg = await renderMermaid();
       } else {
@@ -173,7 +186,15 @@ export const HelpDiagram: React.FC<HelpDiagramProps> = ({
     } finally {
       setIsLoading(false);
     }
-  }, [isVisible, type, renderMermaid, renderPlantUML, onRender, onError, labels.error]);
+  }, [
+    isVisible,
+    type,
+    renderMermaid,
+    renderPlantUML,
+    onRender,
+    onError,
+    labels.error,
+  ]);
 
   // Intersection Observer for lazy loading
   useEffect(() => {
@@ -186,7 +207,7 @@ export const HelpDiagram: React.FC<HelpDiagramProps> = ({
           observerRef.current?.disconnect();
         }
       },
-      { rootMargin: '100px' }
+      { rootMargin: '100px' },
     );
 
     if (containerRef.current) {
@@ -228,21 +249,21 @@ export const HelpDiagram: React.FC<HelpDiagramProps> = ({
       className={`help-diagram help-diagram-${type} ${className ?? ''}`}
       data-loading={isLoading}
       data-error={!!error}
-      role="figure"
+      role='figure'
       aria-label={alt ?? caption ?? 'Diagram'}
     >
       {/* Diagram content */}
-      <div className="help-diagram-content">
+      <div className='help-diagram-content'>
         {isLoading && (
-          <div className="help-diagram-loading" aria-live="polite">
+          <div className='help-diagram-loading' aria-live='polite'>
             {labels.loading}
           </div>
         )}
 
         {error && (
-          <div className="help-diagram-error" role="alert">
-            <span className="help-diagram-error-message">{error}</span>
-            <pre className="help-diagram-source-preview">
+          <div className='help-diagram-error' role='alert'>
+            <span className='help-diagram-error-message'>{error}</span>
+            <pre className='help-diagram-source-preview'>
               <code>{source.substring(0, 200)}...</code>
             </pre>
           </div>
@@ -250,20 +271,20 @@ export const HelpDiagram: React.FC<HelpDiagramProps> = ({
 
         {renderedSvg && !error && (
           <div
-            className="help-diagram-svg"
+            className='help-diagram-svg'
             dangerouslySetInnerHTML={{ __html: renderedSvg }}
-            role="img"
+            role='img'
             aria-label={alt ?? caption ?? 'Rendered diagram'}
           />
         )}
       </div>
 
       {/* Actions */}
-      <div className="help-diagram-actions">
+      <div className='help-diagram-actions'>
         {showCopyButton && (
           <button
-            type="button"
-            className="help-diagram-copy-button"
+            type='button'
+            className='help-diagram-copy-button'
             onClick={handleCopy}
             aria-label={labels.copySource}
           >
@@ -271,8 +292,8 @@ export const HelpDiagram: React.FC<HelpDiagramProps> = ({
           </button>
         )}
         <button
-          type="button"
-          className="help-diagram-source-toggle"
+          type='button'
+          className='help-diagram-source-toggle'
           onClick={() => setShowSource(!showSource)}
           aria-expanded={showSource}
         >
@@ -282,14 +303,14 @@ export const HelpDiagram: React.FC<HelpDiagramProps> = ({
 
       {/* Source code */}
       {showSource && (
-        <pre className="help-diagram-source">
+        <pre className='help-diagram-source'>
           <code>{source}</code>
         </pre>
       )}
 
       {/* Caption */}
       {caption && (
-        <figcaption className="help-diagram-caption">{caption}</figcaption>
+        <figcaption className='help-diagram-caption'>{caption}</figcaption>
       )}
     </figure>
   );
@@ -303,43 +324,52 @@ function encodePlantUML(source: string): string {
   // Simple encoding - use TextEncoder for UTF-8
   const encoder = new TextEncoder();
   const data = encoder.encode(source);
-  
+
   // Convert to base64
   let binary = '';
   for (let i = 0; i < data.length; i++) {
     binary += String.fromCharCode(data[i]);
   }
-  
+
   // Use PlantUML's custom base64 encoding
   const base64 = btoa(binary);
-  return base64
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '');
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
 /**
  * Helper to detect diagram type from source.
  */
-export function detectDiagramType(source: string): 'mermaid' | 'plantuml' | null {
+export function detectDiagramType(
+  source: string,
+): 'mermaid' | 'plantuml' | null {
   const trimmed = source.trim().toLowerCase();
-  
+
   // Mermaid indicators
   const mermaidKeywords = [
-    'graph ', 'flowchart ', 'sequencediagram', 'classdiagram',
-    'statediagram', 'erdiagram', 'gantt', 'pie', 'journey',
-    'gitgraph', 'mindmap', 'timeline', 'sankey',
+    'graph ',
+    'flowchart ',
+    'sequencediagram',
+    'classdiagram',
+    'statediagram',
+    'erdiagram',
+    'gantt',
+    'pie',
+    'journey',
+    'gitgraph',
+    'mindmap',
+    'timeline',
+    'sankey',
   ];
-  
-  if (mermaidKeywords.some(kw => trimmed.startsWith(kw))) {
+
+  if (mermaidKeywords.some((kw) => trimmed.startsWith(kw))) {
     return 'mermaid';
   }
-  
+
   // PlantUML indicators
   if (trimmed.startsWith('@startuml') || trimmed.startsWith('@startmindmap')) {
     return 'plantuml';
   }
-  
+
   return null;
 }
 

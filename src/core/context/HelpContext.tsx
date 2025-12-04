@@ -1,6 +1,6 @@
 /**
  * Help Context for the Web Help Component Library
- * @module @privify-pw/web-help/context/HelpContext
+ * @module @piikeep-pw/web-help/context/HelpContext
  */
 
 import {
@@ -185,10 +185,16 @@ export function HelpProvider({
         dispatch({ type: 'SET_LOADING', payload: true });
         try {
           await contentLoader.loadFromManifest(contentManifest);
-          dispatch({ type: 'SET_CATEGORIES', payload: contentLoader.getCategories() });
+          dispatch({
+            type: 'SET_CATEGORIES',
+            payload: contentLoader.getCategories(),
+          });
           dispatch({ type: 'SET_INITIALIZED', payload: true });
         } catch (error) {
-          dispatch({ type: 'SET_ERROR', payload: error instanceof Error ? error : new Error(String(error)) });
+          dispatch({
+            type: 'SET_ERROR',
+            payload: error instanceof Error ? error : new Error(String(error)),
+          });
         } finally {
           dispatch({ type: 'SET_LOADING', payload: false });
         }
@@ -219,7 +225,7 @@ export function HelpProvider({
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     },
-    [contentLoader, callbacks]
+    [contentLoader, callbacks],
   );
 
   // Navigate to article
@@ -227,33 +233,35 @@ export function HelpProvider({
     async (articleId: string): Promise<void> => {
       const fromId = state.currentArticle?.id ?? null;
       const article = await loadArticle(articleId);
-      
+
       if (article) {
         // Update navigation state
         const allArticles = contentLoader.getAllArticles();
         const currentIndex = allArticles.findIndex((a) => a.id === articleId);
-        
+
         const navigation: NavigationState = {
           currentArticle: articleId,
-          prev: currentIndex > 0
-            ? {
-                id: allArticles[currentIndex - 1].id,
-                title: allArticles[currentIndex - 1].title,
-              }
-            : undefined,
-          next: currentIndex < allArticles.length - 1
-            ? {
-                id: allArticles[currentIndex + 1].id,
-                title: allArticles[currentIndex + 1].title,
-              }
-            : undefined,
+          prev:
+            currentIndex > 0
+              ? {
+                  id: allArticles[currentIndex - 1].id,
+                  title: allArticles[currentIndex - 1].title,
+                }
+              : undefined,
+          next:
+            currentIndex < allArticles.length - 1
+              ? {
+                  id: allArticles[currentIndex + 1].id,
+                  title: allArticles[currentIndex + 1].title,
+                }
+              : undefined,
         };
-        
+
         dispatch({ type: 'SET_NAVIGATION', payload: navigation });
         callbacks.onNavigate?.(fromId, articleId);
       }
     },
-    [loadArticle, contentLoader, callbacks, state.currentArticle?.id]
+    [loadArticle, contentLoader, callbacks, state.currentArticle?.id],
   );
 
   // Register content
@@ -262,7 +270,10 @@ export function HelpProvider({
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
         await contentLoader.loadFromManifest(manifest);
-        dispatch({ type: 'SET_CATEGORIES', payload: contentLoader.getCategories() });
+        dispatch({
+          type: 'SET_CATEGORIES',
+          payload: contentLoader.getCategories(),
+        });
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));
         dispatch({ type: 'SET_ERROR', payload: err });
@@ -271,7 +282,7 @@ export function HelpProvider({
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     },
-    [contentLoader, callbacks]
+    [contentLoader, callbacks],
   );
 
   // Get content index

@@ -1,7 +1,7 @@
 /**
  * Interactive Sandbox Component for the Web Help Component Library
- * @module @privify-pw/web-help/components/advanced/HelpSandbox
- * 
+ * @module @piikeep-pw/web-help/components/advanced/HelpSandbox
+ *
  * A headless component for embedding interactive code sandboxes
  * from CodeSandbox, StackBlitz, and other platforms.
  */
@@ -45,7 +45,12 @@ export interface HelpSandboxProps {
 /**
  * Supported sandbox providers.
  */
-export type SandboxProvider = 'codesandbox' | 'stackblitz' | 'codepen' | 'jsfiddle' | 'replit';
+export type SandboxProvider =
+  | 'codesandbox'
+  | 'stackblitz'
+  | 'codepen'
+  | 'jsfiddle'
+  | 'replit';
 
 /**
  * Labels for sandbox internationalization.
@@ -78,7 +83,8 @@ const providerConfigs: Record<SandboxProvider, ProviderConfig> = {
     buildUrl: (id, options) => {
       const params = new URLSearchParams();
       if (options.initialFile) params.set('module', options.initialFile);
-      if (options.showExplorer !== undefined) params.set('hidenavigation', options.showExplorer ? '0' : '1');
+      if (options.showExplorer !== undefined)
+        params.set('hidenavigation', options.showExplorer ? '0' : '1');
       if (options.theme) params.set('theme', options.theme);
       if (options.autoRun) params.set('runonclick', '0');
       return `https://codesandbox.io/embed/${id}?${params.toString()}`;
@@ -90,8 +96,10 @@ const providerConfigs: Record<SandboxProvider, ProviderConfig> = {
     buildUrl: (id, options) => {
       const params = new URLSearchParams();
       if (options.initialFile) params.set('file', options.initialFile);
-      if (options.showExplorer !== undefined) params.set('hideExplorer', options.showExplorer ? '0' : '1');
-      if (options.showNavbar !== undefined) params.set('hideNavigation', options.showNavbar ? '0' : '1');
+      if (options.showExplorer !== undefined)
+        params.set('hideExplorer', options.showExplorer ? '0' : '1');
+      if (options.showNavbar !== undefined)
+        params.set('hideNavigation', options.showNavbar ? '0' : '1');
       params.set('embed', '1');
       return `https://stackblitz.com/edit/${id}?${params.toString()}`;
     },
@@ -206,7 +214,7 @@ export const HelpSandbox: React.FC<HelpSandboxProps> = ({
           observer.disconnect();
         }
       },
-      { rootMargin: '100px' }
+      { rootMargin: '100px' },
     );
 
     if (containerRef.current) {
@@ -239,13 +247,13 @@ export const HelpSandbox: React.FC<HelpSandboxProps> = ({
       data-expanded={isExpanded}
     >
       {/* Header */}
-      <div className="help-sandbox-header">
-        {title && <span className="help-sandbox-title">{title}</span>}
-        
-        <div className="help-sandbox-actions">
+      <div className='help-sandbox-header'>
+        {title && <span className='help-sandbox-title'>{title}</span>}
+
+        <div className='help-sandbox-actions'>
           <button
-            type="button"
-            className="help-sandbox-expand-button"
+            type='button'
+            className='help-sandbox-expand-button'
             onClick={() => setIsExpanded(!isExpanded)}
             aria-label={isExpanded ? labels.collapse : labels.expand}
           >
@@ -253,9 +261,9 @@ export const HelpSandbox: React.FC<HelpSandboxProps> = ({
           </button>
           <a
             href={directUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="help-sandbox-open-button"
+            target='_blank'
+            rel='noopener noreferrer'
+            className='help-sandbox-open-button'
           >
             {labels.openInNew}
           </a>
@@ -263,18 +271,15 @@ export const HelpSandbox: React.FC<HelpSandboxProps> = ({
       </div>
 
       {/* Sandbox content */}
-      <div
-        className="help-sandbox-content"
-        style={{ height: expandedHeight }}
-      >
+      <div className='help-sandbox-content' style={{ height: expandedHeight }}>
         {isLoading && (
-          <div className="help-sandbox-loading" aria-live="polite">
+          <div className='help-sandbox-loading' aria-live='polite'>
             {labels.loading}
           </div>
         )}
 
         {error && (
-          <div className="help-sandbox-error" role="alert">
+          <div className='help-sandbox-error' role='alert'>
             {error}
           </div>
         )}
@@ -284,11 +289,11 @@ export const HelpSandbox: React.FC<HelpSandboxProps> = ({
             ref={iframeRef}
             src={sandboxUrl}
             title={title ?? `${provider} sandbox`}
-            className="help-sandbox-iframe"
+            className='help-sandbox-iframe'
             onLoad={handleLoad}
             onError={handleError}
-            allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-            sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+            allow='accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking'
+            sandbox='allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts'
             loading={lazyLoad ? 'lazy' : 'eager'}
             style={{
               width: '100%',
@@ -307,7 +312,9 @@ export const HelpSandbox: React.FC<HelpSandboxProps> = ({
  * Helper to extract sandbox ID from full URL.
  * Uses proper URL parsing to ensure the domain is actually the host.
  */
-export function extractSandboxId(url: string): { provider: SandboxProvider; id: string } | null {
+export function extractSandboxId(
+  url: string,
+): { provider: SandboxProvider; id: string } | null {
   let parsedUrl: URL;
   try {
     parsedUrl = new URL(url);
@@ -332,13 +339,18 @@ export function extractSandboxId(url: string): { provider: SandboxProvider; id: 
   // CodePen
   if (hostname === 'codepen.io' || hostname.endsWith('.codepen.io')) {
     const match = url.match(/codepen\.io\/([^/]+)\/(?:pen|embed)\/([^/?]+)/);
-    if (match) return { provider: 'codepen', id: `${match[1]}/pen/${match[2]}` };
+    if (match)
+      return { provider: 'codepen', id: `${match[1]}/pen/${match[2]}` };
   }
 
   // JSFiddle
   if (hostname === 'jsfiddle.net' || hostname.endsWith('.jsfiddle.net')) {
     const match = url.match(/jsfiddle\.net\/([^/]+)(?:\/([^/]+))?/);
-    if (match) return { provider: 'jsfiddle', id: match[2] ? `${match[1]}/${match[2]}` : match[1] };
+    if (match)
+      return {
+        provider: 'jsfiddle',
+        id: match[2] ? `${match[1]}/${match[2]}` : match[1],
+      };
   }
 
   // Replit

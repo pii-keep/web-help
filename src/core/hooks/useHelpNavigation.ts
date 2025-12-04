@@ -1,11 +1,15 @@
 /**
  * useHelpNavigation Hook for the Web Help Component Library
- * @module @privify-pw/web-help/hooks/useHelpNavigation
+ * @module @piikeep-pw/web-help/hooks/useHelpNavigation
  */
 
 import { useCallback, useMemo } from 'react';
 import { useHelpContext, useHelpState } from '../context/HelpContext';
-import type { NavigationState, BreadcrumbItem, HelpCategory } from '../types/content';
+import type {
+  NavigationState,
+  BreadcrumbItem,
+  HelpCategory,
+} from '../types/content';
 
 /**
  * Return type for useHelpNavigation hook.
@@ -25,8 +29,8 @@ export interface UseHelpNavigationReturn {
   getBreadcrumbs: () => BreadcrumbItem[];
   /** Get available categories */
   categories: HelpCategory[];
-  /** 
-   * Navigate to a category. This is a no-op by default and should be 
+  /**
+   * Navigate to a category. This is a no-op by default and should be
    * overridden by the consuming application to handle category navigation.
    */
   goToCategory: (categoryId: string) => void;

@@ -1,7 +1,7 @@
 /**
  * Memory Storage Adapter for the Web Help Component Library
- * @module @privify-pw/web-help/storage/memory
- * 
+ * @module @piikeep-pw/web-help/storage/memory
+ *
  * Useful for testing or SSR environments where browser storage is not available.
  */
 

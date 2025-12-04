@@ -1,6 +1,6 @@
 /**
  * useHelp Hook for the Web Help Component Library
- * @module @privify-pw/web-help/hooks/useHelp
+ * @module @piikeep-pw/web-help/hooks/useHelp
  */
 
 import { useCallback } from 'react';
@@ -33,14 +33,15 @@ export interface UseHelpReturn {
  * Main hook for interacting with the help system.
  */
 export function useHelp(): UseHelpReturn {
-  const { navigateToArticle, registerContent, contentLoader } = useHelpContext();
+  const { navigateToArticle, registerContent, contentLoader } =
+    useHelpContext();
   const state = useHelpState();
 
   const openArticle = useCallback(
     async (articleId: string) => {
       await navigateToArticle(articleId);
     },
-    [navigateToArticle]
+    [navigateToArticle],
   );
 
   const closeArticle = useCallback(() => {

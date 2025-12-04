@@ -1,6 +1,6 @@
 /**
  * useHelpShortcuts Hook for the Web Help Component Library
- * @module @privify-pw/web-help/hooks/useHelpShortcuts
+ * @module @piikeep-pw/web-help/hooks/useHelpShortcuts
  */
 
 import { useEffect, useCallback, useRef } from 'react';
@@ -61,7 +61,10 @@ function isMac(): boolean {
 /**
  * Check if a keyboard event matches a shortcut config.
  */
-function matchesShortcut(event: KeyboardEvent, config: ShortcutConfig): boolean {
+function matchesShortcut(
+  event: KeyboardEvent,
+  config: ShortcutConfig,
+): boolean {
   // Check key
   if (event.key.toLowerCase() !== config.key.toLowerCase()) {
     return false;
@@ -84,7 +87,9 @@ function matchesShortcut(event: KeyboardEvent, config: ShortcutConfig): boolean 
 /**
  * Hook for keyboard shortcuts.
  */
-export function useHelpShortcuts(options: UseHelpShortcutsOptions): UseHelpShortcutsReturn {
+export function useHelpShortcuts(
+  options: UseHelpShortcutsOptions,
+): UseHelpShortcutsReturn {
   const { shortcuts, enabled = true, target } = options;
   const shortcutsRef = useRef<Map<string, ShortcutConfig>>(new Map());
 
@@ -126,7 +131,10 @@ export function useHelpShortcuts(options: UseHelpShortcutsOptions): UseHelpShort
     eventTarget.addEventListener('keydown', handleKeyDown as EventListener);
 
     return () => {
-      eventTarget.removeEventListener('keydown', handleKeyDown as EventListener);
+      eventTarget.removeEventListener(
+        'keydown',
+        handleKeyDown as EventListener,
+      );
     };
   }, [enabled, target]);
 
@@ -183,7 +191,10 @@ export const presetShortcuts = {
   /**
    * Create arrow key navigation shortcuts.
    */
-  navigationShortcuts: (onPrev: () => void, onNext: () => void): ShortcutConfig[] => [
+  navigationShortcuts: (
+    onPrev: () => void,
+    onNext: () => void,
+  ): ShortcutConfig[] => [
     {
       key: 'ArrowLeft',
       handler: () => onPrev(),

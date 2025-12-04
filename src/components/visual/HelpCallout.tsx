@@ -1,7 +1,7 @@
 /**
  * HelpCallout Component for the Web Help Component Library
- * @module @privify-pw/web-help/components/visual/HelpCallout
- * 
+ * @module @piikeep-pw/web-help/components/visual/HelpCallout
+ *
  * Headless component for callout/alert boxes.
  */
 
@@ -11,7 +11,13 @@ import type { BaseComponentProps } from '../../core/types/components';
 /**
  * Callout type.
  */
-export type CalloutType = 'info' | 'warning' | 'tip' | 'danger' | 'note' | 'success';
+export type CalloutType =
+  | 'info'
+  | 'warning'
+  | 'tip'
+  | 'danger'
+  | 'note'
+  | 'success';
 
 /**
  * Props for HelpCallout component.
@@ -69,47 +75,49 @@ function getAriaRole(type: CalloutType): string {
 /**
  * HelpCallout is a headless component for callout/alert boxes.
  */
-export const HelpCallout = forwardRef<HTMLDivElement, HelpCalloutProps>(function HelpCallout(
-  {
-    type = 'info',
-    title,
-    icon,
-    children,
-    dismissible = false,
-    onDismiss,
-    className = '',
-    ...props
+export const HelpCallout = forwardRef<HTMLDivElement, HelpCalloutProps>(
+  function HelpCallout(
+    {
+      type = 'info',
+      title,
+      icon,
+      children,
+      dismissible = false,
+      onDismiss,
+      className = '',
+      ...props
+    },
+    ref,
+  ) {
+    return (
+      <aside
+        ref={ref}
+        className={`help-callout help-callout-${type} ${className}`.trim()}
+        data-component='callout'
+        data-type={type}
+        role={getAriaRole(type)}
+        {...props}
+      >
+        <div className='help-callout-icon' aria-hidden='true'>
+          {icon ?? getDefaultIcon(type)}
+        </div>
+        <div className='help-callout-content'>
+          {title && <div className='help-callout-title'>{title}</div>}
+          <div className='help-callout-body'>{children}</div>
+        </div>
+        {dismissible && (
+          <button
+            type='button'
+            className='help-callout-dismiss'
+            onClick={onDismiss}
+            aria-label='Dismiss'
+          >
+            ×
+          </button>
+        )}
+      </aside>
+    );
   },
-  ref
-) {
-  return (
-    <aside
-      ref={ref}
-      className={`help-callout help-callout-${type} ${className}`.trim()}
-      data-component="callout"
-      data-type={type}
-      role={getAriaRole(type)}
-      {...props}
-    >
-      <div className="help-callout-icon" aria-hidden="true">
-        {icon ?? getDefaultIcon(type)}
-      </div>
-      <div className="help-callout-content">
-        {title && <div className="help-callout-title">{title}</div>}
-        <div className="help-callout-body">{children}</div>
-      </div>
-      {dismissible && (
-        <button
-          type="button"
-          className="help-callout-dismiss"
-          onClick={onDismiss}
-          aria-label="Dismiss"
-        >
-          ×
-        </button>
-      )}
-    </aside>
-  );
-});
+);
 
 HelpCallout.displayName = 'HelpCallout';
