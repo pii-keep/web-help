@@ -9,6 +9,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Phase 3A: Advanced Content Formats
+- MDX parser with React component extraction and placeholder rendering
+- JSON content loader with structured content blocks support
+- CSV content loader with table and list rendering options
+- ContentFormatDetector for automatic format detection based on content analysis
+- Multi-format support through pluggable parser architecture
+
+#### Phase 3B: Content Editor Utility
+- HelpEditor component with live markdown preview
+- HelpMetadataEditor component with full field support
+- HelpAssetUpload component with drag-and-drop support
+- Editor internationalization with built-in translations for 7 languages (en, es, de, fr, pt, zh, ja)
+- getEditorLabels and addEditorTranslation utilities for i18n
+
+#### Phase 4: Advanced Features
+- HelpDiagram component for Mermaid and PlantUML diagrams
+- HelpSandbox component for CodeSandbox, StackBlitz, CodePen, JSFiddle, and Replit embeds
+- useHelpAnalytics hook for comprehensive analytics tracking
+- Accessibility utilities: useFocusTrap, useLiveAnnouncer, useSkipLink hooks
+- Accessibility components: SkipLink, VisuallyHidden, FocusRing
+- WCAG 2.1 AA compliance helpers: getContrastRatio, meetsContrastRequirements
+- PWA utilities: usePWA, useOfflineContent hooks
+- Service worker helpers: registerHelpServiceWorker, generateServiceWorkerScript
+
+## [0.1.0] - 2025-12-03
+
+### Added
+
 #### Phase 1A: Core Foundation
 - TypeScript type system with comprehensive interfaces for content, config, storage, parser, search, and components
 - Markdown parser with frontmatter support using `marked` and `gray-matter`

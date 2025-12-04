@@ -55,31 +55,31 @@ This document tracks all planned features for the @privify-pw/web-help component
 
 | Feature # | Title                          | Status      | Description                                   |
 | --------- | ------------------------------ | ----------- | --------------------------------------------- |
-| #25       | MDX parser                     | 🔲 Planned  | MDX support with React components             |
-| #26       | JSON content loader            | 🔲 Planned  | Load content from JSON files                  |
-| #27       | CSV content loader             | 🔲 Planned  | Load content from CSV files                   |
-| #28       | Content format detection       | 🔲 Planned  | Auto-detect based on file extension           |
-| #29       | Multi-format documentation     | 🔲 Planned  | Support mixed format content                  |
+| #25       | MDX parser                     | ✅ Complete | MDX support with React components             |
+| #26       | JSON content loader            | ✅ Complete | Load content from JSON files                  |
+| #27       | CSV content loader             | ✅ Complete | Load content from CSV files                   |
+| #28       | Content format detection       | ✅ Complete | Auto-detect based on file extension           |
+| #29       | Multi-format documentation     | ✅ Complete | Support mixed format content                  |
 
 ## Phase 3B: Content Editor Utility
 
 | Feature # | Title                          | Status      | Description                                   |
 | --------- | ------------------------------ | ----------- | --------------------------------------------- |
-| #30       | Content editor component       | 🔲 Planned  | Full editor with save/publish callbacks       |
-| #31       | Markdown editor with preview   | 🔲 Planned  | WYSIWYG markdown editing                      |
-| #32       | Metadata editor                | 🔲 Planned  | Form for editing article metadata             |
-| #33       | Asset upload interface         | 🔲 Planned  | Upload and manage images/files                |
-| #34       | Editor internationalization    | 🔲 Planned  | Multi-language support via i18n               |
+| #30       | Content editor component       | ✅ Complete | Full editor with save/publish callbacks       |
+| #31       | Markdown editor with preview   | ✅ Complete | WYSIWYG markdown editing                      |
+| #32       | Metadata editor                | ✅ Complete | Form for editing article metadata             |
+| #33       | Asset upload interface         | ✅ Complete | Upload and manage images/files                |
+| #34       | Editor internationalization    | ✅ Complete | Multi-language support via i18n               |
 
 ## Phase 4: Advanced Features
 
 | Feature # | Title                          | Status      | Description                                   |
 | --------- | ------------------------------ | ----------- | --------------------------------------------- |
-| #35       | Diagram support (Mermaid)      | 🔲 Planned  | Mermaid, PlantUML integration                 |
-| #36       | Interactive sandbox            | 🔲 Planned  | CodeSandbox/StackBlitz embeds                 |
-| #37       | Analytics hooks                | 🔲 Planned  | Track views, searches, interactions           |
-| #38       | A11y audit and enhancements    | 🔲 Planned  | WCAG 2.1 AA compliance                        |
-| #39       | PWA/offline support            | 🔲 Planned  | Service worker, content caching               |
+| #35       | Diagram support (Mermaid)      | ✅ Complete | Mermaid, PlantUML integration                 |
+| #36       | Interactive sandbox            | ✅ Complete | CodeSandbox/StackBlitz embeds                 |
+| #37       | Analytics hooks                | ✅ Complete | Track views, searches, interactions           |
+| #38       | A11y audit and enhancements    | ✅ Complete | WCAG 2.1 AA compliance                        |
+| #39       | PWA/offline support            | ✅ Complete | Service worker, content caching               |
 
 ## Phase 5: Developer Experience
 
