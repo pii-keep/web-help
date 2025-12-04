@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### Phase 3A: Advanced Content Formats
+
 - MDX parser with React component extraction and placeholder rendering
 - JSON content loader with structured content blocks support
 - CSV content loader with table and list rendering options
@@ -17,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multi-format support through pluggable parser architecture
 
 #### Phase 3B: Content Editor Utility
+
 - HelpEditor component with live markdown preview
 - HelpMetadataEditor component with full field support
 - HelpAssetUpload component with drag-and-drop support
@@ -24,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - getEditorLabels and addEditorTranslation utilities for i18n
 
 #### Phase 4: Advanced Features
+
 - HelpDiagram component for Mermaid and PlantUML diagrams
 - HelpSandbox component for CodeSandbox, StackBlitz, CodePen, JSFiddle, and Replit embeds
 - useHelpAnalytics hook for comprehensive analytics tracking
@@ -33,11 +36,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PWA utilities: usePWA, useOfflineContent hooks
 - Service worker helpers: registerHelpServiceWorker, generateServiceWorkerScript
 
+## [0.1.1] - 2025-12-04
+
+### Modified
+
+- Changed all occurances of Privify to PIIKeep. Privify was the org name when we started the project. The correct branded name is PIIKeep
+
 ## [0.1.0] - 2025-12-03
 
 ### Added
 
 #### Phase 1A: Core Foundation
+
 - TypeScript type system with comprehensive interfaces for content, config, storage, parser, search, and components
 - Markdown parser with frontmatter support using `marked` and `gray-matter`
 - Static content loader with caching and content registry
@@ -46,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Storage adapters: localStorage, sessionStorage, cookie, memory
 
 #### Phase 1B: Navigation & Search
+
 - HelpTOC component for auto-generated table of contents
 - HelpBreadcrumbs component for hierarchical navigation
 - HelpPagination component for prev/next navigation
@@ -54,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - useHelpNavigation hook for navigation state
 
 #### Phase 1C: Media & Rich Content
+
 - HelpImage component with lazy loading and lightbox support
 - HelpVideo component for YouTube, Vimeo, and custom video embeds
 - HelpDownload component for downloadable resources
@@ -65,6 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - HelpSteps component for step-by-step guides
 
 #### Phase 2A: User Engagement & Feedback
+
 - HelpRating component with customizable star rating
 - HelpFeedback component for "Was this helpful?" feedback
 - HelpComments component for displaying and submitting comments
@@ -73,12 +86,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reading history tracking in UserPreferencesContext
 
 #### Phase 2B: Additional Display Modes
+
 - HelpModal component with focus management and portal rendering
 - HelpSidebar component for left/right sidebar panels
 - useHelpShortcuts hook for keyboard shortcuts
 - presetShortcuts for common shortcuts (Cmd+K, Escape, arrows)
 
 ### Infrastructure
+
 - FEATURES.md for comprehensive feature tracking
 - CHANGELOG.md for version history
 
