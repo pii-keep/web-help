@@ -99,8 +99,22 @@ export {
 // ============================================================================
 export {
   createMarkdownParser,
+  createJsonParser,
+  createCsvParser,
+  createMdxParser,
   StaticContentLoader,
   createStaticLoader,
+  ContentFormatDetector,
+  createFormatDetector,
+} from './core/loaders';
+
+export type {
+  JsonHelpContent,
+  JsonContentBlock,
+  CsvParserOptions,
+  MdxParserOptions,
+  ExtractedComponent,
+  FormatDetectionResult,
 } from './core/loaders';
 
 // ============================================================================
@@ -185,6 +199,97 @@ export type {
   CommentItem,
   HelpBookmarkProps,
 } from './components/feedback';
+
+// Editor
+export {
+  HelpEditor,
+  HelpMetadataEditor,
+  HelpAssetUpload,
+  getAssetTypeFromMime,
+  getEditorLabels,
+  addEditorTranslation,
+  getSupportedLocales,
+  isLocaleSupported,
+  allFields,
+  defaultFields,
+} from './components/editor';
+
+export type {
+  HelpEditorProps,
+  HelpEditorLabels,
+  HelpEditorState,
+  HelpMetadataEditorProps,
+  HelpMetadataLabels,
+  MetadataField,
+  FieldRenderer,
+  FieldRendererProps,
+  MetadataValidation,
+  HelpAssetUploadProps,
+  HelpAssetUploadLabels,
+  Asset,
+  UploadResult,
+  EditorI18nLabels,
+  SupportedLocale,
+} from './components/editor';
+
+// Advanced Components
+export {
+  // Diagrams
+  HelpDiagram,
+  detectDiagramType,
+  // Sandbox
+  HelpSandbox,
+  extractSandboxId,
+  // Analytics
+  useHelpAnalytics,
+  // Accessibility
+  useAccessibilityPreferences,
+  useFocusTrap,
+  useLiveAnnouncer,
+  useSkipLink,
+  SkipLink,
+  VisuallyHidden,
+  FocusRing,
+  getFocusableElements,
+  isFocusable,
+  generateA11yId,
+  ariaAttributes,
+  getContrastRatio,
+  meetsContrastRequirements,
+  // PWA
+  usePWA,
+  useOfflineContent,
+  registerHelpServiceWorker,
+  unregisterHelpServiceWorker,
+  generateServiceWorkerScript,
+} from './components/advanced';
+
+export type {
+  // Diagrams
+  HelpDiagramProps,
+  HelpDiagramLabels,
+  // Sandbox
+  HelpSandboxProps,
+  HelpSandboxLabels,
+  SandboxProvider,
+  // Analytics
+  AnalyticsEventType,
+  AnalyticsEvent,
+  AnalyticsConfig,
+  AnalyticsState,
+  UseHelpAnalyticsReturn,
+  SessionStats,
+  // Accessibility
+  AccessibilityPreferences,
+  SkipLinkProps,
+  VisuallyHiddenProps,
+  FocusRingProps,
+  // PWA
+  PWAConfig,
+  PWAStatus,
+  CacheUsage,
+  CacheItem,
+} from './components/advanced';
 
 // Legacy export for backwards compatibility
 export type { HelpMetadata } from './types/help-metadata';
