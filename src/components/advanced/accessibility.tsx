@@ -408,7 +408,7 @@ export function isFocusable(element: HTMLElement): boolean {
  * Generate unique IDs for accessibility.
  */
 export function generateA11yId(prefix: string = 'help'): string {
-  return `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
+  return `${prefix}-${Math.random().toString(36).slice(2, 11)}`;
 }
 
 /**

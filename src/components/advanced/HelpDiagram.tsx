@@ -9,6 +9,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 /**
+ * Mermaid library interface for dynamic import.
+ * This allows type-safe usage of the optional mermaid dependency.
+ */
+interface MermaidAPI {
+  initialize: (config: { startOnLoad?: boolean; theme?: string; securityLevel?: string }) => void;
+  render: (id: string, source: string) => Promise<{ svg: string }>;
+}
+
+/**
  * Props for the HelpDiagram component.
  */
 export interface HelpDiagramProps {
@@ -102,17 +111,19 @@ export const HelpDiagram: React.FC<HelpDiagramProps> = ({
   const renderMermaid = useCallback(async () => {
     try {
       // Dynamic import of Mermaid (must be installed by consumer)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mermaid = await import('mermaid' as any) as { default: { initialize: (opts: object) => void; render: (id: string, src: string) => Promise<{ svg: string }> } };
+      // Using Function constructor to avoid TypeScript module resolution
+      const importFn = new Function('specifier', 'return import(specifier)') as (specifier: string) => Promise<{ default: MermaidAPI }>;
+      const mermaidModule = await importFn('mermaid');
+      const mermaid = mermaidModule.default;
       
-      mermaid.default.initialize({
+      mermaid.initialize({
         startOnLoad: false,
         theme: theme,
         securityLevel: 'strict',
       });
 
-      const id = `mermaid-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      const { svg } = await mermaid.default.render(id, source);
+      const id = `mermaid-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+      const { svg } = await mermaid.render(id, source);
       
       return svg;
     } catch {

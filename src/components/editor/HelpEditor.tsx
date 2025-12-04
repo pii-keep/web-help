@@ -483,7 +483,7 @@ const HelpMetadataEditor: React.FC<HelpMetadataEditorInternalProps> = ({
  * Generate a simple ID.
  */
 function generateId(): string {
-  return `article-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  return `article-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 }
 
 /**

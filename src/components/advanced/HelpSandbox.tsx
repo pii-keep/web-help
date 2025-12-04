@@ -305,34 +305,44 @@ export const HelpSandbox: React.FC<HelpSandboxProps> = ({
 
 /**
  * Helper to extract sandbox ID from full URL.
+ * Uses proper URL parsing to ensure the domain is actually the host.
  */
 export function extractSandboxId(url: string): { provider: SandboxProvider; id: string } | null {
+  let parsedUrl: URL;
+  try {
+    parsedUrl = new URL(url);
+  } catch {
+    return null; // Invalid URL
+  }
+
+  const hostname = parsedUrl.hostname;
+
   // CodeSandbox
-  if (url.includes('codesandbox.io')) {
+  if (hostname === 'codesandbox.io' || hostname.endsWith('.codesandbox.io')) {
     const match = url.match(/codesandbox\.io\/(?:s|embed)\/([^/?]+)/);
     if (match) return { provider: 'codesandbox', id: match[1] };
   }
 
   // StackBlitz
-  if (url.includes('stackblitz.com')) {
+  if (hostname === 'stackblitz.com' || hostname.endsWith('.stackblitz.com')) {
     const match = url.match(/stackblitz\.com\/(?:edit|embed)\/([^/?]+)/);
     if (match) return { provider: 'stackblitz', id: match[1] };
   }
 
   // CodePen
-  if (url.includes('codepen.io')) {
+  if (hostname === 'codepen.io' || hostname.endsWith('.codepen.io')) {
     const match = url.match(/codepen\.io\/([^/]+)\/(?:pen|embed)\/([^/?]+)/);
     if (match) return { provider: 'codepen', id: `${match[1]}/pen/${match[2]}` };
   }
 
   // JSFiddle
-  if (url.includes('jsfiddle.net')) {
+  if (hostname === 'jsfiddle.net' || hostname.endsWith('.jsfiddle.net')) {
     const match = url.match(/jsfiddle\.net\/([^/]+)(?:\/([^/]+))?/);
     if (match) return { provider: 'jsfiddle', id: match[2] ? `${match[1]}/${match[2]}` : match[1] };
   }
 
   // Replit
-  if (url.includes('replit.com')) {
+  if (hostname === 'replit.com' || hostname.endsWith('.replit.com')) {
     const match = url.match(/replit\.com\/@([^/]+)\/([^/?]+)/);
     if (match) return { provider: 'replit', id: `@${match[1]}/${match[2]}` };
   }
