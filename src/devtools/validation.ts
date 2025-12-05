@@ -113,6 +113,10 @@ export function validateFrontmatter(
 
 /**
  * Validates if a value matches the expected type
+ * 
+ * @param value - The value to validate
+ * @param expectedType - The expected type ('string', 'number', 'boolean', 'array', 'object', 'date')
+ * @returns True if the value matches the expected type, false otherwise
  */
 function validateFieldType(value: unknown, expectedType: string): boolean {
   switch (expectedType) {
