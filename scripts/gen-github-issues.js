@@ -1,6 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import fs from 'fs';
 import path from 'path';
+import { start } from 'repl';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -21,7 +22,7 @@ if (!GITHUB_TOKEN) {
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
 // Parse FEATURES.md
-function parseFeatures() {
+function parseFeatures(startIssueNumber = null) {
   const featuresPath = path.join(__dirname, '..', 'FEATURES.md');
   const content = fs.readFileSync(featuresPath, 'utf-8');
 
@@ -57,6 +58,10 @@ function parseFeatures() {
         const status = columns[2];
         const description = columns[3];
 
+        // If startIssueNumber is set, skip features below that number
+        if (startIssueNumber && parseInt(featureNum) < startIssueNumber) {
+          continue;
+        }
         features.push({
           number: parseInt(featureNum),
           title,
@@ -216,8 +221,8 @@ async function ensureLabels() {
 }
 
 // Create GitHub issues
-async function createIssues(dryRun = true) {
-  const features = parseFeatures();
+async function createIssues(dryRun = true, startIssueNumber = null) {
+  const features = parseFeatures(startIssueNumber);
 
   console.log(`\n📊 Found ${features.length} features in FEATURES.md\n`);
 
@@ -276,8 +281,11 @@ async function createIssues(dryRun = true) {
 // Main
 const args = process.argv.slice(2);
 const dryRun = !args.includes('--create');
+const startIssueNumber = args.includes('--start')
+  ? parseInt(args[args.indexOf('--start') + 1], 10)
+  : null;
 
-createIssues(dryRun).catch((error) => {
+createIssues(dryRun, startIssueNumber).catch((error) => {
   console.error('❌ Error:', error.message);
   process.exit(1);
 });

@@ -91,6 +91,21 @@ This document tracks all planned features for the @piikeep/web-help component li
 | #43       | Migration utilities         | 🔲 Planned | Migrate from other help systems      |
 | #44       | Comprehensive documentation | 🔲 Planned | API reference, guides, examples      |
 
+## Phase 6: Enterprise Features (v1.0.0)
+
+| Feature # | Title                             | Status     | Description                                        |
+| --------- | --------------------------------- | ---------- | -------------------------------------------------- |
+| #45       | Analytics adapter system          | 🔲 Planned | Pluggable analytics (Supabase, GA, Mixpanel)       |
+| #46       | Static manifest generation CLI    | 🔲 Planned | Generate JSON manifests from markdown              |
+| #47       | Router adapter system             | 🔲 Planned | Framework-agnostic routing (React Router, Next.js) |
+| #48       | Related documents algorithm       | 🔲 Planned | Smart doc recommendations (category, tags, ML)     |
+| #49       | Multi-portal context management   | 🔲 Planned | Multiple help portals with isolated configs        |
+| #50       | Enhanced TOC generator            | 🔲 Planned | Active heading tracking, smooth scroll, nesting    |
+| #51       | Markdown link transformer         | 🔲 Planned | Intelligent link handling, validation, analytics   |
+| #52       | Advanced search functionality     | 🔲 Planned | Fuzzy/semantic search, filters, highlighting       |
+| #53       | Frontmatter management tools      | 🔲 Planned | CLI tools for frontmatter validation, fixing       |
+| #54       | Documentation analytics dashboard | 🔲 Planned | View stats, popular docs, search analytics         |
+
 ## Status Legend
 
 - 🔲 Planned - Feature is documented and planned
