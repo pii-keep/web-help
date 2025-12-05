@@ -49,8 +49,10 @@ export const HelpNavigation = forwardRef<HTMLElement, HelpNavigationProps>(
       (item: NavigationItem) => {
         if (item.children?.length && collapsible) {
           toggleCollapsed(item.id);
+        } else {
+          // Only call onItemSelect for leaf items (articles without children)
+          onItemSelect?.(item.id);
         }
-        onItemSelect?.(item.id);
       },
       [collapsible, toggleCollapsed, onItemSelect],
     );

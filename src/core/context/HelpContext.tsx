@@ -8,8 +8,9 @@ import {
   useContext,
   useReducer,
   useCallback,
-  useMemo,
   useEffect,
+  useRef,
+  useMemo,
   type ReactNode,
 } from 'react';
 import type {
@@ -147,6 +148,8 @@ export interface HelpProviderProps {
   searchAdapter?: SearchAdapter;
   /** Content manifest (article ID -> content) */
   contentManifest?: Record<string, string>;
+  /** Auto-navigate to first article on initialization (default: true) */
+  autoNavigate?: boolean;
   /** Children */
   children: ReactNode;
 }
@@ -160,50 +163,101 @@ export function HelpProvider({
   storageAdapter,
   searchAdapter,
   contentManifest,
+  autoNavigate = true,
   children,
 }: HelpProviderProps) {
   const [state, dispatch] = useReducer(helpReducer, initialState);
 
-  // Initialize storage adapter
-  const storage = useMemo(() => {
-    if (storageAdapter) return storageAdapter;
-    const prefix = config.storage?.prefix ?? 'help_';
-    return createLocalStorageAdapter(prefix);
-  }, [storageAdapter, config.storage?.prefix]);
+  // Keep a ref to the latest state to avoid callback dependencies
+  const stateRef = useRef(state);
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
-  // Initialize content loader
-  const contentLoader = useMemo(() => {
+  // Use ref to store latest config without causing re-renders
+  const configRef = useRef(config);
+  useEffect(() => {
+    configRef.current = config;
+  }, [config]);
+
+  // Use ref to store latest callbacks without causing re-renders
+  const callbacksRef = useRef(callbacks);
+  useEffect(() => {
+    callbacksRef.current = callbacks;
+  }, [callbacks]);
+
+  // Initialize storage adapter ONCE
+  const storage = useRef<StorageAdapter>();
+  if (!storage.current) {
+    storage.current =
+      storageAdapter ??
+      createLocalStorageAdapter(config.storage?.prefix ?? 'help_');
+  }
+
+  // Initialize content loader ONCE
+  const contentLoaderRef = useRef<StaticContentLoader>();
+  if (!contentLoaderRef.current) {
     const loader = new StaticContentLoader(config.content);
     loader.registerParser(createMarkdownParser());
-    return loader;
-  }, [config.content]);
+    contentLoaderRef.current = loader;
+  }
+  const contentLoader = contentLoaderRef.current;
 
-  // Load content manifest on mount
+  // Load content manifest ONCE on mount
   useEffect(() => {
-    if (contentManifest) {
-      const loadContent = async () => {
-        dispatch({ type: 'SET_LOADING', payload: true });
-        try {
-          await contentLoader.loadFromManifest(contentManifest);
-          dispatch({
-            type: 'SET_CATEGORIES',
-            payload: contentLoader.getCategories(),
-          });
-          dispatch({ type: 'SET_INITIALIZED', payload: true });
-        } catch (error) {
-          dispatch({
-            type: 'SET_ERROR',
-            payload: error instanceof Error ? error : new Error(String(error)),
-          });
-        } finally {
-          dispatch({ type: 'SET_LOADING', payload: false });
-        }
-      };
-      loadContent();
-    } else {
+    if (!contentManifest) {
       dispatch({ type: 'SET_INITIALIZED', payload: true });
+      return;
     }
-  }, [contentManifest, contentLoader]);
+
+    const loadContent = async () => {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      try {
+        await contentLoader.loadFromManifest(contentManifest);
+        const categories = contentLoader.getCategories();
+        dispatch({
+          type: 'SET_CATEGORIES',
+          payload: categories,
+        });
+        dispatch({ type: 'SET_INITIALIZED', payload: true });
+
+        // Load first article if autoNavigate is enabled
+        if (autoNavigate) {
+          const allArticles = contentLoader.getAllArticles();
+          if (allArticles.length > 0) {
+            const firstArticle = await contentLoader.loadArticle(
+              allArticles[0].id,
+            );
+            if (firstArticle) {
+              dispatch({ type: 'SET_ARTICLE', payload: firstArticle });
+
+              const navigation: NavigationState = {
+                currentArticle: allArticles[0].id,
+                prev: undefined,
+                next:
+                  allArticles.length > 1
+                    ? { id: allArticles[1].id, title: allArticles[1].title }
+                    : undefined,
+              };
+
+              dispatch({ type: 'SET_NAVIGATION', payload: navigation });
+              callbacksRef.current.onArticleView?.(allArticles[0].id);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading manifest:', error);
+        dispatch({
+          type: 'SET_ERROR',
+          payload: error instanceof Error ? error : new Error(String(error)),
+        });
+      } finally {
+        dispatch({ type: 'SET_LOADING', payload: false });
+      }
+    };
+    loadContent();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run ONLY once on mount
 
   // Load article function
   const loadArticle = useCallback(
@@ -213,25 +267,26 @@ export function HelpProvider({
         const article = await contentLoader.loadArticle(articleId);
         if (article) {
           dispatch({ type: 'SET_ARTICLE', payload: article });
-          callbacks.onArticleView?.(articleId);
+          callbacksRef.current.onArticleView?.(articleId);
         }
         return article;
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));
         dispatch({ type: 'SET_ERROR', payload: err });
-        callbacks.onError?.(err, 'loadArticle');
+        callbacksRef.current.onError?.(err, 'loadArticle');
         return null;
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     },
-    [contentLoader, callbacks],
+    [contentLoader],
   );
 
   // Navigate to article
   const navigateToArticle = useCallback(
     async (articleId: string): Promise<void> => {
-      const fromId = state.currentArticle?.id ?? null;
+      // Use stateRef to get current article without adding to dependencies
+      const fromId = stateRef.current.currentArticle?.id ?? null;
       const article = await loadArticle(articleId);
 
       if (article) {
@@ -258,10 +313,10 @@ export function HelpProvider({
         };
 
         dispatch({ type: 'SET_NAVIGATION', payload: navigation });
-        callbacks.onNavigate?.(fromId, articleId);
+        callbacksRef.current.onNavigate?.(fromId, articleId);
       }
     },
-    [loadArticle, contentLoader, callbacks, state.currentArticle?.id],
+    [loadArticle, contentLoader],
   );
 
   // Register content
@@ -277,12 +332,12 @@ export function HelpProvider({
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));
         dispatch({ type: 'SET_ERROR', payload: err });
-        callbacks.onError?.(err, 'registerContent');
+        callbacksRef.current.onError?.(err, 'registerContent');
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     },
-    [contentLoader, callbacks],
+    [contentLoader],
   );
 
   // Get content index
@@ -295,19 +350,31 @@ export function HelpProvider({
     dispatch({ type: 'SET_SEARCH_QUERY', payload: query });
   }, []);
 
-  const value: HelpContextValue = {
-    state,
-    config,
-    callbacks,
-    storage,
-    contentLoader,
-    searchAdapter,
-    navigateToArticle,
-    loadArticle,
-    registerContent,
-    getContentIndex,
-    setSearchQuery,
-  };
+  const value: HelpContextValue = useMemo(
+    () => ({
+      state,
+      config: configRef.current,
+      callbacks: callbacksRef.current,
+      storage: storage.current!,
+      contentLoader,
+      searchAdapter,
+      navigateToArticle,
+      loadArticle,
+      registerContent,
+      getContentIndex,
+      setSearchQuery,
+    }),
+    [
+      state,
+      searchAdapter,
+      navigateToArticle,
+      loadArticle,
+      registerContent,
+      getContentIndex,
+      setSearchQuery,
+      contentLoader,
+    ],
+  );
 
   return <HelpContext.Provider value={value}>{children}</HelpContext.Provider>;
 }

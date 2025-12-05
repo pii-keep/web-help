@@ -47,16 +47,20 @@ export interface HelpPageProps extends BaseComponentProps {
   /** Article ID to load (if article not provided) */
   articleId?: string;
   /** Render custom header */
-  renderHeader?: (article: HelpArticle) => ReactNode;
+  renderHeader?: (article?: HelpArticle) => ReactNode;
   /** Render custom footer */
-  renderFooter?: (article: HelpArticle) => ReactNode;
+  renderFooter?: (article?: HelpArticle) => ReactNode;
   /** Render custom sidebar */
-  renderSidebar?: (article: HelpArticle) => ReactNode;
-  /** Show table of contents */
+  renderSidebar?: (article?: HelpArticle) => ReactNode;
+  /** Show navigation sidebar (default: true) */
+  showNavigation?: boolean;
+  /** Show search in sidebar (default: true) */
+  showSearch?: boolean;
+  /** Show table of contents (default: true) */
   showTOC?: boolean;
-  /** Show breadcrumbs */
+  /** Show breadcrumbs (default: true) */
   showBreadcrumbs?: boolean;
-  /** Show pagination */
+  /** Show pagination (default: true) */
   showPagination?: boolean;
   /** Children to render when no article */
   children?: ReactNode;

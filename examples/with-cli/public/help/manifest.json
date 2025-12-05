@@ -1,0 +1,58 @@
+{
+  "title": "Help Documentation",
+  "description": "Documentation for the application",
+  "version": "1.0.0",
+  "categories": [
+    {
+      "id": "getting-started",
+      "title": "Getting Started",
+      "order": 1
+    },
+    {
+      "id": "guides",
+      "title": "Guides",
+      "order": 2,
+      "articles": [
+        {
+          "slug": "configuration-guide",
+          "title": "Configuration Guide",
+          "order": 1
+        },
+        {
+          "slug": "test-article",
+          "title": "Test Article",
+          "order": 2
+        }
+      ]
+    },
+    {
+      "id": "reference",
+      "title": "API Reference",
+      "order": 3
+    },
+    {
+      "id": "tutorials",
+      "title": "Tutorials",
+      "order": 4,
+      "articles": [
+        {
+          "slug": "tutorial",
+          "title": "Tutorial",
+          "order": 1
+        }
+      ]
+    },
+    {
+      "id": "general",
+      "title": "General",
+      "order": 5,
+      "articles": [
+        {
+          "slug": "faq",
+          "title": "faq",
+          "order": 1
+        }
+      ]
+    }
+  ]
+}

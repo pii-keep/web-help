@@ -5,10 +5,33 @@
  * Headless component for rendering a help page layout.
  */
 
-import { forwardRef, useEffect } from 'react';
+import { forwardRef, useEffect, useMemo } from 'react';
 import type { HelpPageProps } from '../types/components';
+import type { NavigationItem } from '../types/components';
 import { useHelpContext } from '../context/HelpContext';
 import { HelpContent } from './HelpContent';
+import { HelpNavigation } from './HelpNavigation';
+import { HelpBreadcrumbs } from './navigation/HelpBreadcrumbs';
+import { HelpPagination } from './navigation/HelpPagination';
+import { HelpTOC } from './navigation/HelpTOC';
+import { HelpSearch } from './navigation/HelpSearch';
+
+/**
+ * Helper function to strip the first H1 from rendered HTML if it matches the article title.
+ * This prevents duplicate titles when markdown content includes an H1 heading.
+ */
+function stripDuplicateTitle(html: string, title: string): string {
+  // Match the first H1 tag with any class or id attributes
+  const h1Pattern = /<h1[^>]*>([^<]+)<\/h1>/i;
+  const match = html.match(h1Pattern);
+
+  if (match && match[1].trim() === title.trim()) {
+    // Remove the first H1 tag if it matches the title
+    return html.replace(h1Pattern, '').trim();
+  }
+
+  return html;
+}
 
 /**
  * HelpPage is a headless container component for rendering help articles.
@@ -22,6 +45,8 @@ export const HelpPage = forwardRef<HTMLDivElement, HelpPageProps>(
       renderHeader,
       renderFooter,
       renderSidebar,
+      showNavigation = true,
+      showSearch = true,
       showTOC = true,
       showBreadcrumbs = true,
       showPagination = true,
@@ -31,14 +56,45 @@ export const HelpPage = forwardRef<HTMLDivElement, HelpPageProps>(
     },
     ref,
   ) {
-    const { loadArticle, state } = useHelpContext();
+    const { loadArticle, navigateToArticle, state, contentLoader } =
+      useHelpContext();
+
+    // Auto-build navigation from categories
+    const navigationItems = useMemo((): NavigationItem[] => {
+      const categories = state.categories || [];
+
+      const items = categories
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .map((category) => {
+          const categoryArticles = contentLoader
+            .getAllArticles()
+            .filter((art) => art.metadata?.category === category.id)
+            .sort(
+              (a, b) => (a.metadata?.order ?? 0) - (b.metadata?.order ?? 0),
+            );
+
+          return {
+            id: category.id,
+            label: category.name,
+            isCategory: true,
+            children: categoryArticles.map((art) => ({
+              id: art.id,
+              label: art.title,
+              path: `#${art.id}`,
+            })),
+          };
+        });
+
+      return items;
+    }, [state.categories, contentLoader]);
 
     // Load article if articleId provided
     useEffect(() => {
       if (articleId && !article) {
         loadArticle(articleId);
       }
-    }, [articleId, article, loadArticle]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [articleId, article]); // Only re-run when articleId or article prop changes
 
     const currentArticle = article ?? state.currentArticle;
     const isLoading = state.isLoading;
@@ -100,9 +156,30 @@ export const HelpPage = forwardRef<HTMLDivElement, HelpPageProps>(
         {...props}
       >
         {/* Sidebar */}
-        {renderSidebar && (
+        {(renderSidebar || showNavigation) && (
           <aside className='help-page-sidebar' data-component='sidebar'>
-            {renderSidebar(currentArticle)}
+            {renderSidebar ? (
+              renderSidebar(currentArticle)
+            ) : (
+              <div className='help-sidebar-content'>
+                {showSearch && (
+                  <HelpSearch
+                    onResultSelect={(result) =>
+                      navigateToArticle(result.articleId)
+                    }
+                    placeholder='Search documentation...'
+                  />
+                )}
+                {showNavigation && (
+                  <HelpNavigation
+                    items={navigationItems}
+                    activeId={currentArticle.id}
+                    onItemSelect={navigateToArticle}
+                    collapsible
+                  />
+                )}
+              </div>
+            )}
           </aside>
         )}
 
@@ -115,6 +192,7 @@ export const HelpPage = forwardRef<HTMLDivElement, HelpPageProps>(
             </header>
           ) : (
             <header className='help-page-header' data-component='header'>
+              {showBreadcrumbs && <HelpBreadcrumbs />}
               <h1 className='help-page-title'>{currentArticle.title}</h1>
               {currentArticle.description && (
                 <p className='help-page-description'>
@@ -124,36 +202,19 @@ export const HelpPage = forwardRef<HTMLDivElement, HelpPageProps>(
             </header>
           )}
 
-          {/* Breadcrumbs slot */}
-          {showBreadcrumbs && (
-            <nav
-              className='help-page-breadcrumbs-slot'
-              data-component='breadcrumbs'
-              aria-label='Breadcrumb'
-            >
-              {/* Breadcrumbs component should be rendered here by consumer */}
-            </nav>
-          )}
-
           {/* Article content */}
           <article className='help-page-article' data-component='article'>
             {currentArticle.renderedContent ? (
-              <HelpContent content={currentArticle.renderedContent} />
+              <HelpContent
+                content={stripDuplicateTitle(
+                  currentArticle.renderedContent,
+                  currentArticle.title,
+                )}
+              />
             ) : (
               <HelpContent content={currentArticle.content} />
             )}
           </article>
-
-          {/* Table of contents slot */}
-          {showTOC && (
-            <nav
-              className='help-page-toc-slot'
-              data-component='toc'
-              aria-label='Table of contents'
-            >
-              {/* TOC component should be rendered here by consumer */}
-            </nav>
-          )}
 
           {/* Footer */}
           {renderFooter ? (
@@ -170,18 +231,9 @@ export const HelpPage = forwardRef<HTMLDivElement, HelpPageProps>(
                   ).toLocaleDateString()}
                 </p>
               )}
+              {showPagination && <HelpPagination />}
+              {showTOC && <HelpTOC />}
             </footer>
-          )}
-
-          {/* Pagination slot */}
-          {showPagination && (
-            <nav
-              className='help-page-pagination-slot'
-              data-component='pagination'
-              aria-label='Article navigation'
-            >
-              {/* Pagination component should be rendered here by consumer */}
-            </nav>
           )}
         </main>
       </div>

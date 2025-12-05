@@ -1,11 +1,11 @@
 /**
  * Developer Experience Tools for @piikeep/web-help
- * 
+ *
  * This module provides CLI scaffolding, configuration generation,
  * content validation, migration utilities, and documentation tools.
- * 
+ *
  * @module @piikeep/web-help/devtools
- * 
+ *
  * @example
  * ```typescript
  * import {
@@ -15,27 +15,27 @@
  *   migration,
  *   documentation,
  * } from '@piikeep/web-help';
- * 
+ *
  * // Generate initialization files
  * const initResult = cli.generateInitFiles({
  *   contentDir: './help',
  *   formats: ['md', 'mdx'],
  * });
- * 
+ *
  * // Generate a new article
  * const article = cli.generateArticle({
  *   title: 'Getting Started',
  *   template: 'tutorial',
  * });
- * 
+ *
  * // Generate configuration
  * const config = configGenerator.generateConfig({
  *   projectName: 'my-docs',
  * });
- * 
+ *
  * // Validate content
  * const validationResult = validation.validateContent(files);
- * 
+ *
  * // Migrate from another system
  * const migrationResult = migration.migrate(files, {
  *   source: 'docusaurus',
@@ -55,6 +55,29 @@ export {
   getArticleTemplate,
   slugify,
 } from './cli';
+
+// ============================================================================
+// Manifest Loader
+// ============================================================================
+export {
+  loadFromManifestFile,
+  loadFromConfig,
+  loadArticleFile,
+} from './manifestLoader';
+export type {
+  ManifestStructure,
+  LoadManifestOptions,
+  LoadManifestResult,
+} from './manifestLoader';
+
+// ============================================================================
+// Navigation Builder
+// ============================================================================
+export {
+  buildNavigationFromManifest,
+  buildNavigationFromCategories,
+  buildFlatNavigation,
+} from './navigationBuilder';
 
 // ============================================================================
 // Config Generator

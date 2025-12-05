@@ -1,15 +1,19 @@
 {
   "name": "with-cli",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Example using @piikeep/web-help CLI tools",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "help:init": "node ../../bin/cli.js init --output public/help",
+    "help:add": "node ../../bin/cli.js add"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@piikeep/web-help": "^0.2.1",
+    "@piikeep/web-help": "file:../..",
     "buffer": "^6.0.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
