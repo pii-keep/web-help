@@ -26,7 +26,7 @@ const DEFAULT_OPTIONS: Required<ConfigGeneratorOptions> = {
   media: {
     lazyLoad: true,
     lightbox: true,
-    cdnBaseUrl: undefined as unknown as string,
+    cdnBaseUrl: '',
   },
   navigation: {
     showTOC: true,
