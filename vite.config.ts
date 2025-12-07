@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import dts from 'vite-plugin-dts';
 import path from 'path';
+import { copyFileSync, mkdirSync } from 'fs';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -28,6 +29,19 @@ export default defineConfig({
       staticImport: true,
       clearPureImport: true,
     }),
+    {
+      name: 'copy-css',
+      closeBundle() {
+        // Copy baseline.css to dist/styles/
+        const srcPath = path.resolve(__dirname, 'src/styles/baseline.css');
+        const distDir = path.resolve(__dirname, 'dist/styles');
+        const distPath = path.resolve(distDir, 'baseline.css');
+
+        mkdirSync(distDir, { recursive: true });
+        copyFileSync(srcPath, distPath);
+        console.log('✓ Copied baseline.css to dist/styles/');
+      },
+    },
   ],
   build: {
     lib: {

@@ -1,207 +1,71 @@
 /**
- * with-cli Example Styles
+ * @piikeep/web-help - Baseline CSS
  * 
- * This stylesheet is the source for the baseline.css file included in the package.
- * It contains:
- * - Example-specific styles (app-*, theme-toggle, etc.)
- * - Help component styles (help-*) -> extracted to src/styles/baseline.css
+ * This stylesheet provides default styling for help components.
+ * These styles are completely optional - the library is headless
+ * and you can bring your own styling approach.
  * 
- * When using @piikeep/web-help in your own app, import:
+ * Usage:
  *   import '@piikeep/web-help/baseline.css'
  * 
- * instead of copying this entire file.
+ * Customization:
+ *   Override CSS variables in :root to customize the theme.
+ *   All component classes use semantic naming (help-*).
  */
 
-/* CSS Variables for theming */
+/* ============================================
+   CSS VARIABLES FOR THEMING
+   ============================================ */
+
 :root {
   /* Light theme (default) */
-  --color-bg: #ffffff;
-  --color-bg-secondary: #f5f7fa;
-  --color-bg-tertiary: #e8ecf0;
-  --color-text: #1a1a2e;
-  --color-text-secondary: #4a5568;
-  --color-text-muted: #718096;
-  --color-border: #e2e8f0;
-  --color-primary: #0066cc;
-  --color-primary-hover: #0052a3;
-  --color-primary-light: #e6f0ff;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-info: #3b82f6;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --help-color-bg: #ffffff;
+  --help-color-bg-secondary: #f5f7fa;
+  --help-color-bg-tertiary: #e8ecf0;
+  --help-color-text: #1a1a2e;
+  --help-color-text-secondary: #4a5568;
+  --help-color-text-muted: #718096;
+  --help-color-border: #e2e8f0;
+  --help-color-primary: #0066cc;
+  --help-color-primary-hover: #0052a3;
+  --help-color-primary-light: #e6f0ff;
+  --help-color-success: #10b981;
+  --help-color-warning: #f59e0b;
+  --help-color-danger: #ef4444;
+  --help-color-info: #3b82f6;
+  --help-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --help-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --help-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+  --help-radius-sm: 4px;
+  --help-radius-md: 8px;
+  --help-radius-lg: 12px;
 }
 
 [data-theme='dark'] {
   /* Dark theme */
-  --color-bg: #1a1a2e;
-  --color-bg-secondary: #16213e;
-  --color-bg-tertiary: #0f3460;
-  --color-text: #e0e0e0;
-  --color-text-secondary: #a0aec0;
-  --color-text-muted: #718096;
-  --color-border: #2d3748;
-  --color-primary: #4da6ff;
-  --color-primary-hover: #66b3ff;
-  --color-primary-light: #1a3a5c;
-  --color-success: #34d399;
-  --color-warning: #fbbf24;
-  --color-danger: #f87171;
-  --color-info: #60a5fa;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+  --help-color-bg: #1a1a2e;
+  --help-color-bg-secondary: #16213e;
+  --help-color-bg-tertiary: #0f3460;
+  --help-color-text: #e0e0e0;
+  --help-color-text-secondary: #a0aec0;
+  --help-color-text-muted: #718096;
+  --help-color-border: #2d3748;
+  --help-color-primary: #4da6ff;
+  --help-color-primary-hover: #66b3ff;
+  --help-color-primary-light: #1a3a5c;
+  --help-color-success: #34d399;
+  --help-color-warning: #fbbf24;
+  --help-color-danger: #f87171;
+  --help-color-info: #60a5fa;
+  --help-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --help-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --help-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
-/* Base styles */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* ============================================
+   HELP MODAL
+   ============================================ */
 
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    sans-serif;
-  line-height: 1.6;
-  color: var(--color-text);
-  background-color: var(--color-bg);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-#root {
-  min-height: 100vh;
-}
-
-/* App layout */
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.app-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-  background-color: var(--color-bg-secondary);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.app-header h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.app-main {
-  flex: 1;
-  padding: 2rem;
-}
-
-.app-content {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.app-content h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.app-content h3 {
-  font-size: 1.25rem;
-  margin: 1.5rem 0 1rem;
-}
-
-.app-content p {
-  margin-bottom: 1rem;
-  color: var(--color-text-secondary);
-}
-
-.app-content ul {
-  list-style: none;
-  margin: 1rem 0;
-}
-
-.app-content li {
-  padding: 0.5rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.app-content code {
-  background-color: var(--color-bg-tertiary);
-  padding: 0.125rem 0.375rem;
-  border-radius: var(--radius-sm);
-  font-family: 'Monaco', 'Menlo', monospace;
-  font-size: 0.875em;
-}
-
-/* Buttons */
-.theme-toggle {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: var(--radius-md);
-  transition: background-color 0.2s;
-}
-
-.theme-toggle:hover {
-  background-color: var(--color-bg-tertiary);
-}
-
-.help-button,
-.cta-button {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  background-color: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius-md);
-  transition: background-color 0.2s;
-}
-
-.help-button:hover,
-.cta-button:hover {
-  background-color: var(--color-primary-hover);
-}
-
-.cta-button {
-  margin-top: 2rem;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  color: var(--color-text-secondary);
-  border-radius: var(--radius-sm);
-}
-
-.close-btn:hover {
-  background-color: var(--color-bg-tertiary);
-}
-
-/* Help Modal Override */
 .help-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -214,9 +78,9 @@ body {
 }
 
 .help-modal {
-  background: var(--color-bg);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+  background: var(--help-color-bg);
+  border-radius: var(--help-radius-lg);
+  box-shadow: var(--help-shadow-lg);
   width: 95%;
   max-width: 1000px;
   max-height: 90vh;
@@ -234,7 +98,10 @@ body {
   overflow: hidden;
 }
 
-/* Help Sidebar Layout */
+/* ============================================
+   HELP SIDEBAR LAYOUT (for modal)
+   ============================================ */
+
 .help-sidebar-layout {
   display: flex;
   flex-direction: column;
@@ -247,8 +114,8 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  background-color: var(--color-bg-secondary);
-  border-bottom: 1px solid var(--color-border);
+  background-color: var(--help-color-bg-secondary);
+  border-bottom: 1px solid var(--help-color-border);
 }
 
 .help-title {
@@ -264,8 +131,8 @@ body {
 
 .help-search-container {
   padding: 1rem 1.5rem;
-  background-color: var(--color-bg-secondary);
-  border-bottom: 1px solid var(--color-border);
+  background-color: var(--help-color-bg-secondary);
+  border-bottom: 1px solid var(--help-color-border);
 }
 
 .help-layout {
@@ -276,8 +143,8 @@ body {
 
 .help-nav-sidebar {
   width: 250px;
-  background-color: var(--color-bg-secondary);
-  border-right: 1px solid var(--color-border);
+  background-color: var(--help-color-bg-secondary);
+  border-right: 1px solid var(--help-color-border);
   overflow-y: auto;
   padding: 1rem 0;
 }
@@ -292,14 +159,17 @@ body {
 .help-welcome {
   text-align: center;
   padding: 3rem;
-  color: var(--color-text-secondary);
+  color: var(--help-color-text-secondary);
 }
 
 .help-welcome h2 {
   margin-bottom: 1rem;
 }
 
-/* Help Navigation */
+/* ============================================
+   HELP NAVIGATION
+   ============================================ */
+
 .help-navigation {
   width: 100%;
 }
@@ -322,10 +192,10 @@ body {
   padding: 0.5rem 0.75rem;
   background: none;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--help-radius-sm);
   cursor: pointer;
   text-align: left;
-  color: var(--color-text-secondary);
+  color: var(--help-color-text-secondary);
   transition: all 0.2s;
   font-size: 0.875rem;
 }
@@ -339,19 +209,19 @@ body {
 }
 
 .help-nav-button:hover {
-  background-color: var(--color-bg-tertiary);
-  color: var(--color-text);
+  background-color: var(--help-color-bg-tertiary);
+  color: var(--help-color-text);
 }
 
 .help-nav-item[data-active='true'] > .help-nav-button {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
+  background-color: var(--help-color-primary-light);
+  color: var(--help-color-primary);
   font-weight: 500;
 }
 
 .help-nav-item[data-category='true'] > .help-nav-button {
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--help-color-text);
 }
 
 .help-nav-children {
@@ -371,7 +241,10 @@ body {
   font-size: 0.625rem;
 }
 
-/* Help Search */
+/* ============================================
+   HELP SEARCH
+   ============================================ */
+
 .help-search {
   position: relative;
 }
@@ -384,21 +257,21 @@ body {
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  border: 1px solid var(--help-color-border);
+  border-radius: var(--help-radius-md);
+  background-color: var(--help-color-bg);
+  color: var(--help-color-text);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .help-search-input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
+  border-color: var(--help-color-primary);
+  box-shadow: 0 0 0 3px var(--help-color-primary-light);
 }
 
 .help-search-input::placeholder {
-  color: var(--color-text-muted);
+  color: var(--help-color-text-muted);
 }
 
 .help-search-dropdown {
@@ -407,10 +280,10 @@ body {
   left: 0;
   right: 0;
   margin-top: 0.5rem;
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  background-color: var(--help-color-bg);
+  border: 1px solid var(--help-color-border);
+  border-radius: var(--help-radius-md);
+  box-shadow: var(--help-shadow-md);
   z-index: 100;
   max-height: 300px;
   overflow-y: auto;
@@ -428,7 +301,7 @@ body {
   border: none;
   text-align: left;
   cursor: pointer;
-  color: var(--color-text);
+  color: var(--help-color-text);
   transition: background-color 0.2s;
 }
 
@@ -436,7 +309,7 @@ body {
 .help-search-recent-button:hover,
 .help-search-result[data-highlighted='true'] .help-search-result-button,
 .help-search-recent-item[data-highlighted='true'] .help-search-recent-button {
-  background-color: var(--color-bg-tertiary);
+  background-color: var(--help-color-bg-tertiary);
 }
 
 .help-search-result-title {
@@ -447,7 +320,7 @@ body {
 .help-search-result-snippet {
   display: block;
   font-size: 0.75rem;
-  color: var(--color-text-muted);
+  color: var(--help-color-text-muted);
   margin-top: 0.25rem;
 }
 
@@ -455,7 +328,7 @@ body {
   padding: 0.5rem 1rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-text-muted);
+  color: var(--help-color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -463,78 +336,93 @@ body {
 .help-search-no-results {
   padding: 1rem;
   text-align: center;
-  color: var(--color-text-muted);
+  color: var(--help-color-text-muted);
 }
 
-/* Help Breadcrumbs */
+/* ============================================
+   HELP BREADCRUMBS
+   ============================================ */
+
 .help-breadcrumbs {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 0;
-  margin-bottom: 1.5rem;
   font-size: 0.875rem;
-  color: var(--color-text-secondary);
+  color: var(--help-color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.help-breadcrumbs-list {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
 }
 
 .help-breadcrumb-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--color-text-muted);
+  color: var(--help-color-text-muted);
   text-transform: capitalize;
 }
 
-.help-breadcrumb-item a {
-  color: var(--color-primary);
+.help-breadcrumb-link {
+  color: var(--help-color-primary);
   text-decoration: none;
   transition: color 0.2s;
 }
 
-.help-breadcrumb-item a:hover {
-  color: var(--color-primary-dark);
+.help-breadcrumb-link:hover {
+  color: var(--help-color-primary-hover);
   text-decoration: underline;
 }
 
 .help-breadcrumb-separator {
-  color: var(--color-text-muted);
+  color: var(--help-color-text-muted);
   user-select: none;
 }
 
 .help-breadcrumb-item[aria-current='page'] {
-  color: var(--color-text);
+  color: var(--help-color-text);
   font-weight: 500;
 }
 
-/* Help Content */
+/* ============================================
+   HELP CONTENT
+   ============================================ */
+
 .help-content {
-  color: var(--color-text);
+  color: var(--help-color-text);
 }
 
 .help-content h1 {
   font-size: 1.75rem;
   margin-bottom: 1rem;
-  color: var(--color-text);
+  color: var(--help-color-text);
 }
 
 .help-content h2 {
   font-size: 1.375rem;
   margin-top: 2rem;
   margin-bottom: 0.75rem;
-  color: var(--color-text);
+  color: var(--help-color-text);
 }
 
 .help-content h3 {
   font-size: 1.125rem;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
-  color: var(--color-text);
+  color: var(--help-color-text);
 }
 
 .help-content p {
   margin-bottom: 1rem;
-  color: var(--color-text-secondary);
+  color: var(--help-color-text-secondary);
 }
 
 .help-content ul,
@@ -545,21 +433,21 @@ body {
 
 .help-content li {
   margin-bottom: 0.5rem;
-  color: var(--color-text-secondary);
+  color: var(--help-color-text-secondary);
 }
 
 .help-content code {
-  background-color: var(--color-bg-tertiary);
+  background-color: var(--help-color-bg-tertiary);
   padding: 0.125rem 0.375rem;
-  border-radius: var(--radius-sm);
+  border-radius: var(--help-radius-sm);
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   font-size: 0.875em;
 }
 
 .help-content pre {
-  background-color: var(--color-bg-tertiary);
+  background-color: var(--help-color-bg-tertiary);
   padding: 1rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--help-radius-md);
   overflow-x: auto;
   margin: 1rem 0;
 }
@@ -572,60 +460,51 @@ body {
 }
 
 .help-content blockquote {
-  border-left: 4px solid var(--color-primary);
+  border-left: 4px solid var(--help-color-primary);
   padding-left: 1rem;
   margin: 1rem 0;
-  color: var(--color-text-secondary);
-  background-color: var(--color-bg-secondary);
+  color: var(--help-color-text-secondary);
+  background-color: var(--help-color-bg-secondary);
   padding: 0.75rem 1rem;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-radius: 0 var(--help-radius-sm) var(--help-radius-sm) 0;
 }
 
 .help-content strong {
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--help-color-text);
 }
 
-/* Demo Section */
-.help-demo-section {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--color-border);
-}
+/* ============================================
+   HELP CALLOUT
+   ============================================ */
 
-.help-demo-section h2 {
-  font-size: 1.25rem;
-  margin-bottom: 1.5rem;
-}
-
-/* Callout styles */
 .help-callout {
   display: flex;
   gap: 0.75rem;
   padding: 1rem;
   margin: 1rem 0;
-  border-radius: var(--radius-md);
+  border-radius: var(--help-radius-md);
   border-left: 4px solid;
 }
 
 .help-callout-info {
-  background-color: var(--color-primary-light);
-  border-color: var(--color-info);
+  background-color: var(--help-color-primary-light);
+  border-color: var(--help-color-info);
 }
 
 .help-callout-warning {
   background-color: rgba(245, 158, 11, 0.1);
-  border-color: var(--color-warning);
+  border-color: var(--help-color-warning);
 }
 
 .help-callout-tip {
   background-color: rgba(16, 185, 129, 0.1);
-  border-color: var(--color-success);
+  border-color: var(--help-color-success);
 }
 
 .help-callout-danger {
   background-color: rgba(239, 68, 68, 0.1);
-  border-color: var(--color-danger);
+  border-color: var(--help-color-danger);
 }
 
 .help-callout-icon {
@@ -638,19 +517,22 @@ body {
 }
 
 .help-callout-body {
-  color: var(--color-text-secondary);
+  color: var(--help-color-text-secondary);
 }
 
-/* Accordion styles */
+/* ============================================
+   HELP ACCORDION
+   ============================================ */
+
 .help-accordion {
   margin: 1.5rem 0;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--help-color-border);
+  border-radius: var(--help-radius-md);
   overflow: hidden;
 }
 
 .help-accordion-item {
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--help-color-border);
 }
 
 .help-accordion-item:last-child {
@@ -667,38 +549,41 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  background-color: var(--color-bg-secondary);
+  background-color: var(--help-color-bg-secondary);
   border: none;
   cursor: pointer;
   text-align: left;
-  color: var(--color-text);
+  color: var(--help-color-text);
   font-size: 0.875rem;
   font-weight: 500;
   transition: background-color 0.2s;
 }
 
 .help-accordion-trigger:hover {
-  background-color: var(--color-bg-tertiary);
+  background-color: var(--help-color-bg-tertiary);
 }
 
 .help-accordion-panel {
-  background-color: var(--color-bg);
+  background-color: var(--help-color-bg);
 }
 
 .help-accordion-content {
   padding: 1rem;
-  color: var(--color-text-secondary);
+  color: var(--help-color-text-secondary);
   font-size: 0.875rem;
 }
 
-/* Tabs styles */
+/* ============================================
+   HELP TABS
+   ============================================ */
+
 .help-tabs {
   margin: 1.5rem 0;
 }
 
 .help-tabs-list {
   display: flex;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--help-color-border);
   gap: 0.5rem;
 }
 
@@ -708,19 +593,19 @@ body {
   border: none;
   border-bottom: 2px solid transparent;
   cursor: pointer;
-  color: var(--color-text-secondary);
+  color: var(--help-color-text-secondary);
   font-size: 0.875rem;
   font-weight: 500;
   transition: all 0.2s;
 }
 
 .help-tabs-tab:hover {
-  color: var(--color-text);
+  color: var(--help-color-text);
 }
 
 .help-tabs-tab[data-active='true'] {
-  color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
+  color: var(--help-color-primary);
+  border-bottom-color: var(--help-color-primary);
 }
 
 .help-tabs-panel {
@@ -729,13 +614,16 @@ body {
 
 .help-tabs-panel code {
   display: block;
-  background-color: var(--color-bg-tertiary);
+  background-color: var(--help-color-bg-tertiary);
   padding: 1rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--help-radius-md);
   font-family: 'Monaco', 'Menlo', monospace;
 }
 
-/* Help Page Layout */
+/* ============================================
+   HELP PAGE LAYOUT
+   ============================================ */
+
 .help-page {
   display: flex;
   gap: 2rem;
@@ -747,7 +635,7 @@ body {
 .help-page-sidebar {
   flex: 0 0 280px;
   width: 280px;
-  border-right: 1px solid var(--color-border);
+  border-right: 1px solid var(--help-color-border);
   padding-right: 2rem;
   overflow-y: auto;
   max-height: calc(100vh - 100px);
@@ -768,19 +656,19 @@ body {
 .help-page-header {
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--help-color-border);
 }
 
 .help-page-title {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: var(--color-text);
+  color: var(--help-color-text);
 }
 
 .help-page-description {
   font-size: 1.125rem;
-  color: var(--color-text-secondary);
+  color: var(--help-color-text-secondary);
   margin-top: 0.5rem;
 }
 
@@ -791,22 +679,19 @@ body {
 .help-page-footer {
   margin-top: 4rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--help-color-border);
 }
 
 .help-page-updated {
-  color: var(--color-text-muted);
+  color: var(--help-color-text-muted);
   font-size: 0.875rem;
   font-style: italic;
   margin: 0;
 }
 
-/* Help Navigation */
-.help-navigation {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+/* ============================================
+   HELP NAVIGATION (Page variant)
+   ============================================ */
 
 .help-navigation-category {
   margin-bottom: 0.5rem;
@@ -821,15 +706,15 @@ body {
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-text-secondary);
+  color: var(--help-color-text-secondary);
   cursor: pointer;
   user-select: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--help-radius-sm);
   transition: background-color 0.2s;
 }
 
 .help-navigation-category-header:hover {
-  background-color: var(--color-bg-tertiary);
+  background-color: var(--help-color-bg-tertiary);
 }
 
 .help-navigation-category-toggle {
@@ -851,67 +736,28 @@ body {
 .help-navigation-item {
   display: block;
   padding: 0.5rem 0.75rem;
-  color: var(--color-text);
+  color: var(--help-color-text);
   text-decoration: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--help-radius-sm);
   transition: background-color 0.2s, color 0.2s;
   font-size: 0.9375rem;
 }
 
 .help-navigation-item:hover {
-  background-color: var(--color-bg-tertiary);
-  color: var(--color-primary);
+  background-color: var(--help-color-bg-tertiary);
+  color: var(--help-color-primary);
 }
 
 .help-navigation-item[data-active='true'] {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
+  background-color: var(--help-color-primary-light);
+  color: var(--help-color-primary);
   font-weight: 500;
 }
 
-/* Help Breadcrumbs */
-.help-breadcrumbs {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
-  margin-bottom: 1rem;
-}
+/* ============================================
+   HELP PAGINATION
+   ============================================ */
 
-.help-breadcrumbs-list {
-  list-style: none;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0;
-  margin: 0;
-}
-
-.help-breadcrumb-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.help-breadcrumb-link {
-  color: var(--color-primary);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.help-breadcrumb-link:hover {
-  color: var(--color-primary-hover);
-  text-decoration: underline;
-}
-
-.help-breadcrumb-separator {
-  color: var(--color-text-muted);
-}
-
-/* Help Pagination */
 .help-pagination {
   display: flex;
   justify-content: space-between;
@@ -927,10 +773,10 @@ body {
   flex-direction: column;
   gap: 0.25rem;
   padding: 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--help-color-border);
+  border-radius: var(--help-radius-md);
   text-decoration: none;
-  color: var(--color-text);
+  color: var(--help-color-text);
   transition: all 0.2s;
   flex: 1;
   max-width: 350px;
@@ -958,15 +804,15 @@ body {
 
 .help-pagination-prev:hover,
 .help-pagination-next:hover {
-  border-color: var(--color-primary);
-  background-color: var(--color-primary-light);
+  border-color: var(--help-color-primary);
+  background-color: var(--help-color-primary-light);
 }
 
 .help-pagination-label {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-text-muted);
+  color: var(--help-color-text-muted);
   font-weight: 600;
 }
 
@@ -974,7 +820,7 @@ body {
   font-size: 0.95rem;
   font-weight: 500;
   letter-spacing: 0.05em;
-  color: var(--color-text);
+  color: var(--help-color-text);
   text-transform: capitalize;
 }
 
@@ -988,7 +834,7 @@ body {
 .help-pagination-direction {
   font-size: 1.5rem;
   font-weight: bold;
-  color: var(--color-primary);
+  color: var(--help-color-primary);
 }
 
 .help-pagination-next {
@@ -996,12 +842,15 @@ body {
   margin-left: auto;
 }
 
-/* Help TOC */
+/* ============================================
+   HELP TABLE OF CONTENTS
+   ============================================ */
+
 .help-toc {
   padding: 1.5rem;
-  background-color: var(--color-bg-secondary);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  background-color: var(--help-color-bg-secondary);
+  border-radius: var(--help-radius-md);
+  border: 1px solid var(--help-color-border);
 }
 
 .help-toc-title {
@@ -1009,7 +858,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-text-secondary);
+  color: var(--help-color-text-secondary);
   margin-bottom: 1rem;
 }
 
@@ -1025,7 +874,7 @@ body {
 }
 
 .help-toc-link {
-  color: var(--color-text);
+  color: var(--help-color-text);
   text-decoration: none;
   transition: color 0.2s;
   display: block;
@@ -1033,7 +882,7 @@ body {
 }
 
 .help-toc-link:hover {
-  color: var(--color-primary);
+  color: var(--help-color-primary);
 }
 
 .help-toc-item[data-level='2'] {
@@ -1044,20 +893,30 @@ body {
   padding-left: 2rem;
 }
 
-/* Responsive */
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
 @media (max-width: 768px) {
   .help-page {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    padding: 1rem;
   }
 
   .help-page-sidebar {
+    flex: 0 0 auto;
+    width: 100%;
     border-right: none;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--help-color-border);
     padding-right: 0;
     padding-bottom: 1.5rem;
     margin-bottom: 1.5rem;
     position: static;
     max-height: none;
+  }
+
+  .help-page-main {
+    max-width: 100%;
   }
 
   .help-pagination {
@@ -1081,19 +940,7 @@ body {
   .help-nav-sidebar {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--help-color-border);
     max-height: 200px;
-  }
-
-  .app-header {
-    padding: 1rem;
-  }
-
-  .app-header h1 {
-    font-size: 1.25rem;
-  }
-
-  .app-main {
-    padding: 1rem;
   }
 }

@@ -1,91 +1,50 @@
-import { useEffect, useState, useRef } from 'react';
-import { HelpProvider, HelpPage, useHelpContext } from '@piikeep-pw/web-help';
+import { HelpProvider } from '../../../src/core/context/HelpProvider';
+import { HelpPage } from '../../../src/core/components/HelpPage';
 import { loadFromConfig, type LoadManifestResult } from '../../../src/devtools';
-
 import helpConfig from '../help.config';
+import { useEffect, useState } from 'react';
 
-import { useTheme } from './ThemeContext';
-
-function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
-  return (
-    <button
-      className='theme-toggle'
-      onClick={toggleTheme}
-      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-    >
-      {theme === 'light' ? '🌙' : '☀️'}
-    </button>
+function AppTest() {
+  const [manifestData, setManifestData] = useState<LoadManifestResult | null>(
+    null,
   );
-}
-
-// Component to register categories after provider initializes
-function CategoryRegistrar({
-  categories,
-}: {
-  categories: LoadManifestResult['categories'];
-}) {
-  const { contentLoader } = useHelpContext();
-  const registeredRef = useRef(false);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (!registeredRef.current && categories.length > 0) {
-      categories.forEach((category) => {
-        contentLoader.registerCategory(category);
+    loadFromConfig(helpConfig)
+      .then(setManifestData)
+      .catch((err) => {
+        console.error('Failed to load manifest:', err);
+        setError(err);
       });
-      registeredRef.current = true;
-    }
-  }, [categories, contentLoader]);
-
-  return null;
-}
-
-function App() {
-  const [manifestData, setManifestData] = useState<LoadManifestResult>();
-  const [error, setError] = useState<string>();
-
-  useEffect(() => {
-    async function loadContent() {
-      try {
-        const result = await loadFromConfig(helpConfig);
-        setManifestData(result);
-      } catch (err) {
-        console.error('Failed to load help content:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load content');
-      }
-    }
-    loadContent();
   }, []);
 
   if (error) {
     return (
-      <div className='error' style={{ padding: '2rem', color: 'red' }}>
-        <h1>Error Loading Help Content</h1>
-        <p>{error}</p>
+      <div style={{ padding: '2rem' }}>
+        <h1>Error loading help system</h1>
+        <p>{error.message}</p>
       </div>
     );
   }
 
   if (!manifestData) {
-    return <div style={{ padding: '2rem' }}>Loading help content...</div>;
+    return (
+      <div style={{ padding: '2rem' }}>
+        <p>Loading help system...</p>
+      </div>
+    );
   }
 
   return (
     <HelpProvider
-      config={helpConfig}
-      contentManifest={manifestData.contentManifest}
+      manifestData={manifestData}
+      config={{ fullConfig: helpConfig }}
     >
-      <div className='app'>
-        <header className='app-header'>
-          <h1>Help Documentation</h1>
-          <ThemeToggle />
-        </header>
-        <main className='app-main'>
-          <HelpPage />
-        </main>
-      </div>
+      {/* That's it! HelpPage includes everything by default */}
+      <HelpPage showNavigation />
     </HelpProvider>
   );
 }
 
-export default App;
+export default AppTest;

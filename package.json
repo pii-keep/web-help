@@ -19,6 +19,7 @@
       "import": "./dist/web-help-library.es.js",
       "require": "./dist/web-help-library.umd.js"
     },
+    "./baseline.css": "./dist/styles/baseline.css",
     "./devtools": {
       "types": "./dist/devtools/index.d.ts",
       "import": "./dist/web-help-library.es.js",

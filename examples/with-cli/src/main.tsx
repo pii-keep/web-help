@@ -4,7 +4,7 @@ globalThis.Buffer = Buffer;
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App-test';
+import App from './App';
 import { ThemeProvider } from './ThemeContext';
 import './index.css';
 

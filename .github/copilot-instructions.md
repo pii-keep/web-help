@@ -128,6 +128,21 @@ This project does not currently have a test infrastructure. When adding tests:
 3. **Storage Abstraction**: Provide adapters for localStorage, sessionStorage, cookies with custom adapter support
 4. **Callback-based Integration**: Use callbacks (onComment, onRate, onSearch) for developer integration
 
+## Always do this:
+
+1. Review CHANGELOG.md for recent changes
+2. Review documentation in /docs for architecture and usage patterns
+3. Follow code style guidelines above
+4. Ensure types are exported correctly
+5. Ensure components are headless and unstyled
+6. Provide semantic class names and data attributes for styling
+7. Keep bundle size targets in mind
+8. Write clear, concise code with comments where necessary
+9. Use React best practices and hooks conventions
+10. Ensure accessibility (a11y) best practices are followed
+11. Write tests for new features and bug fixes
+12. Update documentation as needed
+
 ## Documentation
 
 - `docs/web-help.md` contains detailed architecture decisions and implementation plans

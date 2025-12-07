@@ -27,12 +27,14 @@ yarn add @piikeep/web-help
 
 ## Usage
 
+### Basic Setup
+
 Example usage in a React + TypeScript app:
 
 ```tsx
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { HelpProvider, HelpTrigger, useHelp } from 'web-help';
+import { HelpProvider, HelpTrigger, useHelp } from '@piikeep/web-help';
 
 function App() {
   return (
@@ -59,7 +61,63 @@ function Main() {
 createRoot(document.getElementById('root')!).render(<App />);
 ```
 
-(Adjust imports and API names to match your library exports.)
+### Styling
+
+The library is **completely headless** and provides no default styling. You have three options:
+
+#### Option 1: Use Baseline CSS (Recommended for Getting Started)
+
+Import the provided baseline stylesheet for a ready-to-use design:
+
+```tsx
+import '@piikeep/web-help/baseline.css';
+```
+
+The baseline CSS includes:
+
+- Semantic CSS variables for easy theming (colors, spacing, shadows, etc.)
+- Dark mode support via `[data-theme='dark']`
+- Responsive layouts for mobile and desktop
+- All help component styles (navigation, search, breadcrumbs, pagination, etc.)
+
+**Customize the theme** by overriding CSS variables:
+
+```css
+:root {
+  --help-color-primary: #ff6b6b;
+  --help-color-primary-hover: #ff5252;
+  --help-radius-md: 12px;
+  /* See baseline.css for all available variables */
+}
+```
+
+#### Option 2: Bring Your Own Styles
+
+All components use semantic class names and data attributes:
+
+```tsx
+<div className='help-page' data-loading={isLoading}>
+  <nav className='help-navigation'>
+    <button className='help-nav-button' data-active={isActive}>
+      {/* Your content */}
+    </button>
+  </nav>
+</div>
+```
+
+Style with your preferred approach (Tailwind, CSS-in-JS, CSS Modules, etc.).
+
+#### Option 3: Use Tailwind or Other Utility Classes
+
+Pass className props to override default classes:
+
+```tsx
+<HelpPage
+  className='flex gap-4 p-8'
+  sidebarClassName='w-64 border-r'
+  mainClassName='flex-1'
+/>
+```
 
 ## Development
 
