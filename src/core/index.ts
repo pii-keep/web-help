@@ -15,12 +15,8 @@ export {
   type HelpContextValue,
 } from './context/HelpContext';
 
-export {
-  UserPreferencesProvider,
-  useUserPreferences,
-  type UserPreferencesProviderProps,
-  type UserPreferencesContextValue,
-} from './context/UserPreferencesContext';
+// UserPreferences removed - caused infinite re-render loops
+// Will be re-implemented in future version with proper architecture
 
 // Hooks
 export * from './hooks';

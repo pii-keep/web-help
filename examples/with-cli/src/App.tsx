@@ -1,10 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import {
-  HelpProvider,
-  HelpPage,
-  useHelpContext,
-  UserPreferencesProvider,
-} from '@piikeep-pw/web-help';
+import { HelpProvider, HelpPage, useHelpContext } from '@piikeep-pw/web-help';
 import { loadFromConfig, type LoadManifestResult } from '../../../src/devtools';
 
 import helpConfig from '../help.config';
@@ -80,17 +75,15 @@ function App() {
       config={helpConfig}
       contentManifest={manifestData.contentManifest}
     >
-      <UserPreferencesProvider>
-        <div className='app'>
-          <header className='app-header'>
-            <h1>Help Documentation</h1>
-            <ThemeToggle />
-          </header>
-          <main className='app-main'>
-            <HelpPage />
-          </main>
-        </div>
-      </UserPreferencesProvider>
+      <div className='app'>
+        <header className='app-header'>
+          <h1>Help Documentation</h1>
+          <ThemeToggle />
+        </header>
+        <main className='app-main'>
+          <HelpPage />
+        </main>
+      </div>
     </HelpProvider>
   );
 }

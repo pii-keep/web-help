@@ -1,5 +1,5 @@
 ---
-title: Getting Started
+title: introduction
 description: Learn how to get started with our application
 category: getting-started
 tags:

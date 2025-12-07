@@ -1,13 +1,14 @@
 ---
-title: faq
+title: FAQ
 description: Documentation for faq
 category: general
 tags: []
-author: 
+author:
 createdAt: 2025-12-05
 updatedAt: 2025-12-05
 ---
-# faq
+
+# FAQ
 
 Documentation for faq
 

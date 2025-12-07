@@ -26,6 +26,7 @@ export interface ManifestStructure {
     articles?: Array<{
       slug: string;
       title: string;
+      filename?: string; // Optional: explicit filename (e.g., 'help_getting_started.md')
       order: number;
     }>;
   }>;
@@ -120,32 +121,53 @@ export async function loadFromManifestFile(
       for (const article of category.articles) {
         let content: string | null = null;
 
-        // Try each extension until we find the file
-        for (const ext of extensions) {
-          const filename = prefix
-            ? `${prefix}${article.slug}.${ext}`
-            : `${article.slug}.${ext}`;
-          const articlePath = `${articlesPath}/${filename}`;
-
+        // If filename is explicitly provided, use it directly
+        if (article.filename) {
+          const articlePath = `${articlesPath}/${article.filename}`;
           try {
             const response = await fetch(articlePath);
             if (response.ok) {
               content = await response.text();
-              break; // Found the file, stop trying other extensions
+            } else {
+              console.warn(
+                `Failed to load article with filename "${article.filename}": ${response.status}`,
+              );
             }
-          } catch {
-            // Continue trying other extensions
-            continue;
+          } catch (error) {
+            console.warn(
+              `Error loading article with filename "${article.filename}":`,
+              error,
+            );
+          }
+        } else {
+          // Fallback: try each extension until we find the file
+          for (const ext of extensions) {
+            const filename = prefix
+              ? `${prefix}${article.slug}.${ext}`
+              : `${article.slug}.${ext}`;
+            const articlePath = `${articlesPath}/${filename}`;
+
+            try {
+              const response = await fetch(articlePath);
+              if (response.ok) {
+                content = await response.text();
+                break; // Found the file, stop trying other extensions
+              }
+            } catch {
+              // Continue trying other extensions
+              continue;
+            }
           }
         }
 
         if (content) {
           contentManifest[article.slug] = content;
         } else {
+          const filenameInfo = article.filename
+            ? `filename: ${article.filename}`
+            : `tried extensions: ${extensions.join(', ')}`;
           console.warn(
-            `Failed to load article: ${
-              article.slug
-            } (tried extensions: ${extensions.join(', ')})`,
+            `Failed to load article: ${article.slug} (${filenameInfo})`,
           );
         }
       }

@@ -1,15 +1,14 @@
 ---
-title: Configuration Guide
-description: Documentation for Configuration Guide
 category: guides
 tags: []
 difficulty: beginner
 estimatedTime: 10 minutes
 prerequisites: []
-author: 
+author:
 createdAt: 2025-12-05
 updatedAt: 2025-12-05
 ---
+
 # Configuration Guide
 
 Documentation for Configuration Guide

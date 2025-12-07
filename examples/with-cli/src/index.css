@@ -287,15 +287,17 @@ body {
 
 /* Help Navigation */
 .help-navigation {
-  padding: 0 0.5rem;
+  width: 100%;
 }
 
 .help-nav-list {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .help-nav-item {
-  margin-bottom: 0.25rem;
+  margin: 0;
 }
 
 .help-nav-button {
@@ -303,7 +305,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
   background: none;
   border: none;
   border-radius: var(--radius-sm);
@@ -312,6 +314,14 @@ body {
   color: var(--color-text-secondary);
   transition: all 0.2s;
   font-size: 0.875rem;
+}
+
+.help-nav-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .help-nav-button:hover {
@@ -332,16 +342,17 @@ body {
 
 .help-nav-children {
   list-style: none;
-  margin-left: 1rem;
-  border-left: 1px solid var(--color-border);
-  padding-left: 0.5rem;
+  margin: 0;
+  padding-left: 1rem;
 }
 
 .help-nav-icon {
+  flex-shrink: 0;
   font-size: 1rem;
 }
 
 .help-nav-chevron {
+  flex-shrink: 0;
   margin-left: auto;
   font-size: 0.625rem;
 }
@@ -444,27 +455,37 @@ body {
 /* Help Breadcrumbs */
 .help-breadcrumbs {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 0.5rem;
+  padding: 0.75rem 0;
   margin-bottom: 1.5rem;
   font-size: 0.875rem;
+  color: var(--color-text-secondary);
 }
 
 .help-breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   color: var(--color-text-muted);
+  text-transform: capitalize;
 }
 
 .help-breadcrumb-item a {
   color: var(--color-primary);
   text-decoration: none;
+  transition: color 0.2s;
 }
 
 .help-breadcrumb-item a:hover {
+  color: var(--color-primary-dark);
   text-decoration: underline;
 }
 
 .help-breadcrumb-separator {
   color: var(--color-text-muted);
+  user-select: none;
 }
 
 .help-breadcrumb-item[aria-current='page'] {
@@ -702,31 +723,31 @@ body {
 
 /* Help Page Layout */
 .help-page {
-  display: grid;
-  grid-template-columns: 280px 1fr;
+  display: flex;
   gap: 2rem;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  min-height: 600px;
+  padding: 2rem;
 }
 
 .help-page-sidebar {
+  flex: 0 0 280px;
+  width: 280px;
   border-right: 1px solid var(--color-border);
   padding-right: 2rem;
   overflow-y: auto;
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 100px);
   position: sticky;
   top: 2rem;
 }
 
 .help-sidebar-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  width: 100%;
 }
 
 .help-page-main {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
   max-width: 800px;
 }
 
@@ -754,17 +775,16 @@ body {
 }
 
 .help-page-footer {
-  margin-top: 3rem;
-  padding-top: 2rem;
+  margin-top: 4rem;
+  padding-top: 1.5rem;
   border-top: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
 }
 
 .help-page-updated {
   color: var(--color-text-muted);
   font-size: 0.875rem;
+  font-style: italic;
+  margin: 0;
 }
 
 /* Help Navigation */
@@ -845,6 +865,17 @@ body {
   margin-bottom: 1rem;
 }
 
+.help-breadcrumbs-list {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+}
+
 .help-breadcrumb-item {
   display: flex;
   align-items: center;
@@ -873,6 +904,7 @@ body {
   align-items: center;
   gap: 1rem;
   padding: 1.5rem 0;
+  height: 100%;
 }
 
 .help-pagination-prev,
@@ -887,7 +919,27 @@ body {
   color: var(--color-text);
   transition: all 0.2s;
   flex: 1;
-  max-width: 300px;
+  max-width: 350px;
+  min-height: 77.5px;
+}
+
+.help-pagination-link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  align-items: center;
+  width: 100%;
+}
+
+.help-pagination-link-next {
+  justify-content: flex-end;
+}
+
+.help-pagination-link-prev {
+  display: inherit;
+  flex-direction: row;
 }
 
 .help-pagination-prev:hover,
@@ -905,9 +957,24 @@ body {
 }
 
 .help-pagination-title {
-  font-size: 0.9375rem;
+  font-size: 0.95rem;
   font-weight: 500;
+  letter-spacing: 0.05em;
   color: var(--color-text);
+  text-transform: capitalize;
+}
+
+.help-pagination-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0px 1.5px;
+}
+
+.help-pagination-direction {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color-primary);
 }
 
 .help-pagination-next {

@@ -7,6 +7,7 @@
  */
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import parse from 'html-react-parser';
 
 /**
  * Mermaid library interface for dynamic import.
@@ -272,10 +273,11 @@ export const HelpDiagram: React.FC<HelpDiagramProps> = ({
         {renderedSvg && !error && (
           <div
             className='help-diagram-svg'
-            dangerouslySetInnerHTML={{ __html: renderedSvg }}
             role='img'
             aria-label={alt ?? caption ?? 'Rendered diagram'}
-          />
+          >
+            {parse(renderedSvg)}
+          </div>
         )}
       </div>
 

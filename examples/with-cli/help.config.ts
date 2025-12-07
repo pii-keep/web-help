@@ -3,7 +3,7 @@ import type { HelpConfig } from '@piikeep/web-help';
 const helpConfig: HelpConfig = {
   content: {
     source: 'static',
-    path: '/help',
+    path: '/public/help',
     formats: ['md', 'mdx'],
   },
   storage: {

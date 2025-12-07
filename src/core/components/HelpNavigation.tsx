@@ -5,7 +5,7 @@
  * Headless component for rendering navigation menu.
  */
 
-import { forwardRef, useState, useCallback } from 'react';
+import { forwardRef, useState, useCallback, useEffect } from 'react';
 import type { HelpNavigationProps, NavigationItem } from '../types/components';
 
 /**
@@ -33,6 +33,24 @@ export const HelpNavigation = forwardRef<HTMLElement, HelpNavigationProps>(
       return new Set();
     });
 
+    // Auto-expand category containing active item
+    useEffect(() => {
+      if (activeId) {
+        items.forEach((item) => {
+          const hasActiveChild = item.children?.some(
+            (child) => child.id === activeId,
+          );
+          if (hasActiveChild) {
+            setCollapsedItems((prev) => {
+              const next = new Set(prev);
+              next.delete(item.id);
+              return next;
+            });
+          }
+        });
+      }
+    }, [activeId, items]);
+
     const toggleCollapsed = useCallback((id: string) => {
       setCollapsedItems((prev) => {
         const next = new Set(prev);
@@ -47,10 +65,11 @@ export const HelpNavigation = forwardRef<HTMLElement, HelpNavigationProps>(
 
     const handleItemClick = useCallback(
       (item: NavigationItem) => {
-        if (item.children?.length && collapsible) {
+        if (item.isCategory && item.children?.length && collapsible) {
+          // Categories toggle collapse
           toggleCollapsed(item.id);
         } else {
-          // Only call onItemSelect for leaf items (articles without children)
+          // Articles navigate
           onItemSelect?.(item.id);
         }
       },

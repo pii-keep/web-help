@@ -202,6 +202,7 @@ program
         title,
         category: options.category,
         slug,
+        filename: path.basename(finalPath), // Add actual filename
       });
 
       console.log(`\n💡 Next steps:`);
@@ -278,6 +279,7 @@ async function updateManifest(outputDir, article) {
     categoryObj.articles.push({
       slug: article.slug,
       title: article.title,
+      filename: article.filename, // Include filename in manifest
       order: categoryObj.articles.length + 1,
     });
 

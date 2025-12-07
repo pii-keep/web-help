@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- Replaced all `dangerouslySetInnerHTML` with `html-react-parser` across library components
+  - Updated HelpPage-v2 to safely parse rendered HTML content
+  - Updated HelpEditor to safely render markdown preview
+  - Updated HelpDiagram to safely render SVG output
+  - Eliminates XSS vulnerabilities while maintaining functionality
+  - All library components now use safe HTML parsing
+
 ## [0.2.2] - 2025-12-05
 
 ### Enabled CLI

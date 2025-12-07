@@ -7,6 +7,7 @@
  */
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
+import parse from 'html-react-parser';
 import type {
   HelpArticle,
   HelpArticleMetadata,
@@ -329,12 +330,9 @@ export const HelpEditor: React.FC<HelpEditorProps> = ({
             {renderPreview ? (
               renderPreview(content)
             ) : (
-              <div
-                className='help-editor-preview-content'
-                dangerouslySetInnerHTML={{
-                  __html: simpleMarkdownToHtml(content),
-                }}
-              />
+              <div className='help-editor-preview-content'>
+                {parse(simpleMarkdownToHtml(content))}
+              </div>
             )}
           </div>
         )}

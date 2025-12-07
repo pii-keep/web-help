@@ -5,18 +5,10 @@
  * Headless component for search functionality.
  */
 
-import {
-  forwardRef,
-  useState,
-  useCallback,
-  useRef,
-  useEffect,
-  useMemo,
-} from 'react';
+import { forwardRef, useState, useCallback, useRef, useEffect } from 'react';
 import type { HelpSearchProps } from '../../types/components';
 import type { HelpSearchResult } from '../../types/content';
 import { useHelpSearch } from '../../hooks/useHelpSearch';
-import { useUserPreferences } from '../../context/UserPreferencesContext';
 
 /**
  * HelpSearch is a headless component for search functionality.
@@ -45,11 +37,8 @@ export const HelpSearch = forwardRef<HTMLDivElement, HelpSearchProps>(
       debounceMs,
     });
 
-    const { getRecentSearches, addRecentSearch } = useUserPreferences();
-    const recentSearches = useMemo(
-      () => (showRecent ? getRecentSearches() : []),
-      [showRecent, getRecentSearches],
-    );
+    // Recent searches disabled - UserPreferences removed
+    const recentSearches: string[] = [];
 
     // Handle input change
     const handleInputChange = useCallback(
@@ -66,12 +55,12 @@ export const HelpSearch = forwardRef<HTMLDivElement, HelpSearchProps>(
     // Handle result selection
     const handleResultSelect = useCallback(
       (result: HelpSearchResult) => {
-        addRecentSearch(query);
+        // addRecentSearch removed with UserPreferences
         setIsOpen(false);
         clear();
         onResultSelect?.(result);
       },
-      [query, addRecentSearch, clear, onResultSelect],
+      [clear, onResultSelect],
     );
 
     // Handle recent search selection

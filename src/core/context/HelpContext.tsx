@@ -113,6 +113,12 @@ const initialState: HelpState = {
  * Help reducer.
  */
 function helpReducer(state: HelpState, action: HelpAction): HelpState {
+  console.log(
+    '[helpReducer] Action:',
+    action.type,
+    'Current state keys:',
+    Object.keys(state),
+  );
   switch (action.type) {
     case 'SET_ARTICLE':
       return { ...state, currentArticle: action.payload, error: null };
@@ -255,6 +261,16 @@ export function HelpProvider({
   }
   const contentLoader = contentLoaderRef.current;
 
+  // Store contentManifest and autoNavigate in refs to avoid effect dependencies
+  const contentManifestRef = useRef(contentManifest);
+  const autoNavigateRef = useRef(autoNavigate);
+  const searchAdapterRef = useRef(searchAdapter);
+  useEffect(() => {
+    contentManifestRef.current = contentManifest;
+    autoNavigateRef.current = autoNavigate;
+    searchAdapterRef.current = searchAdapter;
+  }, [contentManifest, autoNavigate, searchAdapter]);
+
   // Get current state - stable function that reads from ref
   const getState = useCallback(() => stateRef.current, []);
 
@@ -263,7 +279,7 @@ export function HelpProvider({
     async (articleId: string): Promise<HelpArticle | null> => {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
-        const article = await contentLoader.loadArticle(articleId);
+        const article = await contentLoaderRef.current!.loadArticle(articleId);
         if (article) {
           dispatch({ type: 'SET_ARTICLE', payload: article });
           callbacksRef.current.onArticleView?.(articleId);
@@ -278,7 +294,7 @@ export function HelpProvider({
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     },
-    [contentLoader],
+    [],
   );
 
   // Navigate to article - stable, uses stateRef for current article
@@ -290,7 +306,7 @@ export function HelpProvider({
 
       if (article) {
         // Update navigation state
-        const allArticles = contentLoader.getAllArticles();
+        const allArticles = contentLoaderRef.current!.getAllArticles();
         const currentIndex = allArticles.findIndex((a) => a.id === articleId);
 
         const navigation: NavigationState = {
@@ -315,7 +331,7 @@ export function HelpProvider({
         callbacksRef.current.onNavigate?.(fromId, articleId);
       }
     },
-    [loadArticle, contentLoader],
+    [loadArticle],
   );
 
   // Register content - stable
@@ -323,10 +339,10 @@ export function HelpProvider({
     async (manifest: Record<string, string>): Promise<void> => {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
-        await contentLoader.loadFromManifest(manifest);
+        await contentLoaderRef.current!.loadFromManifest(manifest);
         dispatch({
           type: 'SET_CATEGORIES',
-          payload: contentLoader.getCategories(),
+          payload: contentLoaderRef.current!.getCategories(),
         });
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));
@@ -336,13 +352,13 @@ export function HelpProvider({
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     },
-    [contentLoader],
+    [],
   );
 
   // Get content index - stable
   const getContentIndex = useCallback(() => {
-    return contentLoader.getContentIndex();
-  }, [contentLoader]);
+    return contentLoaderRef.current!.getContentIndex();
+  }, []);
 
   // Set search query - stable
   const setSearchQuery = useCallback((query: string) => {
@@ -351,7 +367,10 @@ export function HelpProvider({
 
   // Load content manifest ONCE on mount
   useEffect(() => {
-    if (!contentManifest) {
+    const manifest = contentManifestRef.current;
+    const shouldAutoNavigate = autoNavigateRef.current;
+
+    if (!manifest) {
       dispatch({ type: 'SET_INITIALIZED', payload: true });
       return;
     }
@@ -359,8 +378,8 @@ export function HelpProvider({
     const loadContent = async () => {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
-        await contentLoader.loadFromManifest(contentManifest);
-        const categories = contentLoader.getCategories();
+        await contentLoaderRef.current!.loadFromManifest(manifest);
+        const categories = contentLoaderRef.current!.getCategories();
         dispatch({
           type: 'SET_CATEGORIES',
           payload: categories,
@@ -368,8 +387,8 @@ export function HelpProvider({
         dispatch({ type: 'SET_INITIALIZED', payload: true });
 
         // Load first article if autoNavigate is enabled
-        if (autoNavigate) {
-          const allArticles = contentLoader.getAllArticles();
+        if (shouldAutoNavigate) {
+          const allArticles = contentLoaderRef.current!.getAllArticles();
           if (allArticles.length > 0) {
             const firstArticle = await contentLoader.loadArticle(
               allArticles[0].id,
@@ -402,14 +421,12 @@ export function HelpProvider({
       }
     };
     loadContent();
-    // Dependencies: contentLoader and contentManifest determine what content to load
-    // autoNavigate controls initial navigation behavior
-    // This effect intentionally runs when these values change
-  }, [contentLoader, contentManifest, autoNavigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run ONLY once on mount - contentLoader is stable, manifest/autoNavigate accessed via refs
 
   // Actions context value - memoized and STABLE (no state dependency)
-  const actions: HelpActions = useMemo(
-    () => ({
+  const actions: HelpActions = useMemo(() => {
+    return {
       navigateToArticle,
       loadArticle,
       registerContent,
@@ -419,29 +436,25 @@ export function HelpProvider({
       config: configRef.current,
       callbacks: callbacksRef.current,
       storage: storage.current!,
-      contentLoader,
-      searchAdapter,
-    }),
-    [
-      navigateToArticle,
-      loadArticle,
-      registerContent,
-      getContentIndex,
-      setSearchQuery,
-      getState,
-      contentLoader,
-      searchAdapter,
-    ],
-  );
+      contentLoader: contentLoaderRef.current!,
+      searchAdapter: searchAdapterRef.current,
+    };
+  }, [
+    navigateToArticle,
+    loadArticle,
+    registerContent,
+    getContentIndex,
+    setSearchQuery,
+    getState,
+  ]);
 
   // Combined context value for backward compatibility
-  const combinedValue: HelpContextValue = useMemo(
-    () => ({
+  const combinedValue: HelpContextValue = useMemo(() => {
+    return {
       state,
       ...actions,
-    }),
-    [state, actions],
-  );
+    };
+  }, [state, actions]);
 
   return (
     <HelpStateContext.Provider value={state}>

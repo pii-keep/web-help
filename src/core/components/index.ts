@@ -3,10 +3,14 @@
  * @module @piikeep-pw/web-help/core/components
  */
 
-// Main components
-export { HelpPage } from './HelpPage';
+// Main components - old versions
+export { HelpPage as HelpPageOld } from './HelpPage';
 export { HelpContent } from './HelpContent';
 export { HelpNavigation } from './HelpNavigation';
+
+// Main components - v2
+export { HelpPage } from './HelpPage';
+export type { HelpPageProps as HelpPagePropsV2 } from './HelpPage';
 
 // Navigation components
 export {

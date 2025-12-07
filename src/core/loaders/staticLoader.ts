@@ -217,6 +217,13 @@ export class StaticContentLoader {
   }
 
   /**
+   * Get an article by ID.
+   */
+  getArticleById(id: string): HelpArticle | undefined {
+    return this.registry.articles.get(id);
+  }
+
+  /**
    * Get the content index for search.
    */
   getContentIndex(): ContentIndex[] {

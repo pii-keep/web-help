@@ -6,7 +6,15 @@
     {
       "id": "getting-started",
       "title": "Getting Started",
-      "order": 1
+      "order": 1,
+      "articles": [
+        {
+          "slug": "introduction",
+          "title": "Introduction",
+          "filename": "help_getting-started.md",
+          "order": 1
+        }
+      ]
     },
     {
       "id": "guides",
@@ -16,11 +24,13 @@
         {
           "slug": "configuration-guide",
           "title": "Configuration Guide",
+          "filename": "help_configuration-guide.md",
           "order": 1
         },
         {
           "slug": "test-article",
           "title": "Test Article",
+          "filename": "help_test-article.md",
           "order": 2
         }
       ]
@@ -38,6 +48,7 @@
         {
           "slug": "tutorial",
           "title": "Tutorial",
+          "filename": "help_test.md",
           "order": 1
         }
       ]
@@ -49,7 +60,8 @@
       "articles": [
         {
           "slug": "faq",
-          "title": "faq",
+          "title": "FAQ",
+          "filename": "help_faq.md",
           "order": 1
         }
       ]
