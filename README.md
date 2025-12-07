@@ -2,6 +2,10 @@
 
 A small TypeScript React component library and utilities to add contextual help to React apps. Built with Vite, ESLint, and TypeScript. Intended to provide a provider, UI components and hooks to show contextual help, tooltips, and guided help flows.
 
+## Actively seeking contributors
+
+I am **actively seeking contributors** that would be interested in working with me on this project. Drop me a [mail](develop@piikeep.com) and let me know your interest, a link to your bio, and what you would like to work on.
+
 ## Features
 
 - TypeScript-first React components and hooks
