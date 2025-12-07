@@ -25,6 +25,24 @@ npm install @piikeep/web-help
 yarn add @piikeep/web-help
 ```
 
+### Browser Environment Setup
+
+When using manifest-based content loading in the browser, you need to include a Buffer polyfill for the `gray-matter` library:
+
+```bash
+npm install buffer
+```
+
+Then add this to your application entry point (e.g., `main.tsx`):
+
+```tsx
+// Polyfill Buffer for gray-matter library
+import { Buffer } from 'buffer';
+globalThis.Buffer = Buffer;
+```
+
+This is required for parsing Markdown frontmatter in browser environments.
+
 ## Usage
 
 ### Basic Setup

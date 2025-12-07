@@ -12,11 +12,13 @@
         {
           "slug": "getting-started",
           "title": "Getting Started",
+          "filename": "getting-started.md",
           "order": 1
         },
         {
           "slug": "features",
           "title": "Features Guide",
+          "filename": "features.md",
           "order": 2
         }
       ]
@@ -30,6 +32,7 @@
         {
           "slug": "advanced",
           "title": "Advanced Topics",
+          "filename": "advanced.md",
           "order": 1
         }
       ]

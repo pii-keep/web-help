@@ -126,6 +126,20 @@ All examples follow a similar structure:
    npm run preview
    ```
 
+## Important Notes
+
+### Buffer Polyfill Requirement
+
+All examples include a Buffer polyfill in `src/main.tsx` to support the `gray-matter` library used for parsing Markdown frontmatter in the browser:
+
+```tsx
+// Polyfill Buffer for gray-matter library
+import { Buffer } from 'buffer';
+globalThis.Buffer = Buffer;
+```
+
+This is required for the help system to work correctly in browser environments. Make sure to include this polyfill in your own projects when using @piikeep/web-help with manifest-based content loading.
+
 ## Creating Your Own Example
 
 To create a new example based on these:
