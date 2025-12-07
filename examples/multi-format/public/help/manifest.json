@@ -12,37 +12,46 @@
         {
           "slug": "markdown-format",
           "title": "Markdown Format",
-          "order": 1
+          "description": "Learn how to use Markdown format for help articles",
+          "filename": "markdown-format.md",
+          "order": 2
         },
         {
           "slug": "json-format",
           "title": "JSON Format",
-          "order": 2
+          "description": "Learn how to use JSON format for help articles",
+          "filename": "json-format.json",
+          "order": 3
         },
         {
-          "slug": "csv-format",
-          "title": "CSV Format",
-          "order": 3
+          "slug": "csv-articles",
+          "title": "CSV Articles",
+          "description": "Learn how to use CSV format for help articles",
+          "filename": "csv-articles.csv",
+          "order": 4
         },
         {
           "slug": "format-comparison",
           "title": "Format Comparison",
-          "order": 4
+          "description": "Compare different content formats for help articles",
+          "filename": "format-comparison.md",
+          "order": 5
+        },
+        {
+          "slug": "mdx-format",
+          "title": "MDX Format",
+          "description": "Learn how to use MDX format for help articles",
+          "filename": "mdx-format.mdx",
+          "order": 1
         }
       ]
     },
     {
       "id": "support",
       "title": "Support",
-      "description": "Troubleshooting and help",
+      "description": "Support and resources",
       "order": 2,
-      "articles": [
-        {
-          "slug": "troubleshooting",
-          "title": "Troubleshooting Tips",
-          "order": 1
-        }
-      ]
+      "articles": []
     }
   ]
 }

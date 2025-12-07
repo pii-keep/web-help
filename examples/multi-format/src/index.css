@@ -19,6 +19,8 @@ body {
 
 /* Custom theme */
 :root {
+  --color-primary: #2c3e50;
+  --color-accent: #3498db;
   --header-bg: #2c3e50;
   --header-accent: #3498db;
 }
@@ -60,4 +62,19 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
+}
+
+.help-code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.help-code-copy {
+  border: 1px solid var(--help-color-border, var(--color-accent));
+  background-color: var(--help-code-copy-bg, var(--color-primary));
+  color: var(--help-code-copy-fg, white);
+  padding: 1rem 1rem;
+  border-radius: 1px;
+  overflow-x: auto;
 }

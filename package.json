@@ -1,6 +1,6 @@
 {
   "name": "@piikeep/web-help",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "A comprehensive, headless help system for React applications. Built with TypeScript for maximum flexibility.",
   "author": {
     "name": "Charles de Jager",
@@ -52,10 +52,8 @@
   ],
   "type": "module",
   "scripts": {
-    "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
     "release": "npm run build && git tag -a v$(node -p \"require('./package.json').version\") -m \"Release v$(node -p \"require('./package.json').version\")\" && git push --follow-tags"
   },
   "peerDependencies": {

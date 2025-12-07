@@ -1,10 +1,12 @@
 {
-  "id": "json-format",
+  "slug": "json-format",
   "title": "JSON Format",
-  "content": "<h1>JSON Format</h1><p>This article is written in <strong>JSON</strong> (.json) format.</p><h2>What is JSON?</h2><p>JSON (JavaScript Object Notation) is a lightweight data interchange format that's easy for humans to read and write and easy for machines to parse and generate.</p><h2>Advantages</h2><ul><li>Structured data format</li><li>Easy to validate</li><li>Works well with APIs</li><li>Native JavaScript support</li></ul><h2>Use Cases</h2><p>JSON format is ideal for:</p><ol><li>Importing content from existing systems</li><li>Programmatically generated documentation</li><li>API documentation</li><li>Structured data with metadata</li></ol><h2>Example Structure</h2><pre><code>{\n  \"id\": \"article-id\",\n  \"title\": \"Article Title\",\n  \"content\": \"HTML content...\",\n  \"metadata\": {\n    \"category\": \"category-name\",\n    \"tags\": [\"tag1\", \"tag2\"]\n  }\n}</code></pre>",
+  "description": "Learn how to use JSON format for help articles",
+  "category": "formats",
+  "content": "<h1>JSON Format</h1>\n\n<p>JSON (JavaScript Object Notation) is a structured data format that's perfect for articles with complex metadata.</p>\n\n<p>This article is written in <strong>JSON</strong> (.json) format.</p>\n\n<h2>What is JSON?</h2>\n\n<p>JSON is a lightweight data interchange format that's easy for humans to read and write, and easy for machines to parse and generate.</p>\n\n<h2>Advantages</h2>\n\n<ul>\n<li><strong>Structured</strong>: Clear separation of metadata and content</li>\n<li><strong>Flexible</strong>: Support for complex data structures</li>\n<li><strong>Familiar</strong>: Widely used across web development</li>\n<li><strong>Validated</strong>: Can be validated with JSON Schema</li>\n</ul>\n\n<h2>JSON Article Structure</h2>\n\n<pre><code>{\n  \"slug\": \"article-slug\",\n  \"title\": \"Article Title\",\n  \"description\": \"Brief description\",\n  \"category\": \"category-id\",\n  \"tags\": [\"tag1\", \"tag2\"],\n  \"content\": \"HTML content here\"\n}</code></pre>\n\n<h2>When to Use JSON</h2>\n\n<ul>\n<li>Articles with rich metadata</li>\n<li>Content that needs to be programmatically generated</li>\n<li>Integration with APIs or databases</li>\n<li>Complex data structures</li>\n</ul>",
+  "tags": ["json", "format", "structured-data"],
   "metadata": {
-    "category": "formats",
-    "tags": ["json", "format", "structured"],
-    "order": 2
+    "author": "Help System",
+    "lastUpdated": "2024-12-07"
   }
 }

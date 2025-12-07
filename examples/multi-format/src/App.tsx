@@ -1,4 +1,5 @@
 import { HelpProvider, HelpPage } from '@piikeep/web-help';
+import { HelpCallout, HelpCodeBlock } from '@piikeep/web-help';
 import { loadFromManifestFile } from '@piikeep/web-help/devtools';
 import { useEffect, useState } from 'react';
 import type { LoadManifestResult } from '@piikeep/web-help/devtools';
@@ -13,9 +14,11 @@ function App() {
     loadFromManifestFile({
       manifestPath: '/help/manifest.json',
       articlesPath: '/help',
-      extensions: ['md', 'json', 'csv'],
+      extensions: ['md', 'mdx', 'json', 'csv'],
     })
-      .then(setManifestData)
+      .then((data) => {
+        setManifestData(data);
+      })
       .catch(setError);
   }, []);
 
@@ -44,7 +47,8 @@ function App() {
         <h1>Multi-Format Example</h1>
         <p>Demonstrating Markdown, JSON, and CSV content formats</p>
         <div className='format-badges'>
-          <span className='format-badge'>Markdown</span>
+          <span className='format-badge'>MD</span>
+          <span className='format-badge'>MDX</span>
           <span className='format-badge'>JSON</span>
           <span className='format-badge'>CSV</span>
         </div>
@@ -56,12 +60,17 @@ function App() {
           config={{
             fullConfig: {
               content: {
-                formats: ['md', 'json', 'csv'],
+                formats: ['md', 'json', 'csv', 'mdx'],
               },
             },
           }}
         >
-          <HelpPage />
+          <HelpPage
+            components={{
+              HelpCallout,
+              HelpCodeBlock,
+            }}
+          />
         </HelpProvider>
       </div>
     </>

@@ -62,6 +62,8 @@ export interface HelpPageProps extends BaseComponentProps {
   showBreadcrumbs?: boolean;
   /** Show pagination (default: true) */
   showPagination?: boolean;
+  /** Component mapping for MDX content (e.g., { HelpCallout, HelpCodeBlock }) */
+  components?: Record<string, React.ComponentType<any>>;
   /** Children to render when no article */
   children?: ReactNode;
 }
@@ -78,6 +80,8 @@ export interface HelpContentProps extends BaseComponentProps {
   renderImage?: (props: { src: string; alt: string }) => ReactNode;
   /** Render custom component for links */
   renderLink?: (props: { href: string; children: ReactNode }) => ReactNode;
+  /** Component mapping for MDX content (e.g., { HelpCallout, HelpCodeBlock }) */
+  components?: Record<string, React.ComponentType<any>>;
 }
 
 /**

@@ -4,7 +4,7 @@
  */
 
 // Parsers
-export { createMarkdownParser } from './markdownParser';
+export { createMarkdownParser, markedDownParser } from './markdownParser';
 export { createJsonParser } from './jsonParser';
 export { createCsvParser } from './csvParser';
 export { createMdxParser } from './mdxParser';

@@ -6,35 +6,17 @@
  * Provides sensible defaults with the ability to override.
  */
 
-import { forwardRef, type HTMLAttributes, useMemo } from 'react';
-import parse from 'html-react-parser';
-import type { HelpArticle } from '../types/content';
-import type { NavigationItem } from '../types/components';
+import { forwardRef, useMemo } from 'react';
+import parse, {
+  type HTMLReactParserOptions,
+  type DOMNode,
+  type Element,
+} from 'html-react-parser';
+import type { NavigationItem, HelpPageProps } from '../types/components';
 import { useHelp } from '../context/HelpProvider';
 import { HelpNavigation } from './HelpNavigation';
 import { HelpBreadcrumbs } from './navigation/HelpBreadcrumbs';
 import { HelpPagination } from './navigation/HelpPagination';
-
-export interface HelpPageProps extends HTMLAttributes<HTMLDivElement> {
-  /** Optional article to display (overrides context) */
-  article?: HelpArticle;
-  /** Optional article ID to load */
-  articleId?: string;
-  /** Custom header renderer */
-  renderHeader?: (article: HelpArticle) => JSX.Element | null;
-  /** Custom footer renderer */
-  renderFooter?: (article: HelpArticle) => JSX.Element | null;
-  /** Custom sidebar renderer */
-  renderSidebar?: () => JSX.Element | null;
-  /** Show breadcrumbs (default: true) */
-  showBreadcrumbs?: boolean;
-  /** Show table of contents (default: true) */
-  showTOC?: boolean;
-  /** Show pagination (default: true) */
-  showPagination?: boolean;
-  /** Show sidebar navigation (default: true) */
-  showNavigation?: boolean;
-}
 
 /**
  * Strip the first H1 from rendered HTML if it matches the article title.
@@ -84,6 +66,7 @@ export const HelpPage = forwardRef<HTMLDivElement, HelpPageProps>(
       showTOC = true,
       showPagination = true,
       showNavigation = true,
+      components,
       className = '',
       children,
       ...props
@@ -104,14 +87,63 @@ export const HelpPage = forwardRef<HTMLDivElement, HelpPageProps>(
     // Use provided article, or fall back to context article
     const displayArticle = article ?? currentArticle;
 
+    // Parser options for MDX component rendering
+    const parserOptions: HTMLReactParserOptions = useMemo(
+      () => ({
+        replace(domNode: DOMNode) {
+          if (domNode.type !== 'tag' || !components) return;
+
+          const element = domNode as Element;
+
+          // MDX component placeholder renderer
+          if (
+            element.name === 'div' &&
+            element.attribs?.class?.includes('help-mdx-placeholder')
+          ) {
+            const componentName = element.attribs['data-component'];
+            const propsJson = element.attribs['data-props'];
+
+            if (componentName && propsJson) {
+              try {
+                const componentProps = JSON.parse(propsJson);
+                const Component = components[componentName];
+
+                if (Component) {
+                  // Transform props for specific components
+                  const transformedProps = { ...componentProps };
+
+                  // HelpCodeBlock: map children to code prop
+                  if (
+                    componentName === 'HelpCodeBlock' &&
+                    transformedProps.children
+                  ) {
+                    transformedProps.code = transformedProps.children;
+                    delete transformedProps.children;
+                  }
+
+                  return <Component {...transformedProps} />;
+                }
+              } catch (error) {
+                console.warn(
+                  `Failed to render MDX component ${componentName}:`,
+                  error,
+                );
+              }
+            }
+          }
+        },
+      }),
+      [components],
+    );
+
     // Build navigation items from categories
     const navigationItems = useMemo((): NavigationItem[] => {
       const allArticles = getAllArticles();
 
       const items = categories.map((category) => {
-        const categoryArticles = allArticles.filter(
-          (art) => art.metadata?.category === category.id,
-        );
+        const categoryArticles = allArticles
+          .filter((art) => art.metadata?.category === category.id)
+          .sort((a, b) => (a.metadata?.order ?? 0) - (b.metadata?.order ?? 0)); // Sort by order
 
         return {
           id: category.id,
@@ -207,6 +239,9 @@ export const HelpPage = forwardRef<HTMLDivElement, HelpPageProps>(
                       : undefined
                   }
                   onItemSelect={(itemId) => {
+                    // Ignore clicks on categories (only load articles)
+                    if (!itemId) return;
+
                     // Extract article ID from composite key (category/article)
                     const articleId = itemId.includes('/')
                       ? itemId.split('/')[1]
@@ -271,6 +306,7 @@ export const HelpPage = forwardRef<HTMLDivElement, HelpPageProps>(
                       displayArticle.renderedContent,
                       displayArticle.title,
                     ),
+                    parserOptions,
                   )}
                 </div>
               ) : (

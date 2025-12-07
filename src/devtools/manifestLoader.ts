@@ -26,6 +26,7 @@ export interface ManifestStructure {
     articles?: Array<{
       slug: string;
       title: string;
+      description?: string; // Optional: description for the article
       filename?: string; // Optional: explicit filename (e.g., 'help_getting_started.md')
       order: number;
     }>;
@@ -54,6 +55,16 @@ export interface LoadManifestResult {
   manifest: ManifestStructure;
   /** Content manifest mapping article IDs to markdown content */
   contentManifest: Record<string, string>;
+  /** Mapping of article IDs to their actual filenames (with extensions) */
+  contentFilenames: Record<string, string>;
+  /** Mapping of article IDs to their category IDs */
+  articleCategories: Record<string, string>;
+  /** Mapping of article IDs to their display order */
+  articleOrder: Record<string, number>;
+  /** Mapping of article IDs to their titles from manifest */
+  articleTitles: Record<string, string>;
+  /** Mapping of article IDs to their descriptions from manifest */
+  articleDescriptions: Record<string, string>;
   /** Processed categories ready for registration */
   categories: HelpCategory[];
 }
@@ -103,11 +114,21 @@ export async function loadFromManifestFile(
   }
   const manifest: ManifestStructure = await manifestResponse.json();
 
+  // Sort categories by order field
+  const sortedCategories = [...manifest.categories].sort(
+    (a, b) => a.order - b.order,
+  );
+
   // 2. Build content manifest by fetching all article files
   const contentManifest: Record<string, string> = {};
+  const contentFilenames: Record<string, string> = {};
+  const articleCategories: Record<string, string> = {};
+  const articleOrder: Record<string, number> = {};
+  const articleTitles: Record<string, string> = {};
+  const articleDescriptions: Record<string, string> = {};
   const categories: HelpCategory[] = [];
 
-  for (const category of manifest.categories) {
+  for (const category of sortedCategories) {
     // Register category
     categories.push({
       id: category.id,
@@ -116,9 +137,13 @@ export async function loadFromManifestFile(
       order: category.order,
     });
 
-    // Fetch each article in the category
+    // Fetch each article in the category (sorted by order)
     if (category.articles) {
-      for (const article of category.articles) {
+      const sortedArticles = [...category.articles].sort(
+        (a, b) => a.order - b.order,
+      );
+
+      for (const article of sortedArticles) {
         let content: string | null = null;
 
         // If filename is explicitly provided, use it directly
@@ -128,6 +153,7 @@ export async function loadFromManifestFile(
             const response = await fetch(articlePath);
             if (response.ok) {
               content = await response.text();
+              contentFilenames[article.slug] = article.filename;
             } else {
               console.warn(
                 `Failed to load article with filename "${article.filename}": ${response.status}`,
@@ -151,6 +177,7 @@ export async function loadFromManifestFile(
               const response = await fetch(articlePath);
               if (response.ok) {
                 content = await response.text();
+                contentFilenames[article.slug] = filename;
                 break; // Found the file, stop trying other extensions
               }
             } catch {
@@ -162,6 +189,12 @@ export async function loadFromManifestFile(
 
         if (content) {
           contentManifest[article.slug] = content;
+          articleCategories[article.slug] = category.id; // Map article to its category
+          articleOrder[article.slug] = article.order; // Track article order
+          articleTitles[article.slug] = article.title; // Track article title from manifest
+          if (article.description) {
+            articleDescriptions[article.slug] = article.description; // Track article description from manifest
+          }
         } else {
           const filenameInfo = article.filename
             ? `filename: ${article.filename}`
@@ -174,7 +207,16 @@ export async function loadFromManifestFile(
     }
   }
 
-  return { manifest, contentManifest, categories };
+  return {
+    manifest,
+    contentManifest,
+    contentFilenames,
+    articleCategories,
+    articleOrder,
+    articleTitles,
+    articleDescriptions,
+    categories,
+  };
 }
 
 /**

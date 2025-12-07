@@ -10,7 +10,6 @@ export { HelpNavigation } from './HelpNavigation';
 
 // Main components - v2
 export { HelpPage } from './HelpPage';
-export type { HelpPageProps as HelpPagePropsV2 } from './HelpPage';
 
 // Navigation components
 export {

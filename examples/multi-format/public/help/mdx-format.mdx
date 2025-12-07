@@ -1,0 +1,41 @@
+---
+title: 'MDX Format Example'
+slug: 'mdx-format'
+tags: ['mdx', 'help', 'example']
+description: 'Demonstrates using MDX for contextual help content.'
+---
+
+import { HelpCallout } from '@piikeep/web-help';
+import { HelpCodeBlock } from '@piikeep/web-help';
+
+# MDX Format Example
+
+This is an example of a help page written in **MDX**. You can use React components inline with Markdown for rich, interactive help experiences.
+
+<HelpCallout type='info'>
+  MDX lets you embed React components directly in your help content!
+</HelpCallout>
+
+## Usage
+
+To use MDX in your help system, configure your content loader to parse `.mdx` files.
+
+<HelpCodeBlock language="tsx">{`
+import { HelpContent } from '@piikeep/web-help'
+
+export const MyHelpPage = () => (
+    <HelpContent>
+        {/* MDX content will be rendered here */}
+    </HelpContent>
+)
+`}</HelpCodeBlock>
+
+## Features
+
+- Markdown + JSX
+- Interactive components
+- Frontmatter support
+
+---
+
+Need more help? Contact support or check the documentation.

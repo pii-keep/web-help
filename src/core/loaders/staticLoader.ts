@@ -86,18 +86,28 @@ export class StaticContentLoader {
    * @param content - Raw content string
    * @param filename - Filename for parser detection
    * @param articleId - Article ID
+   * @param categoryId - Optional category ID to associate with this article
+   * @param order - Optional display order for this article
+   * @param manifestTitle - Optional title from manifest (takes precedence)
+   * @param manifestDescription - Optional description from manifest (takes precedence)
    * @returns Parsed help article or null
    */
   async parseContent(
     content: string,
     filename: string,
     articleId: string,
+    categoryId?: string,
+    order?: number,
+    manifestTitle?: string,
+    manifestDescription?: string,
   ): Promise<HelpArticle | null> {
     const extension = filename.split('.').pop() ?? '';
     const parser = this.getParser(extension);
 
     if (!parser) {
-      console.warn(`No parser registered for extension: ${extension}`);
+      console.warn(
+        `No parser registered for extension: ${extension} (file: ${filename})`,
+      );
       return null;
     }
 
@@ -108,6 +118,10 @@ export class StaticContentLoader {
         filename,
         content,
         result,
+        categoryId,
+        order,
+        manifestTitle,
+        manifestDescription,
       );
 
       // Cache the article
@@ -129,19 +143,37 @@ export class StaticContentLoader {
     filename: string,
     rawContent: string,
     result: ParseResult,
+    categoryId?: string,
+    order?: number,
+    manifestTitle?: string,
+    manifestDescription?: string,
   ): HelpArticle {
-    // Extract title from first heading or filename
-    let title = id;
-    const titleMatch = rawContent.match(/^#\s+(.+)$/m);
-    if (titleMatch) {
-      title = titleMatch[1];
+    // Title priority: 1. Manifest title, 2. Parser metadata custom title, 3. Markdown heading, 4. ID
+    let title =
+      manifestTitle ?? (result.metadata.custom?.title as string) ?? id;
+
+    // For markdown content, try to extract title from first heading if no manifest or custom title
+    if (
+      (filename.endsWith('.md') || filename.endsWith('.mdx')) &&
+      !manifestTitle &&
+      !result.metadata.custom?.title
+    ) {
+      const titleMatch = rawContent.match(/^#\s+(.+)$/m);
+      if (titleMatch) {
+        title = titleMatch[1];
+      }
     }
 
-    // Extract description from frontmatter or first paragraph
-    let description: string | undefined;
-    const descMatch = result.html.match(/<p[^>]*>([^<]+)<\/p>/);
-    if (descMatch) {
-      description = descMatch[1].substring(0, 160);
+    // Description priority: 1. Manifest description, 2. Parser metadata custom description, 3. First paragraph
+    let description =
+      manifestDescription ??
+      (result.metadata.custom?.description as string | undefined);
+
+    if (!description) {
+      const descMatch = result.html.match(/<p[^>]*>([^<]+)<\/p>/);
+      if (descMatch) {
+        description = descMatch[1].substring(0, 160);
+      }
     }
 
     return {
@@ -153,6 +185,8 @@ export class StaticContentLoader {
       metadata: {
         ...result.metadata,
         slug: result.metadata.slug ?? this.generateSlug(filename),
+        category: categoryId ?? result.metadata.category, // Use provided categoryId or fall back to metadata
+        order: order ?? result.metadata.order, // Use provided order or fall back to metadata
       },
     };
   }
@@ -264,10 +298,36 @@ export class StaticContentLoader {
   /**
    * Load articles from a content manifest.
    * @param manifest - Object mapping article IDs to their content
+   * @param filenames - Optional object mapping article IDs to their filenames (for format detection)
+   * @param categories - Optional object mapping article IDs to their category IDs
+   * @param order - Optional object mapping article IDs to their display order
+   * @param titles - Optional object mapping article IDs to their titles from manifest
+   * @param descriptions - Optional object mapping article IDs to their descriptions from manifest
    */
-  async loadFromManifest(manifest: Record<string, string>): Promise<void> {
+  async loadFromManifest(
+    manifest: Record<string, string>,
+    filenames?: Record<string, string>,
+    categories?: Record<string, string>,
+    order?: Record<string, number>,
+    titles?: Record<string, string>,
+    descriptions?: Record<string, string>,
+  ): Promise<void> {
     for (const [id, content] of Object.entries(manifest)) {
-      await this.parseContent(content, `${id}.md`, id);
+      // Use the actual filename if provided, otherwise default to .md
+      const filename = filenames?.[id] ?? `${id}.md`;
+      const categoryId = categories?.[id];
+      const articleOrder = order?.[id];
+      const articleTitle = titles?.[id];
+      const articleDescription = descriptions?.[id];
+      await this.parseContent(
+        content,
+        filename,
+        id,
+        categoryId,
+        articleOrder,
+        articleTitle,
+        articleDescription,
+      );
     }
     this.registry.lastUpdated = Date.now();
   }

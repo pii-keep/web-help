@@ -26,6 +26,7 @@ export const HelpContent = forwardRef<HTMLDivElement, HelpContentProps>(
       renderCodeBlock,
       renderImage,
       renderLink,
+      components,
       className = '',
       ...props
     },
@@ -37,6 +38,44 @@ export const HelpContent = forwardRef<HTMLDivElement, HelpContentProps>(
           if (domNode.type !== 'tag') return;
 
           const element = domNode as Element;
+
+          // MDX component placeholder renderer
+          if (
+            element.name === 'div' &&
+            element.attribs?.class?.includes('help-mdx-placeholder') &&
+            components
+          ) {
+            const componentName = element.attribs['data-component'];
+            const propsJson = element.attribs['data-props'];
+
+            if (componentName && propsJson) {
+              try {
+                const componentProps = JSON.parse(propsJson);
+                const Component = components[componentName];
+
+                if (Component) {
+                  // Transform props for specific components
+                  const transformedProps = { ...componentProps };
+
+                  // HelpCodeBlock: map children to code prop
+                  if (
+                    componentName === 'HelpCodeBlock' &&
+                    transformedProps.children
+                  ) {
+                    transformedProps.code = transformedProps.children;
+                    delete transformedProps.children;
+                  }
+
+                  return <Component {...transformedProps} />;
+                }
+              } catch (error) {
+                console.warn(
+                  `Failed to render MDX component ${componentName}:`,
+                  error,
+                );
+              }
+            }
+          }
 
           // Custom code block renderer
           if (element.name === 'pre' && renderCodeBlock) {
@@ -68,7 +107,7 @@ export const HelpContent = forwardRef<HTMLDivElement, HelpContentProps>(
           }
         },
       }),
-      [renderCodeBlock, renderImage, renderLink],
+      [renderCodeBlock, renderImage, renderLink, components],
     );
 
     return (

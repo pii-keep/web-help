@@ -5,7 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.0] - 2024-12-07
+
+### Added
+
+- Multi-format content support with automatic format detection (MD, MDX, JSON, CSV)
+- MDX component rendering support with placeholder-based architecture
+- Article description support in manifest files with priority fallback system
+- Article ordering support via `order` field in manifests
+- Category ordering support via `order` field in manifests
+- Comprehensive manifest loader with `loadFromManifestFile` and `loadFromConfig`
+- Article metadata tracking: categories, titles, descriptions, and order
+- Buffer polyfill documentation for browser environments
+- Three new comprehensive examples:
+  - Basic example with custom styling
+  - Styled example using baseline CSS
+  - Multi-format example demonstrating MD/MDX/JSON/CSV support
+
+### Changed
+
+- Updated `HelpProvider` to accept and use manifest data structures
+- Enhanced `StaticContentLoader` to support filename-based format detection
+- Improved article title priority: manifest → parser metadata → markdown heading → article ID
+- Improved article description priority: manifest → parser metadata → first paragraph
+- Updated `HelpPage` to support MDX component rendering via `components` prop
+- Enhanced `HelpContent` with MDX component placeholder detection and rendering
+- Updated all examples to use new manifest-based loading system
+- Improved navigation sorting to respect category and article order fields
+
+### Fixed
+
+- Fixed parser selection to use actual file extensions instead of hardcoded `.md`
+- Fixed article filtering in navigation to properly match categories
+- Fixed `HelpCodeBlock` children-to-code prop transformation for MDX usage
+- Fixed undefined `itemId` error in navigation click handlers
+- Added safety checks for category mapping in article parsing
+- Fixed CSV parser to properly set article metadata from manifest
+
+### Security
+
+- Maintained XSS protection via `html-react-parser` with safe parsing options
 
 ## [0.2.4] - 2024-12-07
 

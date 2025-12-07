@@ -1,0 +1,41 @@
+{
+  "title": "Basic Example Help",
+  "description": "Help documentation for the basic example",
+  "version": "1.0.0",
+  "categories": [
+    {
+      "id": "basics",
+      "title": "Basics",
+      "description": "Getting started with the help system",
+      "order": 1,
+      "articles": [
+        {
+          "slug": "getting-started",
+          "title": "Getting Started",
+          "filename": "getting-started.md",
+          "order": 1
+        },
+        {
+          "slug": "features",
+          "title": "Features Guide",
+          "filename": "features.md",
+          "order": 2
+        }
+      ]
+    },
+    {
+      "id": "advanced",
+      "title": "Advanced",
+      "description": "Advanced topics and customization",
+      "order": 2,
+      "articles": [
+        {
+          "slug": "advanced",
+          "title": "Advanced Topics",
+          "filename": "advanced.md",
+          "order": 1
+        }
+      ]
+    }
+  ]
+}

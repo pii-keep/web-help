@@ -102,7 +102,14 @@ export function HelpProvider({
 
       // Load content from manifest asynchronously
       loaderRef.current
-        .loadFromManifest(manifestData.contentManifest)
+        .loadFromManifest(
+          manifestData.contentManifest,
+          manifestData.contentFilenames,
+          manifestData.articleCategories,
+          manifestData.articleOrder,
+          manifestData.articleTitles,
+          manifestData.articleDescriptions,
+        )
         .then(() => {
           // Mark articles as ready to trigger re-render
           setArticlesReady(true);

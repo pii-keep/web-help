@@ -113,12 +113,6 @@ const initialState: HelpState = {
  * Help reducer.
  */
 function helpReducer(state: HelpState, action: HelpAction): HelpState {
-  console.log(
-    '[helpReducer] Action:',
-    action.type,
-    'Current state keys:',
-    Object.keys(state),
-  );
   switch (action.type) {
     case 'SET_ARTICLE':
       return { ...state, currentArticle: action.payload, error: null };

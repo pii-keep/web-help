@@ -203,6 +203,8 @@ export function createMarkdownParser(): ContentParser {
   };
 }
 
+export const markedDownParser = createMarkdownParser();
+
 /**
  * Extract metadata from frontmatter.
  */

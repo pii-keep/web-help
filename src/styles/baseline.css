@@ -944,3 +944,20 @@
     max-height: 200px;
   }
 }
+
+/* ============================================
+   HelpCodeBlock Additional Styles
+   ============================================ */
+.help-code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.help-code-copy {
+  border: 1px solid var(--help-color-border);
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
