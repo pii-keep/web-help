@@ -1,6 +1,6 @@
 {
   "name": "@piikeep/web-help",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A comprehensive, headless help system for React applications. Built with TypeScript for maximum flexibility.",
   "author": {
     "name": "Charles de Jager",

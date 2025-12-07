@@ -1,0 +1,38 @@
+{
+  "title": "Styled Example Help",
+  "description": "Help documentation demonstrating baseline CSS styling",
+  "version": "1.0.0",
+  "categories": [
+    {
+      "id": "styling",
+      "title": "Styling",
+      "description": "Learn about styling the help system",
+      "order": 1,
+      "articles": [
+        {
+          "slug": "baseline-css",
+          "title": "Baseline CSS Guide",
+          "order": 1
+        },
+        {
+          "slug": "component-styling",
+          "title": "Component Styling",
+          "order": 2
+        }
+      ]
+    },
+    {
+      "id": "advanced",
+      "title": "Advanced",
+      "description": "Advanced styling and theming",
+      "order": 2,
+      "articles": [
+        {
+          "slug": "custom-themes",
+          "title": "Custom Themes",
+          "order": 1
+        }
+      ]
+    }
+  ]
+}

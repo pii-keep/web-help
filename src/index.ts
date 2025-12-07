@@ -299,6 +299,14 @@ export {
   getArticleTemplates,
   getArticleTemplate,
   slugify,
+  // Manifest Loader
+  loadFromManifestFile,
+  loadFromConfig,
+  loadArticleFile,
+  // Navigation Builder
+  buildNavigationFromManifest,
+  buildNavigationFromCategories,
+  buildFlatNavigation,
   // Config Generator
   configGenerator,
   generateConfig,
@@ -341,6 +349,10 @@ export type {
   CLIResult,
   ArticleTemplate,
   TemplateContent,
+  // Manifest Loader Types
+  ManifestStructure,
+  LoadManifestOptions,
+  LoadManifestResult,
   // Config Types
   ConfigGeneratorOptions,
   GeneratedConfig,

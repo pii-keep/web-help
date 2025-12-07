@@ -1,17 +1,11 @@
-// Polyfill Buffer for gray-matter library
-import { Buffer } from 'buffer';
-globalThis.Buffer = Buffer;
-
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import { ThemeProvider } from './ThemeContext';
 import './index.css';
+import '../../../dist/styles/baseline.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
-  </StrictMode>
+    <App />
+  </StrictMode>,
 );

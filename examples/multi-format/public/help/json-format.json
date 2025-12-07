@@ -1,0 +1,10 @@
+{
+  "id": "json-format",
+  "title": "JSON Format",
+  "content": "<h1>JSON Format</h1><p>This article is written in <strong>JSON</strong> (.json) format.</p><h2>What is JSON?</h2><p>JSON (JavaScript Object Notation) is a lightweight data interchange format that's easy for humans to read and write and easy for machines to parse and generate.</p><h2>Advantages</h2><ul><li>Structured data format</li><li>Easy to validate</li><li>Works well with APIs</li><li>Native JavaScript support</li></ul><h2>Use Cases</h2><p>JSON format is ideal for:</p><ol><li>Importing content from existing systems</li><li>Programmatically generated documentation</li><li>API documentation</li><li>Structured data with metadata</li></ol><h2>Example Structure</h2><pre><code>{\n  \"id\": \"article-id\",\n  \"title\": \"Article Title\",\n  \"content\": \"HTML content...\",\n  \"metadata\": {\n    \"category\": \"category-name\",\n    \"tags\": [\"tag1\", \"tag2\"]\n  }\n}</code></pre>",
+  "metadata": {
+    "category": "formats",
+    "tags": ["json", "format", "structured"],
+    "order": 2
+  }
+}

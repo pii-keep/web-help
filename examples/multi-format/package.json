@@ -1,16 +1,17 @@
 {
   "name": "multi-format-example",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Multi-format example using @piikeep/web-help with MD, JSON, and CSV content",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "@piikeep-pw/web-help": "file:../../",
-    "buffer": "^6.0.3",
+    "@piikeep/web-help": "file:../..",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

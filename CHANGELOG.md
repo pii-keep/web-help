@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.4] - 2024-12-07
+
+### Fixed
+
+- Added missing exports for manifest loader functions (`loadFromManifestFile`, `loadFromConfig`, `loadArticleFile`)
+- Added missing exports for navigation builder functions
+- Added missing type exports (`ManifestStructure`, `LoadManifestOptions`, `LoadManifestResult`)
+
 ## [0.2.3] - 2025-12-07
 
 ### Changed

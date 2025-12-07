@@ -1,91 +1,54 @@
-import { useState } from 'react';
-import { HelpProvider, HelpModal, useHelp } from '@piikeep-pw/web-help';
-
-// Define help content manifest
-const contentManifest = {
-  'getting-started': `---
-title: Getting Started
-category: Basics
-tags:
-  - beginner
-  - introduction
----
-
-# Getting Started
-
-Welcome to the application! Here are some tips and guidance for getting started.
-
-## Quick Start
-
-1. Click the **Help** button to open help content
-2. Browse through different help topics
-3. Use the search feature to find specific information
-
-## Features
-
-- **Contextual Help**: Get help relevant to where you are in the app
-- **Search**: Find help articles quickly
-- **Bookmarks**: Save important articles for later
-
-> **Tip**: You can press \`?\` to quickly open the help system from anywhere in the app.
-`,
-};
-
-function Main() {
-  const { openArticle, currentArticle, isLoading } = useHelp();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenHelp = async () => {
-    await openArticle('getting-started');
-    setIsModalOpen(true);
-  };
-
-  return (
-    <div style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
-      <h1>My App</h1>
-      <p>This is a basic example demonstrating the web-help library.</p>
-
-      <button
-        onClick={handleOpenHelp}
-        style={{
-          padding: '0.5rem 1rem',
-          fontSize: '1rem',
-          cursor: 'pointer',
-          backgroundColor: '#0066cc',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-        }}
-      >
-        Help
-      </button>
-
-      <HelpModal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title={currentArticle?.title || 'Help'}
-      >
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : currentArticle ? (
-          <div
-            dangerouslySetInnerHTML={{
-              __html: currentArticle.renderedContent || currentArticle.content,
-            }}
-          />
-        ) : (
-          <p>No help content available.</p>
-        )}
-      </HelpModal>
-    </div>
-  );
-}
+import { HelpProvider, HelpPage } from '@piikeep/web-help';
+import { loadFromManifestFile } from '@piikeep/web-help/devtools';
+import { useEffect, useState } from 'react';
+import type { LoadManifestResult } from '@piikeep/web-help/devtools';
 
 function App() {
+  const [manifestData, setManifestData] = useState<LoadManifestResult | null>(
+    null,
+  );
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    loadFromManifestFile({
+      manifestPath: '/help/manifest.json',
+      articlesPath: '/help',
+      extensions: ['md'],
+    })
+      .then(setManifestData)
+      .catch(setError);
+  }, []);
+
+  if (error) {
+    return (
+      <div className='container'>
+        <div className='help-page-error'>
+          <h1>Error loading help content</h1>
+          <p>{error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!manifestData) {
+    return (
+      <div className='container'>
+        <div className='help-page-loading'>Loading...</div>
+      </div>
+    );
+  }
+
   return (
-    <HelpProvider contentManifest={contentManifest}>
-      <Main />
-    </HelpProvider>
+    <div className='container'>
+      <header className='header'>
+        <h1>Basic Example</h1>
+        <p>A simple example of @piikeep/web-help with minimal styling</p>
+      </header>
+
+      <HelpProvider manifestData={manifestData}>
+        <HelpPage />
+      </HelpProvider>
+    </div>
   );
 }
 

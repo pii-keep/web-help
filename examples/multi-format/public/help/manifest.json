@@ -1,0 +1,48 @@
+{
+  "title": "Multi-Format Example Help",
+  "description": "Help documentation demonstrating multiple content formats",
+  "version": "1.0.0",
+  "categories": [
+    {
+      "id": "formats",
+      "title": "Content Formats",
+      "description": "Learn about different content formats",
+      "order": 1,
+      "articles": [
+        {
+          "slug": "markdown-format",
+          "title": "Markdown Format",
+          "order": 1
+        },
+        {
+          "slug": "json-format",
+          "title": "JSON Format",
+          "order": 2
+        },
+        {
+          "slug": "csv-format",
+          "title": "CSV Format",
+          "order": 3
+        },
+        {
+          "slug": "format-comparison",
+          "title": "Format Comparison",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "id": "support",
+      "title": "Support",
+      "description": "Troubleshooting and help",
+      "order": 2,
+      "articles": [
+        {
+          "slug": "troubleshooting",
+          "title": "Troubleshooting Tips",
+          "order": 1
+        }
+      ]
+    }
+  ]
+}
