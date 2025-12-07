@@ -3,7 +3,7 @@
  * @module @piikeep-pw/web-help/hooks
  */
 
-export { useHelp, type UseHelpReturn } from './useHelp';
+export { useHelp } from './useHelp';
 export {
   useHelpNavigation,
   type UseHelpNavigationReturn,

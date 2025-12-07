@@ -13,7 +13,7 @@ import type {
   UserSettings,
   StorageAdapter,
 } from '../types/storage';
-import { useHelpActions } from './HelpContext';
+import { createLocalStorageAdapter } from '../storage/localStorage';
 
 /**
  * User preferences return value.
@@ -91,24 +91,38 @@ function readFromStorage<T>(
  *
  * This hook reads/writes storage directly instead of using Context,
  * which avoids infinite re-render loops caused by context value changes.
- * 
+ *
  * All callbacks use refs for complete stability - empty dependency arrays.
+ *
+ * @param storage - Optional storage adapter. Defaults to LocalStorageAdapter.
+ * @param callbacks - Optional callbacks for bookmark/history events.
  */
-export function useUserPreferences(): UserPreferencesContextValue {
-  const actionsContext = useHelpActions();
-  
+export function useUserPreferences(
+  storage?: StorageAdapter,
+  callbacks?: {
+    onBookmark?: (articleId: string, bookmarked: boolean) => void;
+    onHistory?: (entry: ReadingHistoryEntry) => void;
+  },
+): UserPreferencesContextValue {
+  // Use default localStorage adapter if none provided
+  const defaultStorage = useMemo(() => createLocalStorageAdapter(), []);
+
   // Store in refs to prevent any dependency changes
-  const storageRef = useRef(actionsContext.storage);
-  const callbacksRef = useRef(actionsContext.callbacks);
-  
-  // Update refs when context changes (but don't trigger re-renders)
-  storageRef.current = actionsContext.storage;
-  callbacksRef.current = actionsContext.callbacks;
+  const storageRef = useRef(storage ?? defaultStorage);
+  const callbacksRef = useRef(callbacks);
+
+  // Update refs when params change (but don't trigger re-renders)
+  storageRef.current = storage ?? defaultStorage;
+  callbacksRef.current = callbacks;
 
   // Read current preferences from storage - completely stable, runs once
   const preferences = useMemo((): UserPreferences => {
     return {
-      bookmarks: readFromStorage<string[]>(storageRef.current, STORAGE_KEYS.BOOKMARKS, []),
+      bookmarks: readFromStorage<string[]>(
+        storageRef.current,
+        STORAGE_KEYS.BOOKMARKS,
+        [],
+      ),
       history: readFromStorage<ReadingHistoryEntry[]>(
         storageRef.current,
         STORAGE_KEYS.HISTORY,
@@ -143,7 +157,7 @@ export function useUserPreferences(): UserPreferencesContextValue {
     if (!bookmarks.includes(articleId)) {
       const newBookmarks = [...bookmarks, articleId];
       storageRef.current.set(STORAGE_KEYS.BOOKMARKS, newBookmarks);
-      callbacksRef.current.onBookmark?.(articleId, true);
+      callbacksRef.current?.onBookmark?.(articleId, true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -156,7 +170,7 @@ export function useUserPreferences(): UserPreferencesContextValue {
     );
     const newBookmarks = bookmarks.filter((id) => id !== articleId);
     storageRef.current.set(STORAGE_KEYS.BOOKMARKS, newBookmarks);
-    callbacksRef.current.onBookmark?.(articleId, false);
+    callbacksRef.current?.onBookmark?.(articleId, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -191,7 +205,11 @@ export function useUserPreferences(): UserPreferencesContextValue {
   }, []);
 
   const getBookmarks = useCallback((): string[] => {
-    return readFromStorage<string[]>(storageRef.current, STORAGE_KEYS.BOOKMARKS, []);
+    return readFromStorage<string[]>(
+      storageRef.current,
+      STORAGE_KEYS.BOOKMARKS,
+      [],
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -220,7 +238,7 @@ export function useUserPreferences(): UserPreferencesContextValue {
         MAX_HISTORY_ENTRIES,
       );
       storageRef.current.set(STORAGE_KEYS.HISTORY, newHistory);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     [],
   );
@@ -283,7 +301,11 @@ export function useUserPreferences(): UserPreferencesContextValue {
   }, []);
 
   const getRecentSearches = useCallback((): string[] => {
-    return readFromStorage<string[]>(storageRef.current, STORAGE_KEYS.RECENT_SEARCHES, []);
+    return readFromStorage<string[]>(
+      storageRef.current,
+      STORAGE_KEYS.RECENT_SEARCHES,
+      [],
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -305,7 +327,11 @@ export function useUserPreferences(): UserPreferencesContextValue {
   }, []);
 
   const getSettings = useCallback((): UserSettings => {
-    return readFromStorage<UserSettings>(storageRef.current, STORAGE_KEYS.SETTINGS, {});
+    return readFromStorage<UserSettings>(
+      storageRef.current,
+      STORAGE_KEYS.SETTINGS,
+      {},
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -332,8 +358,8 @@ export function useUserPreferences(): UserPreferencesContextValue {
 /**
  * Legacy provider component for backward compatibility.
  * This is now a no-op wrapper that just renders children.
- * 
- * @deprecated No longer needed. You can remove <UserPreferencesProvider> 
+ *
+ * @deprecated No longer needed. You can remove <UserPreferencesProvider>
  * from your component tree and just use useUserPreferences() hook directly.
  */
 export function UserPreferencesProvider({

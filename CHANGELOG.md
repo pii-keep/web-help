@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.3] - 2025-12-07
+
+### Changed
+
+- **Context Architecture Refactoring**: Migrated all hooks and components to use the new simplified HelpProvider
+  - Updated `useHelp` hook to re-export from HelpProvider for backwards compatibility
+  - Updated `useHelpNavigation` hook to use HelpProvider instead of split context system
+  - Updated `useHelpSearch` hook to use HelpProvider with improved stability
+  - Made `useUserPreferences` standalone - now accepts optional storage and callbacks parameters
+  - Removed dependencies on old HelpContext (now exported as HelpProviderOld for legacy support)
+  - Eliminates re-render issues from previous split context implementation
+  - All components now use stable, optimized context structure
+
 ### Security
 
 - Replaced all `dangerouslySetInnerHTML` with `html-react-parser` across library components

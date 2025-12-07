@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { useHelpActions } from '../context/HelpContext';
+import { useHelp } from '../context/HelpProvider';
 import type { HelpSearchResult, ContentIndex } from '../types/content';
 
 /**
@@ -19,6 +19,8 @@ export interface UseHelpSearchOptions {
   minQueryLength?: number;
   /** Fuzzy matching threshold (0-1) */
   threshold?: number;
+  /** Custom search callback */
+  onSearch?: (query: string, results: HelpSearchResult[]) => void;
 }
 
 /**
@@ -44,12 +46,26 @@ export interface UseHelpSearchReturn {
 /**
  * Default search options.
  */
-const defaultOptions: Required<UseHelpSearchOptions> = {
+const defaultOptions: Required<Omit<UseHelpSearchOptions, 'onSearch'>> = {
   debounceMs: 300,
   maxResults: 10,
   minQueryLength: 2,
   threshold: 0.3,
 };
+
+/**
+ * Build content index from articles.
+ */
+function buildContentIndex(getAllArticles: () => any[]): ContentIndex[] {
+  const articles = getAllArticles();
+  return articles.map((article) => ({
+    id: article.id,
+    title: article.title,
+    content: article.content || '',
+    category: article.metadata?.category,
+    tags: article.metadata?.tags || [],
+  }));
+}
 
 /**
  * Simple client-side search implementation.
@@ -58,7 +74,7 @@ const defaultOptions: Required<UseHelpSearchOptions> = {
 function performClientSearch(
   query: string,
   index: ContentIndex[],
-  options: Required<UseHelpSearchOptions>,
+  options: Required<Omit<UseHelpSearchOptions, 'onSearch'>>,
 ): HelpSearchResult[] {
   if (!query || query.length < options.minQueryLength) {
     return [];
@@ -152,15 +168,11 @@ function extractSnippet(
 
 /**
  * Hook for search functionality.
- *
- * Uses the split context pattern for optimal performance:
- * - Actions come from useHelpActions (stable, won't cause re-renders)
- * - Callbacks are accessed via the stable callbacks property
  */
 export function useHelpSearch(
   options?: UseHelpSearchOptions,
 ): UseHelpSearchReturn {
-  const { getContentIndex, callbacks } = useHelpActions();
+  const { getAllArticles } = useHelp();
 
   const [query, setQueryState] = useState('');
   const [results, setResults] = useState<HelpSearchResult[]>([]);
@@ -169,11 +181,11 @@ export function useHelpSearch(
     undefined,
   );
 
-  // Store callbacks in a ref to avoid dependency changes
-  const callbacksRef = useRef(callbacks);
+  // Store onSearch callback in ref
+  const onSearchRef = useRef(options?.onSearch);
   useEffect(() => {
-    callbacksRef.current = callbacks;
-  }, [callbacks]);
+    onSearchRef.current = options?.onSearch;
+  }, [options?.onSearch]);
 
   // Memoize options
   const mergedOptions = useMemo(
@@ -182,9 +194,12 @@ export function useHelpSearch(
   );
 
   // Memoize the content index
-  const contentIndex = useMemo(() => getContentIndex(), [getContentIndex]);
+  const contentIndex = useMemo(
+    () => buildContentIndex(getAllArticles),
+    [getAllArticles],
+  );
 
-  // Perform search - stable, uses callbacksRef for callback access
+  // Perform search
   const performSearch = useCallback(
     async (searchQuery: string): Promise<HelpSearchResult[]> => {
       if (!searchQuery || searchQuery.length < mergedOptions.minQueryLength) {
@@ -201,7 +216,7 @@ export function useHelpSearch(
         );
 
         // Call callback via ref to avoid dependency
-        callbacksRef.current.onSearch?.(searchQuery, searchResults);
+        onSearchRef.current?.(searchQuery, searchResults);
 
         return searchResults;
       } finally {
